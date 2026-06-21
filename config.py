@@ -98,6 +98,7 @@ CLIMA_DIAS_ATRAS = 7
 # ---------------------------------------------------------------------------
 IDIOMA_NOTICIAS = "spanish"
 NOTICIAS_DIAS_ATRAS = 7
+NOTICIAS_MAX_REGISTROS = 25
 # Términos que disparan señales relevantes para agroexportación.
 TERMINOS_NOTICIAS = [
     "café",
