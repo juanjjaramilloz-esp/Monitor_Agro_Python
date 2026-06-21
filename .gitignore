@@ -1,0 +1,20 @@
+# Entorno virtual
+.venv/
+
+# Cachés de Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Secretos / variables de entorno (API keys)
+.env
+
+# Configuración local del editor
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Nota: datos/snapshots/ SÍ se versiona a propósito: es el histórico semanal
+# y sirve como evidencia de que el monitor corre en el tiempo.

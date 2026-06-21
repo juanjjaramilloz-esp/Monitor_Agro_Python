@@ -1,0 +1,20 @@
+# Monitor Agro LatAm — dependencias
+#
+# Instalar (con el entorno virtual activo):
+#   pip install -r requirements.txt
+#
+# Cuando todo funcione, congelamos versiones exactas con:
+#   pip freeze > requirements.txt
+
+# --- Núcleo (Fases 1 a 4) ---
+pandas          # manejo de datos / DataFrames
+requests        # llamadas HTTP (Open-Meteo, Frankfurter, Banco Mundial)
+yfinance        # precio del café (KC=F) y FX de respaldo
+gdeltdoc        # cliente de la GDELT DOC 2.0 API (noticias)
+
+# --- Reporte / resumen con IA (Fase 4) ---
+# anthropic     # descomentar en la Fase 4 si usamos Claude API para el resumen
+
+# --- Cara visual (Fase 5) ---
+# streamlit     # descomentar al llegar a la Fase 5
+# plotly        # gráficos del tablero
