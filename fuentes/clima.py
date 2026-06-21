@@ -13,19 +13,82 @@ Las coordenadas de cada zona cafetera se leen de config.PAISES.
 """
 
 import pandas as pd
+import requests
+
+from config import CLIMA_DIAS_ATRAS, CLIMA_VARIABLES, PAISES
 
 
 COLUMNAS = ["fecha", "pais", "variable", "valor", "unidad", "fuente"]
 
+URL_OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
+MAPEO_VARIABLES = {
+    "temperature_2m_min": ("temp_min", "°C"),
+    "temperature_2m_max": ("temp_max", "°C"),
+    "precipitation_sum": ("precipitacion", "mm"),
+}
+
 
 def obtener() -> pd.DataFrame:
     """Devuelve variables climáticas diarias para cada zona cafetera."""
-    return pd.DataFrame(columns=COLUMNAS)
+    filas: list[dict] = []
+
+    for pais in PAISES:
+        iso3 = pais["iso3"]
+        zona = pais["zona_cafetera"]
+        parametros = {
+            "latitude": zona["lat"],
+            "longitude": zona["lon"],
+            "daily": ",".join(CLIMA_VARIABLES),
+            "past_days": CLIMA_DIAS_ATRAS,
+            "forecast_days": 1,
+            "timezone": "auto",
+        }
+
+        try:
+            respuesta = requests.get(URL_OPEN_METEO, params=parametros, timeout=20)
+            respuesta.raise_for_status()
+            datos = respuesta.json()
+            diarios = datos.get("daily", {})
+            fechas = diarios.get("time", [])
+
+            if not fechas:
+                print(f"  AVISO: {iso3} - Open-Meteo no devolvio fechas.")
+                continue
+
+            for variable_api in CLIMA_VARIABLES:
+                if variable_api not in MAPEO_VARIABLES:
+                    print(f"  AVISO: {variable_api} - variable climatica sin mapeo.")
+                    continue
+
+                nombre_variable, unidad = MAPEO_VARIABLES[variable_api]
+                valores = diarios.get(variable_api, [])
+
+                if not valores:
+                    print(f"  AVISO: {iso3} - sin datos para {variable_api}.")
+                    continue
+
+                for fecha, valor in zip(fechas, valores):
+                    if valor is None:
+                        continue
+
+                    filas.append({
+                        "fecha": pd.to_datetime(fecha).date(),
+                        "pais": iso3,
+                        "variable": nombre_variable,
+                        "valor": float(valor),
+                        "unidad": unidad,
+                        "fuente": "open-meteo",
+                    })
+
+        except Exception as e:
+            print(f"  AVISO: {iso3} - error al consultar Open-Meteo: {e}")
+
+    return pd.DataFrame(filas, columns=COLUMNAS)
 
 
 if __name__ == "__main__":
     df = obtener()
-    print("fuentes.clima — stub Fase 0")
+    print("fuentes.clima - resultado")
     print(f"  shape : {df.shape}")
-    print(f"  cols  : {list(df.columns)}")
-    print(df.head())
+    print(f"  tipos :\n{df.dtypes}")
+    print(f"\n{df.head(15)}")
