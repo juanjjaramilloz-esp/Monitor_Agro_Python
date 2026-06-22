@@ -37,6 +37,18 @@ COLUMNAS_HISTORICO_SEMANAL = [
     "dias_observados",
 ]
 
+COLUMNAS_INDICADORES = [
+    "semana_fin",
+    "geografia",
+    "variable_base",
+    "indicador",
+    "valor",
+    "unidad",
+    "ventana_semanas",
+    "observaciones",
+    "fuente",
+]
+
 VARIABLES_CLIMA = {
     "precipitacion_semanal",
     "temp_min_semanal",
@@ -196,3 +208,24 @@ def generar_reporte_historico(tabla: pd.DataFrame) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(filas)
+
+
+def validar_indicadores(tabla: pd.DataFrame) -> None:
+    """Valida que la capa derivada sea tidy, numérica y reproducible."""
+    if list(tabla.columns) != COLUMNAS_INDICADORES:
+        raise ValueError("indicadores: columnas incorrectas")
+    if tabla.empty:
+        raise ValueError("indicadores: no contiene resultados")
+    if tabla.isna().any().any():
+        raise ValueError("indicadores: contiene valores nulos")
+    claves = ["semana_fin", "geografia", "variable_base", "indicador"]
+    if tabla.duplicated(claves).any():
+        raise ValueError("indicadores: contiene filas duplicadas")
+
+    fechas = pd.to_datetime(tabla["semana_fin"], errors="coerce")
+    valores = pd.to_numeric(tabla["valor"], errors="coerce")
+    observaciones = pd.to_numeric(tabla["observaciones"], errors="coerce")
+    if fechas.isna().any() or valores.isna().any() or observaciones.isna().any():
+        raise ValueError("indicadores: contiene fechas o valores inválidos")
+    if (observaciones <= 0).any():
+        raise ValueError("indicadores: observaciones debe ser positivo")

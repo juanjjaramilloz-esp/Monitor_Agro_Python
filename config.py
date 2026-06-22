@@ -17,10 +17,24 @@ RAIZ = Path(__file__).resolve().parent
 DIR_DATOS = RAIZ / "datos"
 DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
 DIR_HISTORICO = DIR_DATOS / "historico"
+DIR_INDICADORES = DIR_DATOS / "indicadores"
 
 # Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
 HISTORICO_RETRASO_CLIMA_DIAS = 5
+
+# Ventanas descriptivas del Bloque 3. No expresan todavía criterio cafetero.
+INDICADORES_VENTANA_CORTA = 4
+INDICADORES_VENTANA_LARGA = 12
+INDICADORES_VENTANA_ANOMALIA = 52
+INDICADORES_MIN_OBS_ANOMALIA = 26
+GEOGRAFIA_PRIORITARIA = "Caldas"
+VARIABLES_CAMBIO_PORCENTUAL = {
+    "fx_usd_local",
+    "precio_cafe_arabica",
+    "precio_interno_referencia",
+    "precipitacion_semanal",
+}
 
 # ---------------------------------------------------------------------------
 # Geografía nacional (Colombia)

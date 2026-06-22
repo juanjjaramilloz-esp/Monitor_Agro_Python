@@ -10,9 +10,10 @@ para analizar tendencias antes de construir un score.
   clima de ocho departamentos.
 - Histórico diario: 33.368 observaciones desde 2023.
 - Histórico semanal: 180 semanas completas, con 35 indicadores por semana.
+- Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
-- Pendiente: indicadores de tendencia, score, reporte y dashboard.
+- Pendiente: criterios cafeteros, score, reporte y dashboard.
 
 ## Cómo probarlo
 
@@ -46,11 +47,25 @@ python -m procesar.historico --desde 2025-01-01 --hasta 2025-12-31
 El proceso es idempotente: repetir un rango actualiza los registros existentes
 sin duplicarlos.
 
+## Cómo calcular indicadores
+
+Después de actualizar el histórico, ejecuta:
+
+```powershell
+python -m procesar.indicadores
+```
+
+La terminal muestra la última semana para Caldas, Colombia y el mercado global.
+Los rankings ordenan de mayor a menor valor numérico; no significan todavía
+"mejor" o "peor".
+
 ## Archivos de resultados
 
 - `datos/historico/historico_diario.csv`: observaciones originales normalizadas.
 - `datos/historico/historico_semanal.csv`: semanas comparables, listas para
   tendencias, gráficos y score.
+- `datos/indicadores/indicadores_semanales.csv`: capa derivada completa.
+- `datos/indicadores/resumen_ultima_semana.csv`: vista compacta de 35 filas.
 - `datos/snapshots/`: fotografías de cada futura ejecución semanal.
 
 La semana se cierra el domingo. Café, USD/COP y precio FNC usan el último dato

@@ -17,11 +17,11 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Bloque 2 - backfill historico completado**. Existen series
-diarias normalizadas y semanas comparables desde enero de 2023.
+Fase actual: **Bloque 3 - indicadores utiles completado** sobre 180 semanas
+historicas completas.
 
-Siguiente paso recomendado: **Bloque 3 - indicadores utiles** (variaciones,
-promedios moviles, tendencias y anomalias), antes de definir el score.
+Siguiente paso recomendado: **Bloque 4 - conocimiento cafetero**. Recoger y
+documentar criterios de usuarias reales antes de definir el score.
 
 Commits relevantes:
 
@@ -216,6 +216,24 @@ Commits relevantes:
 - Validacion real: 33.368 filas diarias y 6.300 filas semanales.
 - Cobertura: 180 semanas desde `2023-01-08` hasta `2026-06-14`; todas con 35
   indicadores, 8 departamentos climaticos, cero nulos y cero duplicados.
+
+---
+
+## Indicadores utiles - Bloque 3
+
+- Modulo ejecutable: `python -m procesar.indicadores`.
+- Salida completa: `datos/indicadores/indicadores_semanales.csv` (derivada y
+  regenerable; no se versiona para evitar crecimiento innecesario de Git).
+- Resumen versionado: `datos/indicadores/resumen_ultima_semana.csv`.
+- Indicadores temporales: cambio absoluto semanal; cambios porcentuales de 1 y
+  4 semanas para precios, FX y lluvia; promedios moviles de 4 y 12 semanas.
+- Anomalia: z-score del valor actual contra hasta 52 semanas anteriores, con
+  minimo 26 observaciones y sin usar datos futuros.
+- Comparacion climatica: ranking, percentil y diferencia frente a la mediana de
+  los 8 departamentos.
+- Ranking 1 = valor numerico mas alto; NO significa mejor ni menor riesgo.
+- Validacion real: 44.946 filas, 180 semanas, cero nulos, cero duplicados y
+  rankings entre 1 y 8. Resumen reciente: 35 filas para `2026-06-14`.
 
 ---
 
