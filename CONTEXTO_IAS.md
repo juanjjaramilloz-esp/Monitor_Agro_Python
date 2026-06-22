@@ -1,4 +1,4 @@
-# Contexto entre IAs - Monitor Agro LatAm
+# Contexto entre IAs - Monitor Agro Colombia
 
 Este archivo sirve como bitacora de continuidad para trabajar alternando entre
 asistentes, IDEs y sesiones. Antes de retomar el proyecto, leer en este orden:
@@ -18,15 +18,16 @@ Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
 Fase actual: **Pivote a Colombia completo** (config, fuentes, union y docs).
-Union incluye ya las cuatro fuentes numericas; snapshot de 35 filas.
+Union incluye las cuatro fuentes numericas activas; snapshot validado de 35
+filas.
 
-Siguiente paso natural: **Fase 3 - score** (indice de oportunidad/riesgo por
-departamento, con los datos reales del snapshot en mano).
+Siguiente paso recomendado: revisar el proyecto completo y disenar una fase de
+**backfill historico** antes de construir el score. No definir el score final a
+ciegas con un solo snapshot.
 
 Commits relevantes:
 
-- `(pivote)` - Pivote a Colombia: config + rename pais->geografia + integrar
-  precio_interno en la union.
+- `53dfbf4` - Pivote a Colombia: retrofit geografico end-to-end.
 - `8db29b7` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
 - `e47bd1c` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
 - `4791a62` - Fase 1d: implementar `fuentes/noticias.py` con GDELT.
@@ -57,19 +58,18 @@ Commits relevantes:
 
 ### FX - Fase 1a
 
-- Se usa `yfinance` para las cinco monedas, no una mezcla Frankfurter +
-  yfinance.
-- Motivo: `yfinance` cubre COP, BRL, PEN, HNL y MXN; Frankfurter/BCE no cubre
-  COP, PEN ni HNL.
+- Tras el pivote a Colombia, FX queda reducido a una sola fila USD/COP.
+- Se usa `config.TICKER_FX = "USDCOP=X"` y `config.MONEDA = "COP"`.
+- La salida usa `geografia = "COLOMBIA"`, variable `fx_usd_local`, unidad
+  `COP/USD`, fuente `yfinance`.
+- Frankfurter/BCE no cubre COP; por eso se usa yfinance.
 - `yfinance` puede devolver columnas `MultiIndex`; para extraer cierre se usa
   `datos["Close"]` y, si es `DataFrame`, `iloc[:, 0]`.
-- Las fechas pueden diferir por pais. Se toma el ultimo cierre disponible de los
-  ultimos 5 dias, adecuado para frecuencia semanal.
 
 ### Cafe - Fase 1b
 
 - Se usa `config.TICKER_CAFE_ARABICA = "KC=F"`.
-- El precio del cafe es global, por eso `pais = "GLOBAL"`.
+- El precio del cafe es global, por eso `geografia = "GLOBAL"`.
 - Variable: `precio_cafe_arabica`.
 - Unidad: `USc/lb`.
 - Fuente fragil: `yfinance` raspa Yahoo Finance y puede romperse.
@@ -77,23 +77,26 @@ Commits relevantes:
 
 ### Clima - Fase 1c
 
-- Se usa Open-Meteo con coordenadas de `config.PAISES[*]["zona_cafetera"]`.
+- Se usa Open-Meteo con coordenadas de `config.REGIONES_CAFE`.
+- Las regiones activas son 8 departamentos cafeteros: Huila, Antioquia,
+  Tolima, Cauca, Narino, Caldas, Risaralda y Quindio.
 - Variables configuradas:
   `temperature_2m_min`, `temperature_2m_max`, `precipitation_sum`.
-- Mapeo de salida:
+- Mapeo de salida diario:
   `temp_min` (`grados C`), `temp_max` (`grados C`), `precipitacion` (`mm`).
-- Ultima validacion real: `120` filas, equivalente a 5 paises x 3 variables x
-  8 fechas (`past_days=7` mas dia actual).
+- En la union semanal se agregan 4 variables por departamento:
+  `precipitacion_semanal`, `temp_min_semanal`, `temp_max_semanal`,
+  `temp_promedio_semanal`.
 
 ### Noticias - Fase 1d
 
 - Se usa `gdeltdoc` con `GdeltDoc` y `Filters`.
-- `gdeltdoc` ya esta en `requirements.txt`, pero hubo que instalarlo en el
-  entorno `.venv`.
+- `gdeltdoc` esta en `requirements.txt` y fue instalado en `.venv`.
 - Se agrego `NOTICIAS_MAX_REGISTROS = 25` en `config.py`.
-- GDELT se consulta por pais usando `fips` de `config.PAISES`.
-- Ultima validacion real devolvio `RateLimitError` para todos los paises; el
-  fallback funciono y devolvio `DataFrame` vacio con columnas correctas.
+- Tras el pivote, GDELT se consulta solo a nivel nacional con
+  `config.PAIS_FIPS = "CO"` y `geografia = "COLOMBIA"`.
+- Ultima validacion real devolvio `RateLimitError`; el fallback funciono y
+  devolvio `DataFrame` vacio con columnas correctas.
 - La normalizacion fue probada con un DataFrame artificial estilo GDELT:
   `seendate`, `title`, `url`, `language` -> contrato de noticias.
 - `tono` queda como `NaN` float; `categoria` queda pendiente para fase posterior.
@@ -101,7 +104,8 @@ Commits relevantes:
 ### Precio interno FNC - fuente extra (scraping)
 
 - Modulo: `fuentes/precio_interno.py`. Variable `precio_interno_referencia`,
-  `pais = "COLOMBIA"`, unidad `COP/carga_125kg`, fuente `FNC`, `valor` entero.
+  `geografia = "COLOMBIA"`, unidad `COP/carga_125kg`, fuente `FNC`, `valor`
+  entero.
 - Fuente elegida: la **pagina de estadisticas cafeteras** de la FNC
   (`config.URL_PRECIO_INTERNO_FNC`), por estabilidad. Es WordPress/Elementor:
   el HTML lo entrega el servidor (no requiere JS). El precio esta en el menu de
@@ -170,10 +174,27 @@ Commits relevantes:
 - El proyecto se mantiene como MVP primero; luego se mejora para LinkedIn.
 - El resultado final deseado debe impresionar como herramienta analitica, no
   solo como scripts: ranking/score semanal, narrativa ejecutiva y dashboard.
+- Usuarios/beneficiarias potenciales reales: personas del ecosistema cafetero
+  en Manizales/Caldas, incluyendo entorno profesional de CRECE, Gobernacion y
+  Fundacion Manuel Mejia.
 - El usuario quiere mantener el habito de commits entre cambios, sin importar
   que asistente hizo el trabajo.
 - El usuario quiere que este archivo registre novedades, decisiones del chat,
   hallazgos y cualquier instruccion relevante para que otras IAs retomen bien.
+- `BRIEFING_CHAT.md` se deja quieto por ahora; sirve para darle contexto a una
+  IA web en un chat nuevo.
+- Antes de hacer score, el usuario quiere revisar bien el proyecto y pensar
+  mejoras/funciones que hagan el MVP mas completo.
+
+---
+
+## Preguntas abiertas / no asumir
+
+- No definir todavia score final sin mas criterio del negocio cafetero.
+- Falta disenar el backfill historico.
+- Falta decidir que mejoras del MVP van antes del score.
+- Si GDELT sigue con `RateLimitError`, falta decidir si se reintenta con otra
+  estrategia o se complementa con otra fuente.
 
 ---
 
@@ -201,7 +222,7 @@ Formato recomendado para nuevas entradas:
 
 ### Unir - Fase 2
 
-- Esquema de salida: `fecha_snapshot`, `fecha_dato`, `pais`, `variable`,
+- Esquema de salida: `fecha_snapshot`, `fecha_dato`, `geografia`, `variable`,
   `valor`, `unidad`, `fuente`.
 - Decision de fechas: se mantienen dos columnas separadas.
   `fecha_snapshot` = hoy (parametrizable para pruebas).
@@ -209,12 +230,13 @@ Formato recomendado para nuevas entradas:
   Motivo: las fuentes no comparten exactamente el mismo dia (yfinance devuelve
   el ultimo cierre disponible, Open-Meteo cierra el dia anterior), y ocultar
   esa diferencia seria deshonesto para un proyecto de portafolio.
-- Clima: se agrega de diario a semanal con cuatro variables por pais:
+- Clima: se agrega de diario a semanal con cuatro variables por departamento:
   `precipitacion_semanal` (suma), `temp_min_semanal` (min de minimas),
   `temp_max_semanal` (max de maximas), `temp_promedio_semanal` (media de
   puntos medios diarios). `fecha_dato` = dia mas reciente de la ventana.
 - Primer snapshot validado: `datos/snapshots/snapshot_2026-06-21.csv`,
-  26 filas (5 FX + 1 cafe + 20 clima = 5 paises x 4 variables).
+  35 filas = 1 cafe (GLOBAL) + 1 FX USD/COP (COLOMBIA) + 1 precio interno FNC
+  (COLOMBIA) + 32 clima (8 departamentos x 4 variables).
 - Si una fuente devuelve vacio, la union omite esa parte sin romper.
 - Snapshot guardado como CSV (utf-8, sin indice): legible y diff-eable en git.
 
@@ -222,9 +244,10 @@ Formato recomendado para nuevas entradas:
 
 ## Proxima tarea sugerida
 
-Implementar **Fase 3 - `procesar/score.py`**:
+Antes de implementar **Fase 3 - `procesar/score.py`**:
 
-- Definir la metodologia del indice de oportunidad/riesgo por pais.
-- Usar los datos reales del snapshot como base de diseno.
-- Registrar la metodologia en CONTEXTO_IAS.md y en el propio modulo.
-- Hacer commit al validar.
+- Revisar el proyecto completo.
+- Disenar backfill historico para que el score use tendencias y no solo niveles
+  de un snapshot.
+- No definir la metodologia final del indice sin mas criterio del negocio
+  cafetero y/o historico suficiente.
