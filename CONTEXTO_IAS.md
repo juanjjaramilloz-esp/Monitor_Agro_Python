@@ -14,21 +14,20 @@ validada, registrar aqui lo importante y hacer commit.
 
 ## Estado actual
 
-Proyecto: monitor semanal de condiciones para agroexportacion latinoamericana,
-con foco inicial en cafe.
+Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
+**Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Fase 2 completa + fuente extra `precio_interno` (FNC) anadida**.
+Fase actual: **Pivote a Colombia completo** (config, fuentes, union y docs).
+Union incluye ya las cuatro fuentes numericas; snapshot de 35 filas.
 
-Nota de secuencia: el usuario etiqueto esta tarea como "Fase 3", pero en la
-practica fue agregar una nueva fuente numerica (`fuentes/precio_interno.py`),
-no el score. El score (Fase 3 segun CLAUDE.md) sigue pendiente.
-
-Siguiente paso natural: **integrar `precio_interno` en `procesar/unir.py`** (no
-esta incluida aun en la union) y luego **Fase 3 - score**.
+Siguiente paso natural: **Fase 3 - score** (indice de oportunidad/riesgo por
+departamento, con los datos reales del snapshot en mano).
 
 Commits relevantes:
 
-- `(precio_interno)` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
+- `(pivote)` - Pivote a Colombia: config + rename pais->geografia + integrar
+  precio_interno en la union.
+- `8db29b7` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
 - `e47bd1c` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
 - `4791a62` - Fase 1d: implementar `fuentes/noticias.py` con GDELT.
 - `e14bfad` - Fase 1c: implementar `fuentes/clima.py` con Open-Meteo.
@@ -42,9 +41,11 @@ Commits relevantes:
 
 - Cada modulo en `fuentes/` expone una unica funcion publica `obtener()`.
 - Las fuentes numericas devuelven exactamente:
-  `fecha`, `pais`, `variable`, `valor`, `unidad`, `fuente`.
+  `fecha`, `geografia`, `variable`, `valor`, `unidad`, `fuente`.
 - Noticias devuelve exactamente:
-  `fecha`, `pais`, `titulo`, `url`, `fuente`, `idioma`, `tono`, `categoria`.
+  `fecha`, `geografia`, `titulo`, `url`, `fuente`, `idioma`, `tono`, `categoria`.
+- `geografia` tiene tres niveles: `GLOBAL` (cafe), `COLOMBIA` (FX, precio
+  interno, noticias) y nombre de departamento cafetero (clima).
 - Si una fuente falla, debe devolver un `DataFrame` vacio con columnas correctas.
 - Todo parametro editable debe vivir en `config.py`.
 - No mezclar fases en un mismo cambio.
@@ -121,7 +122,35 @@ Commits relevantes:
   devuelve `DataFrame` vacio con columnas correctas (regla del contrato).
 - Validacion real (`python -m fuentes.precio_interno`): 1 fila,
   `2026-06-18`, `2.110.000 COP/carga_125kg`.
-- Pendiente: aun NO esta integrada en `procesar/unir.py`.
+
+### Pivote a Colombia (retrofit geografico)
+
+- Decision de producto: el monitor deja de comparar paises de LatAm y pasa a
+  comparar los **departamentos cafeteros de Colombia** entre si. Mas honesto y
+  accionable para el foco real (cafe colombiano).
+- Paises LatAm retirados (Brasil, Peru, Honduras, Mexico): **recuperables en el
+  historial de git**, no se borran del proyecto, solo de la config activa.
+- `config.PAISES` -> reemplazado por `config.REGIONES_CAFE`: 8 departamentos
+  (Huila, Antioquia, Tolima, Cauca, Narino, Caldas, Risaralda, Quindio), cada
+  uno con un municipio cafetero representativo y su lat/lon para Open-Meteo.
+- FX: se reduce a **solo USD/COP** (`config.TICKER_FX`, `config.MONEDA`). Se
+  quitaron las otras cuatro monedas.
+- Geografia nacional: `config.GEOGRAFIA_PAIS = "COLOMBIA"` y
+  `config.PAIS_FIPS = "CO"` (GDELT).
+- **Rename de columna `pais` -> `geografia`** en todas las fuentes numericas y
+  en noticias, mas `procesar/unir.py` y docs. Motivo: la columna ahora mezcla
+  tres niveles (GLOBAL / COLOMBIA / departamento); `pais` ya no describe bien.
+- `precio_interno` **integrado a la union**: es una fila puntual de COLOMBIA, se
+  trata igual que FX/cafe (rename `fecha`->`fecha_dato`, se le agrega
+  `fecha_snapshot`).
+- `noticias.py`: ahora consulta GDELT **solo a nivel nacional** (un solo query
+  con `PAIS_FIPS`), no pais por pais.
+- `precio_interno.py`: solo el rename de columna; la logica del scraper NO se
+  toco.
+- Validacion del flujo (`python -m procesar.unir`): **35 filas** = 1 cafe
+  (GLOBAL) + 1 FX (COLOMBIA) + 1 precio interno (COLOMBIA) + 32 clima
+  (8 departamentos x 4 variables). Snapshot regenerado:
+  `datos/snapshots/snapshot_2026-06-21.csv`.
 
 ---
 

@@ -1,78 +1,65 @@
 """
-Fuente: tipos de cambio USD/moneda local.
+Fuente: tipo de cambio USD/COP.
 
 Contrato de salida (ver CLAUDE.md, sección 4):
     fecha    : date
-    pais     : str  — código ISO3
+    geografia: str  — "COLOMBIA"
     variable : str  — "fx_usd_local"
     valor    : float
-    unidad   : str  — "<MONEDA>/USD" (ej. "COP/USD")
+    unidad   : str  — "COP/USD"
     fuente   : str  — "yfinance"
 
-Decisión de diseño: se usa yfinance para las cinco monedas (BRL, MXN, COP,
-PEN, HNL) en lugar del enfoque híbrido Frankfurter + yfinance. Motivo:
-yfinance cubre las cinco y ya es dependencia del proyecto; la consistencia
-metodológica prima sobre usar la fuente "oficial" solo para dos de ellas.
-Diagnóstico previo (experimento_fx.py) confirmó que Frankfurter no cubre
-COP, PEN ni HNL.
+Tras el pivote a Colombia el FX relevante es uno solo: USD/COP (config.TICKER_FX).
+Se usa yfinance porque Frankfurter/BCE no cubre COP; yfinance ya es dependencia
+del proyecto.
 
-Limitación conocida: yfinance raspa Yahoo Finance y puede romperse sin
-aviso. Si un ticker falla, se omite esa fila y se imprime una advertencia.
+Limitación conocida: yfinance raspa Yahoo Finance y puede romperse sin aviso.
+Si el ticker falla, se devuelve un DataFrame vacío con las columnas correctas.
 """
 
 import warnings
-from datetime import date
 
 import pandas as pd
 import yfinance as yf
 
-from config import PAISES
+from config import GEOGRAFIA_PAIS, MONEDA, TICKER_FX
 
-COLUMNAS = ["fecha", "pais", "variable", "valor", "unidad", "fuente"]
+COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 
 def obtener() -> pd.DataFrame:
-    """Devuelve el tipo de cambio USD→moneda local más reciente para cada país."""
-    filas: list[dict] = []
+    """Devuelve el tipo de cambio USD→COP más reciente (una sola fila)."""
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            datos = yf.download(TICKER_FX, period="5d", interval="1d", progress=False, auto_adjust=True)
 
-    for pais in PAISES:
-        ticker = pais["ticker_fx"]
-        iso3 = pais["iso3"]
-        moneda = pais["moneda"]
+        if datos.empty:
+            print(f"  AVISO: {TICKER_FX} — yfinance no devolvió datos.")
+            return pd.DataFrame(columns=COLUMNAS)
 
-        try:
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                datos = yf.download(ticker, period="5d", interval="1d", progress=False, auto_adjust=True)
+        # yfinance devuelve MultiIndex ('Price', 'Ticker'); extraemos Close.
+        close = datos["Close"]
+        if isinstance(close, pd.DataFrame):
+            close = close.iloc[:, 0]
+        close = close.dropna()
+        if close.empty:
+            print(f"  AVISO: {TICKER_FX} — sin valores de cierre.")
+            return pd.DataFrame(columns=COLUMNAS)
 
-            if datos.empty:
-                print(f"  AVISO: {ticker} ({iso3}) — yfinance no devolvió datos.")
-                continue
+        fila = {
+            "fecha": close.index[-1].date(),
+            "geografia": GEOGRAFIA_PAIS,
+            "variable": "fx_usd_local",
+            "valor": float(close.iloc[-1]),
+            "unidad": f"{MONEDA}/USD",
+            "fuente": "yfinance",
+        }
+        return pd.DataFrame([fila], columns=COLUMNAS)
 
-            # yfinance devuelve MultiIndex ('Price', 'Ticker'); extraemos Close.
-            close = datos["Close"]
-            if isinstance(close, pd.DataFrame):
-                close = close.iloc[:, 0]
-            close = close.dropna()
-            if close.empty:
-                print(f"  AVISO: {ticker} ({iso3}) — sin valores de cierre.")
-                continue
-            valor = float(close.iloc[-1])
-            fecha_dato = close.index[-1].date()
-
-            filas.append({
-                "fecha": fecha_dato,
-                "pais": iso3,
-                "variable": "fx_usd_local",
-                "valor": valor,
-                "unidad": f"{moneda}/USD",
-                "fuente": "yfinance",
-            })
-
-        except Exception as e:
-            print(f"  AVISO: {ticker} ({iso3}) — error al descargar: {e}")
-
-    return pd.DataFrame(filas, columns=COLUMNAS)
+    except Exception as e:
+        print(f"  AVISO: {TICKER_FX} — error al descargar: {e}")
+        return pd.DataFrame(columns=COLUMNAS)
 
 
 if __name__ == "__main__":

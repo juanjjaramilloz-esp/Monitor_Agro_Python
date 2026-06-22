@@ -17,63 +17,43 @@ DIR_DATOS = RAIZ / "datos"
 DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
 
 # ---------------------------------------------------------------------------
-# Países a monitorear
+# Geografía nacional (Colombia)
 #
-# Cada país incluye:
-#   nombre        : nombre legible
-#   iso3          : código ISO 3166-1 alfa-3 (Banco Mundial, etc.)
-#   moneda        : código ISO 4217 de la moneda local
-#   fips          : código país FIPS de 2 letras (lo usa GDELT para filtrar)
-#   ticker_fx     : par USD/moneda local en Yahoo Finance (fuente de respaldo)
-#   zona_cafetera : punto representativo de la principal región cafetera
-#                   (lat/lon) para consultar el clima
-#
-# Nota FX: las tasas del BCE (Frankfurter) NO cubren COP, PEN ni HNL; solo
-# BRL y MXN. Por eso guardamos un ticker de Yahoo para todas, y la decisión
-# final de fuente se valida en vivo en la Fase 1a.
+# PIVOTE A COLOMBIA: el monitor dejó de comparar países de LatAm y ahora se
+# enfoca en Colombia, comparando sus departamentos cafeteros. Las variables
+# de alcance nacional (FX, precio interno, noticias) usan estos códigos.
+# Los países LatAm retirados quedan recuperables en el historial de git.
 # ---------------------------------------------------------------------------
-PAISES = [
-    {
-        "nombre": "Colombia",
-        "iso3": "COL",
-        "moneda": "COP",
-        "fips": "CO",
-        "ticker_fx": "USDCOP=X",
-        "zona_cafetera": {"nombre": "Eje Cafetero (Manizales)", "lat": 5.07, "lon": -75.52},
-    },
-    {
-        "nombre": "Brasil",
-        "iso3": "BRA",
-        "moneda": "BRL",
-        "fips": "BR",
-        "ticker_fx": "USDBRL=X",
-        "zona_cafetera": {"nombre": "Sul de Minas (Varginha)", "lat": -21.55, "lon": -45.43},
-    },
-    {
-        "nombre": "Perú",
-        "iso3": "PER",
-        "moneda": "PEN",
-        "fips": "PE",
-        "ticker_fx": "USDPEN=X",
-        "zona_cafetera": {"nombre": "Chanchamayo (Junín)", "lat": -11.05, "lon": -75.34},
-    },
-    {
-        "nombre": "Honduras",
-        "iso3": "HND",
-        "moneda": "HNL",
-        "fips": "HO",
-        "ticker_fx": "USDHNL=X",
-        "zona_cafetera": {"nombre": "Marcala (La Paz)", "lat": 14.16, "lon": -88.01},
-    },
-    {
-        "nombre": "México",
-        "iso3": "MEX",
-        "moneda": "MXN",
-        "fips": "MX",
-        "ticker_fx": "USDMXN=X",
-        "zona_cafetera": {"nombre": "Soconusco, Chiapas (Tapachula)", "lat": 14.90, "lon": -92.26},
-    },
+GEOGRAFIA_PAIS = "COLOMBIA"   # etiqueta de geografía para datos nacionales
+PAIS_FIPS = "CO"              # código FIPS de Colombia (lo usa GDELT)
+
+# ---------------------------------------------------------------------------
+# Departamentos cafeteros de Colombia (clima)
+#
+# Cada región incluye:
+#   departamento : nombre del departamento (es la 'geografia' de cada fila)
+#   municipio    : municipio cafetero representativo (referencia humana)
+#   lat / lon    : coordenada del municipio para consultar Open-Meteo
+# ---------------------------------------------------------------------------
+REGIONES_CAFE = [
+    {"departamento": "Huila",      "municipio": "Pitalito",   "lat": 1.85,  "lon": -76.05},
+    {"departamento": "Antioquia",  "municipio": "Andes",      "lat": 5.66,  "lon": -75.88},
+    {"departamento": "Tolima",     "municipio": "Líbano",     "lat": 4.92,  "lon": -75.06},
+    {"departamento": "Cauca",      "municipio": "Popayán",    "lat": 2.44,  "lon": -76.61},
+    {"departamento": "Nariño",     "municipio": "La Unión",   "lat": 1.60,  "lon": -77.13},
+    {"departamento": "Caldas",     "municipio": "Manizales",  "lat": 5.07,  "lon": -75.52},
+    {"departamento": "Risaralda",  "municipio": "Pereira",    "lat": 4.81,  "lon": -75.69},
+    {"departamento": "Quindío",    "municipio": "Armenia",    "lat": 4.53,  "lon": -75.68},
 ]
+
+# ---------------------------------------------------------------------------
+# FX (Fase 1a) — solo USD/COP
+#
+# Tras el pivote a Colombia el FX relevante es uno solo: USD/COP. Se usa
+# yfinance (Frankfurter/BCE no cubre COP). geografia = COLOMBIA.
+# ---------------------------------------------------------------------------
+TICKER_FX = "USDCOP=X"
+MONEDA = "COP"
 
 # ---------------------------------------------------------------------------
 # Café (Fase 1b)
@@ -127,5 +107,5 @@ PESOS_OPORTUNIDAD: dict[str, float] = {}
 PESOS_RIESGO: dict[str, float] = {}
 
 
-# Atajo útil para recorrer solo los códigos ISO3.
-ISO3 = [p["iso3"] for p in PAISES]
+# Atajo útil para recorrer solo los nombres de departamento.
+DEPARTAMENTOS = [r["departamento"] for r in REGIONES_CAFE]

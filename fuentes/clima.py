@@ -3,22 +3,22 @@ Fuente: clima en zonas cafeteras (Open-Meteo, sin key, solo uso no comercial).
 
 Contrato de salida (ver CLAUDE.md, sección 4):
     fecha    : date
-    pais     : str  — código ISO3
+    geografia: str  — nombre del departamento cafetero (ej. "Huila")
     variable : str  — "temp_min" | "temp_max" | "precipitacion"
     valor    : float
     unidad   : str  — "°C" | "mm"
     fuente   : str  — "open-meteo"
 
-Las coordenadas de cada zona cafetera se leen de config.PAISES.
+Las coordenadas de cada departamento cafetero se leen de config.REGIONES_CAFE.
 """
 
 import pandas as pd
 import requests
 
-from config import CLIMA_DIAS_ATRAS, CLIMA_VARIABLES, PAISES
+from config import CLIMA_DIAS_ATRAS, CLIMA_VARIABLES, REGIONES_CAFE
 
 
-COLUMNAS = ["fecha", "pais", "variable", "valor", "unidad", "fuente"]
+COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 URL_OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
 MAPEO_VARIABLES = {
@@ -32,12 +32,11 @@ def obtener() -> pd.DataFrame:
     """Devuelve variables climáticas diarias para cada zona cafetera."""
     filas: list[dict] = []
 
-    for pais in PAISES:
-        iso3 = pais["iso3"]
-        zona = pais["zona_cafetera"]
+    for region in REGIONES_CAFE:
+        departamento = region["departamento"]
         parametros = {
-            "latitude": zona["lat"],
-            "longitude": zona["lon"],
+            "latitude": region["lat"],
+            "longitude": region["lon"],
             "daily": ",".join(CLIMA_VARIABLES),
             "past_days": CLIMA_DIAS_ATRAS,
             "forecast_days": 1,
@@ -52,7 +51,7 @@ def obtener() -> pd.DataFrame:
             fechas = diarios.get("time", [])
 
             if not fechas:
-                print(f"  AVISO: {iso3} - Open-Meteo no devolvio fechas.")
+                print(f"  AVISO: {departamento} - Open-Meteo no devolvio fechas.")
                 continue
 
             for variable_api in CLIMA_VARIABLES:
@@ -64,7 +63,7 @@ def obtener() -> pd.DataFrame:
                 valores = diarios.get(variable_api, [])
 
                 if not valores:
-                    print(f"  AVISO: {iso3} - sin datos para {variable_api}.")
+                    print(f"  AVISO: {departamento} - sin datos para {variable_api}.")
                     continue
 
                 for fecha, valor in zip(fechas, valores):
@@ -73,7 +72,7 @@ def obtener() -> pd.DataFrame:
 
                     filas.append({
                         "fecha": pd.to_datetime(fecha).date(),
-                        "pais": iso3,
+                        "geografia": departamento,
                         "variable": nombre_variable,
                         "valor": float(valor),
                         "unidad": unidad,
@@ -81,7 +80,7 @@ def obtener() -> pd.DataFrame:
                     })
 
         except Exception as e:
-            print(f"  AVISO: {iso3} - error al consultar Open-Meteo: {e}")
+            print(f"  AVISO: {departamento} - error al consultar Open-Meteo: {e}")
 
     return pd.DataFrame(filas, columns=COLUMNAS)
 

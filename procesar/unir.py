@@ -4,17 +4,18 @@ Fase 2 — Unir fuentes numéricas en una tabla semanal y archivar el snapshot.
 Esquema de salida:
     fecha_snapshot : date  — fecha en que se generó el snapshot (igual para todas las filas)
     fecha_dato     : date  — fecha real del dato según la fuente
-    pais           : str   — código ISO3, o "GLOBAL" para el café
+    geografia      : str   — "GLOBAL" (café), "COLOMBIA" (FX, precio interno) o
+                             nombre de departamento cafetero (clima)
     variable       : str   — nombre del indicador
     valor          : float
     unidad         : str
     fuente         : str
 
 Decisión de fechas (ver CONTEXTO_IAS.md):
-  - FX y café: datos puntuales; se usa la fecha del último cierre disponible
-    como fecha_dato. No se agrega ni redondea.
-  - Clima: la fuente devuelve ~8 días diarios por país. Se agrega a cuatro
-    variables semanales; fecha_dato = la fecha más reciente de esa ventana.
+  - FX, café y precio interno: datos puntuales; se usa la fecha del dato como
+    fecha_dato. No se agrega ni redondea.
+  - Clima: la fuente devuelve ~8 días diarios por departamento. Se agrega a
+    cuatro variables semanales; fecha_dato = la fecha más reciente de la ventana.
   - fecha_snapshot = datetime.now().date() al momento de correr la unión;
     permite reconstruir qué datos había disponibles en cada corrida semanal.
 """
@@ -25,19 +26,19 @@ from typing import Optional
 import pandas as pd
 
 from config import DIR_SNAPSHOTS
-from fuentes import cafe, clima, fx
+from fuentes import cafe, clima, fx, precio_interno
 
-COLUMNAS = ["fecha_snapshot", "fecha_dato", "pais", "variable", "valor", "unidad", "fuente"]
+COLUMNAS = ["fecha_snapshot", "fecha_dato", "geografia", "variable", "valor", "unidad", "fuente"]
 
 
 def _agregar_clima(df_clima: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame:
-    """Convierte el clima diario en cuatro variables semanales por país."""
+    """Convierte el clima diario en cuatro variables semanales por departamento."""
     if df_clima.empty:
         return pd.DataFrame(columns=COLUMNAS)
 
     filas: list[dict] = []
 
-    for iso3, grupo in df_clima.groupby("pais"):
+    for departamento, grupo in df_clima.groupby("geografia"):
         fecha_dato = grupo["fecha"].max()
 
         def _serie(var: str) -> pd.Series:
@@ -60,7 +61,7 @@ def _agregar_clima(df_clima: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame
             filas.append({
                 "fecha_snapshot": fecha_snapshot,
                 "fecha_dato":     fecha_dato,
-                "pais":           iso3,
+                "geografia":      departamento,
                 "variable":       variable,
                 "valor":          round(float(valor), 4),
                 "unidad":         unidad,
@@ -71,7 +72,7 @@ def _agregar_clima(df_clima: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame
 
 
 def _puntual_a_semanal(df: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame:
-    """Añade fecha_snapshot a una fuente puntual (FX o café) y reordena columnas."""
+    """Añade fecha_snapshot a una fuente puntual (FX, café o precio interno)."""
     if df.empty:
         return pd.DataFrame(columns=COLUMNAS)
 
@@ -82,8 +83,8 @@ def _puntual_a_semanal(df: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame:
 
 def unir(fecha_snapshot: Optional[date] = None) -> pd.DataFrame:
     """
-    Llama las tres fuentes numéricas, las une en una tabla semanal tidy
-    y guarda el snapshot en datos/snapshots/.
+    Llama las cuatro fuentes numéricas (FX, café, precio interno, clima),
+    las une en una tabla semanal tidy y guarda el snapshot en datos/snapshots/.
 
     Parámetros
     ----------
@@ -101,6 +102,9 @@ def unir(fecha_snapshot: Optional[date] = None) -> pd.DataFrame:
 
     df_cafe = cafe.obtener()
     partes.append(_puntual_a_semanal(df_cafe, fecha_snapshot))
+
+    df_precio_interno = precio_interno.obtener()
+    partes.append(_puntual_a_semanal(df_precio_interno, fecha_snapshot))
 
     df_clima = clima.obtener()
     partes.append(_agregar_clima(df_clima, fecha_snapshot))

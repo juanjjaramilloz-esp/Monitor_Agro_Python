@@ -3,7 +3,7 @@ Fuente: precio interno de referencia de la FNC (Colombia).
 
 Contrato de salida (ver CLAUDE.md, sección 4):
     fecha    : date  — fecha que publica la FNC junto al precio
-    pais     : str   — "COLOMBIA"
+    geografia: str   — "COLOMBIA"
     variable : str   — "precio_interno_referencia"
     valor    : int   — precio en COP por carga de 125 kg (entero)
     unidad   : str   — "COP/carga_125kg"
@@ -33,7 +33,7 @@ from bs4 import BeautifulSoup
 
 from config import URL_PRECIO_INTERNO_FNC
 
-COLUMNAS = ["fecha", "pais", "variable", "valor", "unidad", "fuente"]
+COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 # Cabecera de navegador: algunos WAF rechazan el User-Agent por defecto de requests.
 _CABECERAS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -95,7 +95,7 @@ def obtener() -> pd.DataFrame:
 
         fila = {
             "fecha": fecha_dato,
-            "pais": "COLOMBIA",
+            "geografia": "COLOMBIA",
             "variable": "precio_interno_referencia",
             "valor": valor,
             "unidad": "COP/carga_125kg",

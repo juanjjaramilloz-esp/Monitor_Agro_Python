@@ -3,7 +3,7 @@ Fuente: precio del café (futuro ICE Coffee C, arábica).
 
 Contrato de salida (ver CLAUDE.md, sección 4):
     fecha    : date
-    pais     : str  — "GLOBAL" (precio internacional, no por país)
+    geografia: str  — "GLOBAL" (precio internacional, no por geografía)
     variable : str  — "precio_cafe_arabica"
     valor    : float
     unidad   : str  — "USc/lb"
@@ -19,7 +19,7 @@ import yfinance as yf
 from config import TICKER_CAFE_ARABICA
 
 
-COLUMNAS = ["fecha", "pais", "variable", "valor", "unidad", "fuente"]
+COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 
 def obtener() -> pd.DataFrame:
@@ -50,7 +50,7 @@ def obtener() -> pd.DataFrame:
 
         fila = {
             "fecha": cierre.index[-1].date(),
-            "pais": "GLOBAL",
+            "geografia": "GLOBAL",
             "variable": "precio_cafe_arabica",
             "valor": float(cierre.iloc[-1]),
             "unidad": "USc/lb",
