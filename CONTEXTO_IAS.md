@@ -17,15 +17,16 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Bloque 1 de calidad implementado** sobre el pivote a Colombia.
-La union incluye las cuatro fuentes numericas activas y ahora valida estructura,
-fechas, duplicados, nulos, valores y cobertura antes de guardar.
+Fase actual: **Bloque 2 - backfill historico completado**. Existen series
+diarias normalizadas y semanas comparables desde enero de 2023.
 
-Siguiente paso recomendado: **Bloque 2 - backfill historico**. No definir el
-score final a ciegas con un solo snapshot.
+Siguiente paso recomendado: **Bloque 3 - indicadores utiles** (variaciones,
+promedios moviles, tendencias y anomalias), antes de definir el score.
 
 Commits relevantes:
 
+- `3ef2d23` - Agregar modo historico a fuentes numericas.
+- `9536939` - Agregar controles de calidad para snapshots.
 - `53dfbf4` - Pivote a Colombia: retrofit geografico end-to-end.
 - `8db29b7` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
 - `e47bd1c` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
@@ -125,6 +126,9 @@ Commits relevantes:
   devuelve `DataFrame` vacio con columnas correctas (regla del contrato).
 - Validacion real (`python -m fuentes.precio_interno`): 1 fila,
   `2026-06-18`, `2.110.000 COP/carga_125kg`.
+- Para historico, el modulo descubre en la pagina FNC el Excel mas reciente de
+  "Precios, area y produccion de cafe". La hoja diaria contiene datos desde
+  2003; el backfill activo filtra desde 2023. Se usa `openpyxl` para leerla.
 
 ### Pivote a Colombia (retrofit geografico)
 
@@ -190,10 +194,28 @@ Commits relevantes:
 ## Preguntas abiertas / no asumir
 
 - No definir todavia score final sin mas criterio del negocio cafetero.
-- Falta disenar el backfill historico.
-- Falta decidir que mejoras del MVP van antes del score.
 - Si GDELT sigue con `RateLimitError`, falta decidir si se reintenta con otra
   estrategia o se complementa con otra fuente.
+
+---
+
+## Backfill historico - Bloque 2
+
+- Modulo ejecutable: `python -m procesar.historico`.
+- Rango inicial configurable: `2023-01-01` hasta hoy menos 5 dias por el retraso
+  de disponibilidad del archivo climatico.
+- Fuentes con `obtener(desde, hasta)`: USD/COP, cafe, clima y precio interno FNC.
+- Semana comparable: lunes a domingo; semanas parciales se excluyen.
+- Mercado y FNC: ultimo dato disponible de la semana.
+- Clima: lluvia acumulada, minima, maxima y promedio de pares diarios.
+- Persistencia idempotente: una nueva corrida reemplaza la misma clave, no la
+  duplica.
+- Archivos generados:
+  `datos/historico/historico_diario.csv` y
+  `datos/historico/historico_semanal.csv`.
+- Validacion real: 33.368 filas diarias y 6.300 filas semanales.
+- Cobertura: 180 semanas desde `2023-01-08` hasta `2026-06-14`; todas con 35
+  indicadores, 8 departamentos climaticos, cero nulos y cero duplicados.
 
 ---
 

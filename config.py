@@ -20,6 +20,7 @@ DIR_HISTORICO = DIR_DATOS / "historico"
 
 # Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
+HISTORICO_RETRASO_CLIMA_DIAS = 5
 
 # ---------------------------------------------------------------------------
 # Geografía nacional (Colombia)

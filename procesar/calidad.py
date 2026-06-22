@@ -17,6 +17,26 @@ COLUMNAS_SNAPSHOT = [
     "fuente",
 ]
 
+COLUMNAS_HISTORICO_DIARIO = [
+    "fecha",
+    "geografia",
+    "variable",
+    "valor",
+    "unidad",
+    "fuente",
+]
+
+COLUMNAS_HISTORICO_SEMANAL = [
+    "semana_fin",
+    "fecha_dato",
+    "geografia",
+    "variable",
+    "valor",
+    "unidad",
+    "fuente",
+    "dias_observados",
+]
+
 VARIABLES_CLIMA = {
     "precipitacion_semanal",
     "temp_min_semanal",
@@ -104,4 +124,75 @@ def generar_reporte_calidad(tabla: pd.DataFrame, fecha_snapshot: date) -> pd.Dat
             }
         )
 
+    return pd.DataFrame(filas)
+
+
+def validar_historico_diario(
+    tabla: pd.DataFrame,
+    desde: date,
+    hasta: date,
+) -> None:
+    """Valida estructura, rango y unicidad de las observaciones históricas."""
+    if list(tabla.columns) != COLUMNAS_HISTORICO_DIARIO:
+        raise ValueError("historico diario: columnas incorrectas")
+    if tabla.empty:
+        raise ValueError("historico diario: no contiene datos")
+    if tabla.isna().any().any():
+        raise ValueError("historico diario: contiene valores nulos")
+
+    fechas = pd.to_datetime(tabla["fecha"], errors="coerce").dt.date
+    if fechas.isna().any():
+        raise ValueError("historico diario: contiene fechas inválidas")
+    if (fechas < desde).any() or (fechas > hasta).any():
+        raise ValueError("historico diario: contiene fechas fuera del rango solicitado")
+    if tabla.duplicated(["fecha", "geografia", "variable", "fuente"]).any():
+        raise ValueError("historico diario: contiene observaciones duplicadas")
+    if pd.to_numeric(tabla["valor"], errors="coerce").isna().any():
+        raise ValueError("historico diario: contiene valores no numéricos")
+
+
+def validar_historico_semanal(tabla: pd.DataFrame) -> None:
+    """Valida la tabla semanal sin exigir que todas las fuentes estén disponibles."""
+    if list(tabla.columns) != COLUMNAS_HISTORICO_SEMANAL:
+        raise ValueError("historico semanal: columnas incorrectas")
+    if tabla.empty:
+        raise ValueError("historico semanal: no contiene semanas completas")
+    if tabla.isna().any().any():
+        raise ValueError("historico semanal: contiene valores nulos")
+    if tabla.duplicated(["semana_fin", "geografia", "variable", "fuente"]).any():
+        raise ValueError("historico semanal: contiene indicadores duplicados")
+
+    semanas = pd.to_datetime(tabla["semana_fin"], errors="coerce").dt.date
+    fechas = pd.to_datetime(tabla["fecha_dato"], errors="coerce").dt.date
+    if semanas.isna().any() or fechas.isna().any():
+        raise ValueError("historico semanal: contiene fechas inválidas")
+    if any(semana.weekday() != 6 for semana in semanas):
+        raise ValueError("historico semanal: semana_fin debe ser domingo")
+    if (fechas > semanas).any():
+        raise ValueError("historico semanal: fecha_dato posterior al cierre semanal")
+
+
+def generar_reporte_historico(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Muestra cobertura de los 35 indicadores esperados en cada semana."""
+    filas = []
+    for semana, grupo in tabla.groupby("semana_fin", sort=True):
+        esperadas = 3 + len(DEPARTAMENTOS) * len(VARIABLES_CLIMA)
+        recibidas = len(grupo)
+        dias_clima = grupo.loc[
+            grupo["variable"].isin(VARIABLES_CLIMA), "dias_observados"
+        ]
+        dias_clima_minimos = int(dias_clima.min()) if not dias_clima.empty else 0
+        completa = recibidas == esperadas and dias_clima_minimos >= 7
+        filas.append(
+            {
+                "semana_fin": semana,
+                "estado": "OK" if completa else "INCOMPLETO",
+                "indicadores_recibidos": recibidas,
+                "indicadores_esperados": esperadas,
+                "departamentos_clima": grupo.loc[
+                    grupo["variable"].isin(VARIABLES_CLIMA), "geografia"
+                ].nunique(),
+                "dias_clima_minimos": dias_clima_minimos,
+            }
+        )
     return pd.DataFrame(filas)
