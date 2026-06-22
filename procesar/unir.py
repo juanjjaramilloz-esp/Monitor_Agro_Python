@@ -27,6 +27,7 @@ import pandas as pd
 
 from config import DIR_SNAPSHOTS
 from fuentes import cafe, clima, fx, precio_interno
+from procesar.calidad import generar_reporte_calidad, validar_snapshot
 
 COLUMNAS = ["fecha_snapshot", "fecha_dato", "geografia", "variable", "valor", "unidad", "fuente"]
 
@@ -47,14 +48,39 @@ def _agregar_clima(df_clima: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame
         temp_min = _serie("temp_min")
         temp_max = _serie("temp_max")
 
-        # Punto medio diario para el promedio semanal
-        medios = (temp_min.values + temp_max.values[:len(temp_min)]) / 2 if not temp_min.empty and not temp_max.empty else pd.Series(dtype=float)
+        # Emparejar por fecha evita mezclar mínimas y máximas de días distintos.
+        temperaturas = grupo.loc[
+            grupo["variable"].isin(["temp_min", "temp_max"]),
+            ["fecha", "variable", "valor"],
+        ].pivot_table(
+            index="fecha", columns="variable", values="valor", aggfunc="first"
+        ).reindex(columns=["temp_min", "temp_max"])
+        temperaturas = temperaturas.dropna(subset=["temp_min", "temp_max"])
+        medios = (temperaturas["temp_min"] + temperaturas["temp_max"]) / 2
 
         agregados = [
-            ("precipitacion_semanal", _serie("precipitacion").sum() if not _serie("precipitacion").empty else float("nan"), "mm"),
-            ("temp_min_semanal",      temp_min.min() if not temp_min.empty else float("nan"),                               "°C"),
-            ("temp_max_semanal",      temp_max.max() if not temp_max.empty else float("nan"),                               "°C"),
-            ("temp_promedio_semanal", float(pd.Series(medios).mean()) if len(medios) > 0 else float("nan"),                "°C"),
+            (
+                "precipitacion_semanal",
+                _serie("precipitacion").sum()
+                if not _serie("precipitacion").empty
+                else float("nan"),
+                "mm",
+            ),
+            (
+                "temp_min_semanal",
+                temp_min.min() if not temp_min.empty else float("nan"),
+                "°C",
+            ),
+            (
+                "temp_max_semanal",
+                temp_max.max() if not temp_max.empty else float("nan"),
+                "°C",
+            ),
+            (
+                "temp_promedio_semanal",
+                float(medios.mean()) if not medios.empty else float("nan"),
+                "°C",
+            ),
         ]
 
         for variable, valor, unidad in agregados:
@@ -81,7 +107,26 @@ def _puntual_a_semanal(df: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame:
     return out[COLUMNAS]
 
 
-def unir(fecha_snapshot: Optional[date] = None) -> pd.DataFrame:
+def _guardar_snapshot(
+    tabla: pd.DataFrame,
+    fecha_snapshot: date,
+    sobrescribir: bool = False,
+) -> None:
+    """Guarda un snapshot sin reemplazar evidencia previa por accidente."""
+    DIR_SNAPSHOTS.mkdir(parents=True, exist_ok=True)
+    ruta = DIR_SNAPSHOTS / f"snapshot_{fecha_snapshot}.csv"
+    if ruta.exists() and not sobrescribir:
+        raise FileExistsError(
+            f"Ya existe {ruta}. Usa sobrescribir=True solo si deseas reemplazarlo."
+        )
+    tabla.to_csv(ruta, index=False, encoding="utf-8")
+    print(f"  Snapshot guardado: {ruta}  ({len(tabla)} filas)")
+
+
+def unir(
+    fecha_snapshot: Optional[date] = None,
+    sobrescribir: bool = False,
+) -> pd.DataFrame:
     """
     Llama las cuatro fuentes numéricas (FX, café, precio interno, clima),
     las une en una tabla semanal tidy y guarda el snapshot en datos/snapshots/.
@@ -90,7 +135,9 @@ def unir(fecha_snapshot: Optional[date] = None) -> pd.DataFrame:
     ----------
     fecha_snapshot : date, opcional
         Fecha que identifica el snapshot. Por defecto es hoy.
-        Se puede sobrescribir en pruebas para reproducibilidad.
+        No convierte una consulta actual en una consulta histórica.
+    sobrescribir : bool, opcional
+        Permite reemplazar explícitamente un snapshot de la misma fecha.
     """
     if fecha_snapshot is None:
         fecha_snapshot = date.today()
@@ -116,10 +163,12 @@ def unir(fecha_snapshot: Optional[date] = None) -> pd.DataFrame:
 
     tabla = pd.concat(partes_con_datos, ignore_index=True)
 
-    DIR_SNAPSHOTS.mkdir(parents=True, exist_ok=True)
-    ruta = DIR_SNAPSHOTS / f"snapshot_{fecha_snapshot}.csv"
-    tabla.to_csv(ruta, index=False, encoding="utf-8")
-    print(f"  Snapshot guardado: {ruta}  ({len(tabla)} filas)")
+    validar_snapshot(tabla, fecha_snapshot)
+    reporte = generar_reporte_calidad(tabla, fecha_snapshot)
+    print("\n  Calidad del snapshot:")
+    print(reporte.to_string(index=False))
+
+    _guardar_snapshot(tabla, fecha_snapshot, sobrescribir=sobrescribir)
 
     return tabla
 

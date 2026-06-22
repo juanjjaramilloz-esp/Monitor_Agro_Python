@@ -25,6 +25,7 @@ DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
 # Los países LatAm retirados quedan recuperables en el historial de git.
 # ---------------------------------------------------------------------------
 GEOGRAFIA_PAIS = "COLOMBIA"   # etiqueta de geografía para datos nacionales
+GEOGRAFIA_GLOBAL = "GLOBAL"    # etiqueta para indicadores internacionales
 PAIS_FIPS = "CO"              # código FIPS de Colombia (lo usa GDELT)
 
 # ---------------------------------------------------------------------------

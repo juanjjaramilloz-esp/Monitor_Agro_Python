@@ -16,7 +16,7 @@ Alpha Vantage cubre solo frecuencia mensual y requiere API key (.env).
 import pandas as pd
 import yfinance as yf
 
-from config import TICKER_CAFE_ARABICA
+from config import GEOGRAFIA_GLOBAL, TICKER_CAFE_ARABICA
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
@@ -50,7 +50,7 @@ def obtener() -> pd.DataFrame:
 
         fila = {
             "fecha": cierre.index[-1].date(),
-            "geografia": "GLOBAL",
+            "geografia": GEOGRAFIA_GLOBAL,
             "variable": "precio_cafe_arabica",
             "valor": float(cierre.iloc[-1]),
             "unidad": "USc/lb",

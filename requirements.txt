@@ -1,17 +1,14 @@
-# Monitor Agro LatAm — dependencias
+# Monitor Agro Colombia — dependencias reproducibles
 #
 # Instalar (con el entorno virtual activo):
 #   pip install -r requirements.txt
 #
-# Cuando todo funcione, congelamos versiones exactas con:
-#   pip freeze > requirements.txt
-
 # --- Núcleo (Fases 1 a 4) ---
-pandas          # manejo de datos / DataFrames
-requests        # llamadas HTTP (Open-Meteo, Frankfurter, Banco Mundial)
-yfinance        # precio del café (KC=F) y FX de respaldo
-gdeltdoc        # cliente de la GDELT DOC 2.0 API (noticias)
-beautifulsoup4  # parseo HTML del precio interno FNC (scraping)
+pandas==3.0.3          # manejo de datos / DataFrames
+requests==2.34.2       # llamadas HTTP (Open-Meteo, FNC, Banco Mundial)
+yfinance==1.4.1        # precio del café (KC=F) y USD/COP
+gdeltdoc==1.12.0       # cliente de la GDELT DOC 2.0 API (noticias)
+beautifulsoup4==4.15.0 # parseo HTML del precio interno FNC (scraping)
 
 # --- Reporte / resumen con IA (Fase 4) ---
 # anthropic     # descomentar en la Fase 4 si usamos Claude API para el resumen

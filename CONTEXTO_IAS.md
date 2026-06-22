@@ -17,13 +17,12 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Pivote a Colombia completo** (config, fuentes, union y docs).
-Union incluye las cuatro fuentes numericas activas; snapshot validado de 35
-filas.
+Fase actual: **Bloque 1 de calidad implementado** sobre el pivote a Colombia.
+La union incluye las cuatro fuentes numericas activas y ahora valida estructura,
+fechas, duplicados, nulos, valores y cobertura antes de guardar.
 
-Siguiente paso recomendado: revisar el proyecto completo y disenar una fase de
-**backfill historico** antes de construir el score. No definir el score final a
-ciegas con un solo snapshot.
+Siguiente paso recomendado: **Bloque 2 - backfill historico**. No definir el
+score final a ciegas con un solo snapshot.
 
 Commits relevantes:
 
@@ -237,17 +236,24 @@ Formato recomendado para nuevas entradas:
 - Primer snapshot validado: `datos/snapshots/snapshot_2026-06-21.csv`,
   35 filas = 1 cafe (GLOBAL) + 1 FX USD/COP (COLOMBIA) + 1 precio interno FNC
   (COLOMBIA) + 32 clima (8 departamentos x 4 variables).
+- Ese primer snapshot es anterior a la capa de calidad: contiene un FX con
+  `fecha_dato=2026-06-22`, posterior a `fecha_snapshot=2026-06-21`. Se conserva
+  sin inventar ni cambiar datos; las corridas nuevas bloquean esa inconsistencia.
 - Si una fuente devuelve vacio, la union omite esa parte sin romper.
+- El reporte de calidad marca cada componente como `OK`, `VACIO`, `INCOMPLETO`
+  o `FECHA_FUTURA`.
+- La temperatura promedio semanal empareja minima y maxima por fecha.
+- Un snapshot existente solo se reemplaza usando `sobrescribir=True`.
 - Snapshot guardado como CSV (utf-8, sin indice): legible y diff-eable en git.
+- Pruebas: `python -m unittest discover -s tests -v`.
 
 ---
 
 ## Proxima tarea sugerida
 
-Antes de implementar **Fase 3 - `procesar/score.py`**:
+Implementar **Bloque 2 - backfill historico**:
 
-- Revisar el proyecto completo.
-- Disenar backfill historico para que el score use tendencias y no solo niveles
-  de un snapshot.
-- No definir la metodologia final del indice sin mas criterio del negocio
-  cafetero y/o historico suficiente.
+- Disenar almacenamiento historico separado de los snapshots operativos.
+- Obtener historico de cafe, USD/COP, clima y precio interno FNC.
+- Crear semanas comparables sin etiquetar consultas actuales como historicas.
+- Validar continuidad, cobertura y faltantes antes de calcular tendencias.

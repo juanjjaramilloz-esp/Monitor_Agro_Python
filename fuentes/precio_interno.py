@@ -31,7 +31,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from config import URL_PRECIO_INTERNO_FNC
+from config import GEOGRAFIA_PAIS, URL_PRECIO_INTERNO_FNC
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
@@ -95,7 +95,7 @@ def obtener() -> pd.DataFrame:
 
         fila = {
             "fecha": fecha_dato,
-            "geografia": "COLOMBIA",
+            "geografia": GEOGRAFIA_PAIS,
             "variable": "precio_interno_referencia",
             "valor": valor,
             "unidad": "COP/carga_125kg",
