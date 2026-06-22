@@ -12,15 +12,22 @@ Contrato de salida (ver CLAUDE.md, sección 4):
 Las coordenadas de cada departamento cafetero se leen de config.REGIONES_CAFE.
 """
 
+from datetime import date
+
 import pandas as pd
 import requests
 
-from config import CLIMA_DIAS_ATRAS, CLIMA_VARIABLES, REGIONES_CAFE
+from config import (
+    CLIMA_DIAS_ATRAS,
+    CLIMA_VARIABLES,
+    REGIONES_CAFE,
+    URL_OPEN_METEO_HISTORICO,
+    URL_OPEN_METEO_PRONOSTICO,
+)
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
-URL_OPEN_METEO = "https://api.open-meteo.com/v1/forecast"
 MAPEO_VARIABLES = {
     "temperature_2m_min": ("temp_min", "°C"),
     "temperature_2m_max": ("temp_max", "°C"),
@@ -28,23 +35,36 @@ MAPEO_VARIABLES = {
 }
 
 
-def obtener() -> pd.DataFrame:
-    """Devuelve variables climáticas diarias para cada zona cafetera."""
+def obtener(
+    desde: date | None = None,
+    hasta: date | None = None,
+) -> pd.DataFrame:
+    """Devuelve clima diario reciente o histórico para cada zona cafetera."""
+    if (desde is None) != (hasta is None):
+        raise ValueError("clima: desde y hasta deben proporcionarse juntos")
+    if desde is not None and hasta is not None and desde > hasta:
+        raise ValueError("clima: desde no puede ser posterior a hasta")
+
     filas: list[dict] = []
+    url = URL_OPEN_METEO_HISTORICO if desde is not None else URL_OPEN_METEO_PRONOSTICO
 
     for region in REGIONES_CAFE:
         departamento = region["departamento"]
-        parametros = {
+        parametros: dict[str, str | float | int] = {
             "latitude": region["lat"],
             "longitude": region["lon"],
             "daily": ",".join(CLIMA_VARIABLES),
-            "past_days": CLIMA_DIAS_ATRAS,
-            "forecast_days": 1,
             "timezone": "auto",
         }
+        if desde is None:
+            parametros["past_days"] = CLIMA_DIAS_ATRAS
+            parametros["forecast_days"] = 1
+        else:
+            parametros["start_date"] = desde.isoformat()
+            parametros["end_date"] = hasta.isoformat()
 
         try:
-            respuesta = requests.get(URL_OPEN_METEO, params=parametros, timeout=20)
+            respuesta = requests.get(url, params=parametros, timeout=30)
             respuesta.raise_for_status()
             datos = respuesta.json()
             diarios = datos.get("daily", {})

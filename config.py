@@ -7,6 +7,7 @@ país, mover una coordenada o ajustar un peso del score, se edita solo este
 archivo.
 """
 
+from datetime import date
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -15,6 +16,10 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent
 DIR_DATOS = RAIZ / "datos"
 DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
+DIR_HISTORICO = DIR_DATOS / "historico"
+
+# Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
+HISTORICO_FECHA_INICIO = date(2023, 1, 1)
 
 # ---------------------------------------------------------------------------
 # Geografía nacional (Colombia)
@@ -72,6 +77,11 @@ TICKER_CAFE_ROBUSTA = None
 # Página de estadísticas cafeteras de la Federación Nacional de Cafeteros.
 # Se raspa el HTML del servidor (no requiere JS). Es scraping: frágil.
 URL_PRECIO_INTERNO_FNC = "https://federaciondecafeteros.org/wp/estadisticas-cafeteras/"
+FNC_PATRON_ARCHIVO_HISTORICO = "Precios-area-y-produccion-de-cafe"
+FNC_PREFIJO_HOJA_PRECIO_DIARIO = "1. Precio Interno Diario"
+FNC_FILA_ENCABEZADO_HISTORICO = 5
+FNC_COLUMNA_FECHA_HISTORICO = "Fecha"
+FNC_COLUMNA_PRECIO_HISTORICO = "Precio Interno ($/125 Kg)"
 
 # ---------------------------------------------------------------------------
 # Clima (Fase 1c) — Open-Meteo
@@ -80,6 +90,8 @@ URL_PRECIO_INTERNO_FNC = "https://federaciondecafeteros.org/wp/estadisticas-cafe
 CLIMA_VARIABLES = ["temperature_2m_min", "temperature_2m_max", "precipitation_sum"]
 # Cuántos días hacia atrás traer en cada corrida.
 CLIMA_DIAS_ATRAS = 7
+URL_OPEN_METEO_PRONOSTICO = "https://api.open-meteo.com/v1/forecast"
+URL_OPEN_METEO_HISTORICO = "https://archive-api.open-meteo.com/v1/archive"
 
 # ---------------------------------------------------------------------------
 # Noticias (Fase 1d) — GDELT

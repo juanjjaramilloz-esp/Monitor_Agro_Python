@@ -13,6 +13,8 @@ Limitación conocida: yfinance raspa Yahoo Finance y puede romperse sin aviso.
 Alpha Vantage cubre solo frecuencia mensual y requiere API key (.env).
 """
 
+from datetime import date, timedelta
+
 import pandas as pd
 import yfinance as yf
 
@@ -22,16 +24,29 @@ from config import GEOGRAFIA_GLOBAL, TICKER_CAFE_ARABICA
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 
-def obtener() -> pd.DataFrame:
-    """Devuelve el precio semanal del café arábica (global)."""
+def obtener(
+    desde: date | None = None,
+    hasta: date | None = None,
+) -> pd.DataFrame:
+    """Devuelve el cierre reciente o una serie diaria histórica de café."""
+    if (desde is None) != (hasta is None):
+        raise ValueError("cafe: desde y hasta deben proporcionarse juntos")
+    if desde is not None and hasta is not None and desde > hasta:
+        raise ValueError("cafe: desde no puede ser posterior a hasta")
+
     try:
-        datos = yf.download(
-            TICKER_CAFE_ARABICA,
-            period="5d",
-            interval="1d",
-            progress=False,
-            auto_adjust=True,
-        )
+        parametros = {
+            "interval": "1d",
+            "progress": False,
+            "auto_adjust": True,
+        }
+        if desde is None:
+            parametros["period"] = "5d"
+        else:
+            parametros["start"] = desde.isoformat()
+            parametros["end"] = (hasta + timedelta(days=1)).isoformat()
+
+        datos = yf.download(TICKER_CAFE_ARABICA, **parametros)
 
         if datos.empty:
             print(f"  AVISO: {TICKER_CAFE_ARABICA} - yfinance no devolvio datos.")
@@ -48,16 +63,21 @@ def obtener() -> pd.DataFrame:
             print(f"  AVISO: {TICKER_CAFE_ARABICA} - sin valores de cierre.")
             return pd.DataFrame(columns=COLUMNAS)
 
-        fila = {
-            "fecha": cierre.index[-1].date(),
-            "geografia": GEOGRAFIA_GLOBAL,
-            "variable": "precio_cafe_arabica",
-            "valor": float(cierre.iloc[-1]),
-            "unidad": "USc/lb",
-            "fuente": "yfinance",
-        }
+        if desde is None:
+            cierre = cierre.iloc[[-1]]
 
-        return pd.DataFrame([fila], columns=COLUMNAS)
+        filas = [
+            {
+                "fecha": pd.to_datetime(fecha).date(),
+                "geografia": GEOGRAFIA_GLOBAL,
+                "variable": "precio_cafe_arabica",
+                "valor": float(valor),
+                "unidad": "USc/lb",
+                "fuente": "yfinance",
+            }
+            for fecha, valor in cierre.items()
+        ]
+        return pd.DataFrame(filas, columns=COLUMNAS)
 
     except Exception as e:
         print(f"  AVISO: {TICKER_CAFE_ARABICA} - error al descargar: {e}")

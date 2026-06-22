@@ -9,6 +9,7 @@ requests==2.34.2       # llamadas HTTP (Open-Meteo, FNC, Banco Mundial)
 yfinance==1.4.1        # precio del café (KC=F) y USD/COP
 gdeltdoc==1.12.0       # cliente de la GDELT DOC 2.0 API (noticias)
 beautifulsoup4==4.15.0 # parseo HTML del precio interno FNC (scraping)
+openpyxl==3.1.5        # lectura del Excel histórico publicado por la FNC
 
 # --- Reporte / resumen con IA (Fase 4) ---
 # anthropic     # descomentar en la Fase 4 si usamos Claude API para el resumen

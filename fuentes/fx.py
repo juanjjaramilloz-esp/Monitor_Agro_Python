@@ -18,6 +18,7 @@ Si el ticker falla, se devuelve un DataFrame vacío con las columnas correctas.
 """
 
 import warnings
+from datetime import date, timedelta
 
 import pandas as pd
 import yfinance as yf
@@ -27,12 +28,32 @@ from config import GEOGRAFIA_PAIS, MONEDA, TICKER_FX
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 
-def obtener() -> pd.DataFrame:
-    """Devuelve el tipo de cambio USD→COP más reciente (una sola fila)."""
+def obtener(
+    desde: date | None = None,
+    hasta: date | None = None,
+) -> pd.DataFrame:
+    """Devuelve el cierre reciente o una serie diaria histórica de USD/COP."""
+    if (desde is None) != (hasta is None):
+        raise ValueError("fx: desde y hasta deben proporcionarse juntos")
+    if desde is not None and hasta is not None and desde > hasta:
+        raise ValueError("fx: desde no puede ser posterior a hasta")
+
     try:
+        parametros = {
+            "interval": "1d",
+            "progress": False,
+            "auto_adjust": True,
+        }
+        if desde is None:
+            parametros["period"] = "5d"
+        else:
+            parametros["start"] = desde.isoformat()
+            # yfinance interpreta end como límite exclusivo.
+            parametros["end"] = (hasta + timedelta(days=1)).isoformat()
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            datos = yf.download(TICKER_FX, period="5d", interval="1d", progress=False, auto_adjust=True)
+            datos = yf.download(TICKER_FX, **parametros)
 
         if datos.empty:
             print(f"  AVISO: {TICKER_FX} — yfinance no devolvió datos.")
@@ -47,15 +68,21 @@ def obtener() -> pd.DataFrame:
             print(f"  AVISO: {TICKER_FX} — sin valores de cierre.")
             return pd.DataFrame(columns=COLUMNAS)
 
-        fila = {
-            "fecha": close.index[-1].date(),
-            "geografia": GEOGRAFIA_PAIS,
-            "variable": "fx_usd_local",
-            "valor": float(close.iloc[-1]),
-            "unidad": f"{MONEDA}/USD",
-            "fuente": "yfinance",
-        }
-        return pd.DataFrame([fila], columns=COLUMNAS)
+        if desde is None:
+            close = close.iloc[[-1]]
+
+        filas = [
+            {
+                "fecha": pd.to_datetime(fecha).date(),
+                "geografia": GEOGRAFIA_PAIS,
+                "variable": "fx_usd_local",
+                "valor": float(valor),
+                "unidad": f"{MONEDA}/USD",
+                "fuente": "yfinance",
+            }
+            for fecha, valor in close.items()
+        ]
+        return pd.DataFrame(filas, columns=COLUMNAS)
 
     except Exception as e:
         print(f"  AVISO: {TICKER_FX} — error al descargar: {e}")
