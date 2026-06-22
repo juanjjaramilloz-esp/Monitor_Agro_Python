@@ -11,6 +11,7 @@ para analizar tendencias antes de construir un score.
 - Histórico diario: 33.368 observaciones desde 2023.
 - Histórico semanal: 180 semanas completas, con 35 indicadores por semana.
 - Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
+- Preparación visual: etiquetas humanas, categorías, colores e índice base 100.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
 - Pendiente: criterios cafeteros, score, reporte y dashboard.
@@ -59,6 +60,15 @@ La terminal muestra la última semana para Caldas, Colombia y el mercado global.
 Los rankings ordenan de mayor a menor valor numérico; no significan todavía
 "mejor" o "peor".
 
+## Cómo preparar datos para gráficos
+
+```powershell
+python -m procesar.visualizacion
+```
+
+Este paso agrega etiquetas legibles, orden estable, municipio de referencia,
+colores y escalas comparables. No genera score ni interpreta riesgo.
+
 ## Archivos de resultados
 
 - `datos/historico/historico_diario.csv`: observaciones originales normalizadas.
@@ -66,6 +76,11 @@ Los rankings ordenan de mayor a menor valor numérico; no significan todavía
   tendencias, gráficos y score.
 - `datos/indicadores/indicadores_semanales.csv`: capa derivada completa.
 - `datos/indicadores/resumen_ultima_semana.csv`: vista compacta de 35 filas.
+- `datos/visualizacion/series_visualizacion.csv`: 6.300 filas listas para
+  gráficos; es derivado y se regenera con el comando anterior.
+- `datos/visualizacion/resumen_visual.csv`: última semana con metadatos.
+- `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
+  colores y formatos de las siete variables.
 - `datos/snapshots/`: fotografías de cada futura ejecución semanal.
 
 La semana se cierra el domingo. Café, USD/COP y precio FNC usan el último dato

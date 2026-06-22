@@ -18,6 +18,7 @@ DIR_DATOS = RAIZ / "datos"
 DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
 DIR_HISTORICO = DIR_DATOS / "historico"
 DIR_INDICADORES = DIR_DATOS / "indicadores"
+DIR_VISUALIZACION = DIR_DATOS / "visualizacion"
 
 # Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
@@ -34,6 +35,73 @@ VARIABLES_CAMBIO_PORCENTUAL = {
     "precio_cafe_arabica",
     "precio_interno_referencia",
     "precipitacion_semanal",
+}
+VARIABLES_INDICE_BASE_100 = {
+    "fx_usd_local",
+    "precio_cafe_arabica",
+    "precio_interno_referencia",
+}
+UMBRAL_ANOMALIA_MODERADA = 1.0
+UMBRAL_ANOMALIA_ALTA = 2.0
+
+# Metadatos de presentación. Las etiquetas no alteran los datos ni el score.
+CATALOGO_VARIABLES = {
+    "fx_usd_local": {
+        "etiqueta": "Tasa de cambio USD/COP",
+        "descripcion": "Pesos colombianos por un dólar estadounidense",
+        "categoria": "Mercado",
+        "orden": 1,
+        "decimales": 0,
+        "color": "#2563EB",
+    },
+    "precio_cafe_arabica": {
+        "etiqueta": "Precio internacional del café arábica",
+        "descripcion": "Futuro ICE Coffee C expresado en centavos de dólar por libra",
+        "categoria": "Mercado",
+        "orden": 2,
+        "decimales": 1,
+        "color": "#0F766E",
+    },
+    "precio_interno_referencia": {
+        "etiqueta": "Precio interno de referencia FNC",
+        "descripcion": "Precio base por carga de 125 kg de café pergamino seco",
+        "categoria": "Mercado",
+        "orden": 3,
+        "decimales": 0,
+        "color": "#B7791F",
+    },
+    "precipitacion_semanal": {
+        "etiqueta": "Precipitación semanal",
+        "descripcion": "Lluvia acumulada en la coordenada municipal de referencia",
+        "categoria": "Clima",
+        "orden": 4,
+        "decimales": 1,
+        "color": "#0284C7",
+    },
+    "temp_min_semanal": {
+        "etiqueta": "Temperatura mínima semanal",
+        "descripcion": "Menor temperatura mínima diaria de la semana",
+        "categoria": "Clima",
+        "orden": 5,
+        "decimales": 1,
+        "color": "#4F46E5",
+    },
+    "temp_max_semanal": {
+        "etiqueta": "Temperatura máxima semanal",
+        "descripcion": "Mayor temperatura máxima diaria de la semana",
+        "categoria": "Clima",
+        "orden": 6,
+        "decimales": 1,
+        "color": "#DC2626",
+    },
+    "temp_promedio_semanal": {
+        "etiqueta": "Temperatura promedio semanal",
+        "descripcion": "Promedio de los puntos medios diarios de temperatura",
+        "categoria": "Clima",
+        "orden": 7,
+        "decimales": 1,
+        "color": "#D97706",
+    },
 }
 
 # ---------------------------------------------------------------------------
@@ -137,3 +205,8 @@ PESOS_RIESGO: dict[str, float] = {}
 
 # Atajo útil para recorrer solo los nombres de departamento.
 DEPARTAMENTOS = [r["departamento"] for r in REGIONES_CAFE]
+ORDEN_GEOGRAFIAS = [
+    GEOGRAFIA_GLOBAL,
+    GEOGRAFIA_PAIS,
+    GEOGRAFIA_PRIORITARIA,
+] + [d for d in DEPARTAMENTOS if d != GEOGRAFIA_PRIORITARIA]

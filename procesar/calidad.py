@@ -49,6 +49,40 @@ COLUMNAS_INDICADORES = [
     "fuente",
 ]
 
+COLUMNAS_VISUALIZACION = [
+    "semana_fin",
+    "anio",
+    "mes",
+    "semana_iso",
+    "geografia",
+    "tipo_geografia",
+    "municipio_referencia",
+    "orden_geografia",
+    "categoria",
+    "orden_variable",
+    "variable",
+    "etiqueta_variable",
+    "descripcion_variable",
+    "valor",
+    "unidad",
+    "decimales",
+    "color",
+    "fuente",
+    "dias_observados",
+    "indice_base_100",
+    "cambio_1s_absoluto",
+    "cambio_1s_pct",
+    "cambio_4s_pct",
+    "promedio_movil_4s",
+    "promedio_movil_12s",
+    "anomalia_z_52s",
+    "estado_anomalia",
+    "direccion_cambio",
+    "ranking_departamental",
+    "percentil_departamental",
+    "diferencia_mediana_departamentos",
+]
+
 VARIABLES_CLIMA = {
     "precipitacion_semanal",
     "temp_min_semanal",
@@ -229,3 +263,35 @@ def validar_indicadores(tabla: pd.DataFrame) -> None:
         raise ValueError("indicadores: contiene fechas o valores inválidos")
     if (observaciones <= 0).any():
         raise ValueError("indicadores: observaciones debe ser positivo")
+
+
+def validar_visualizacion(tabla: pd.DataFrame) -> None:
+    """Valida claves y metadatos obligatorios de la tabla lista para gráficos."""
+    if list(tabla.columns) != COLUMNAS_VISUALIZACION:
+        raise ValueError("visualizacion: columnas incorrectas")
+    if tabla.empty:
+        raise ValueError("visualizacion: no contiene datos")
+    claves = ["semana_fin", "geografia", "variable"]
+    if tabla.duplicated(claves).any():
+        raise ValueError("visualizacion: contiene series duplicadas")
+
+    obligatorias = [
+        "semana_fin",
+        "geografia",
+        "tipo_geografia",
+        "municipio_referencia",
+        "categoria",
+        "variable",
+        "etiqueta_variable",
+        "descripcion_variable",
+        "valor",
+        "unidad",
+        "color",
+        "fuente",
+    ]
+    if tabla[obligatorias].isna().any().any():
+        raise ValueError("visualizacion: faltan datos o metadatos obligatorios")
+    if pd.to_datetime(tabla["semana_fin"], errors="coerce").isna().any():
+        raise ValueError("visualizacion: contiene fechas inválidas")
+    if pd.to_numeric(tabla["valor"], errors="coerce").isna().any():
+        raise ValueError("visualizacion: contiene valores no numéricos")

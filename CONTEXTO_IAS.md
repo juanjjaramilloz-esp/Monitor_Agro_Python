@@ -17,11 +17,11 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Bloque 3 - indicadores utiles completado** sobre 180 semanas
-historicas completas.
+Fase actual: **Bloque 3.5 - preparacion visual completado** sobre 180 semanas
+historicas completas. Bloques 4 y 5 pausados por decision del usuario.
 
-Siguiente paso recomendado: **Bloque 4 - conocimiento cafetero**. Recoger y
-documentar criterios de usuarias reales antes de definir el score.
+Siguiente paso recomendado: crear **visualizaciones basicas** y recoger
+feedback. Despues se retomara conocimiento cafetero y score.
 
 Commits relevantes:
 
@@ -188,6 +188,8 @@ Commits relevantes:
   IA web en un chat nuevo.
 - Antes de hacer score, el usuario quiere revisar bien el proyecto y pensar
   mejoras/funciones que hagan el MVP mas completo.
+- El usuario decidio pausar los bloques 4 (conocimiento cafetero) y 5 (score)
+  mientras recibe informacion y feedback de visualizaciones basicas.
 
 ---
 
@@ -196,6 +198,8 @@ Commits relevantes:
 - No definir todavia score final sin mas criterio del negocio cafetero.
 - Si GDELT sigue con `RateLimitError`, falta decidir si se reintenta con otra
   estrategia o se complementa con otra fuente.
+- Falta recibir feedback sobre las visualizaciones basicas antes de fijar su
+  estructura definitiva.
 
 ---
 
@@ -234,6 +238,24 @@ Commits relevantes:
 - Ranking 1 = valor numerico mas alto; NO significa mejor ni menor riesgo.
 - Validacion real: 44.946 filas, 180 semanas, cero nulos, cero duplicados y
   rankings entre 1 y 8. Resumen reciente: 35 filas para `2026-06-14`.
+
+---
+
+## Preparacion visual - Bloque 3.5
+
+- Modulo ejecutable: `python -m procesar.visualizacion`.
+- Dataset principal: `datos/visualizacion/series_visualizacion.csv`, derivado y
+  regenerable; contiene 6.300 filas (una por serie base y semana).
+- Resumen versionado: `datos/visualizacion/resumen_visual.csv` (35 filas).
+- Catalogo versionado: `datos/visualizacion/catalogo_variables.csv` (7 filas).
+- Metadatos: etiqueta y descripcion humana, categoria, color, decimales, tipo y
+  orden geografico, municipio de referencia, anio, mes y semana ISO.
+- Mercado: USD/COP, cafe internacional y precio FNC incluyen indice base 100
+  desde `2023-01-08` para compararlos aunque tengan unidades distintas.
+- Anomalias se describen como por encima/debajo de su historia; no como riesgo.
+- Direccion de cambio solo usa `Sube`, `Baja`, `Sin cambio` o `Sin comparacion`.
+- Validacion real: 6.300 filas, 180 semanas, cero duplicados y cero metadatos
+  obligatorios faltantes.
 
 ---
 
@@ -291,9 +313,9 @@ Formato recomendado para nuevas entradas:
 
 ## Proxima tarea sugerida
 
-Implementar **Bloque 2 - backfill historico**:
+Crear visualizaciones basicas para feedback:
 
-- Disenar almacenamiento historico separado de los snapshots operativos.
-- Obtener historico de cafe, USD/COP, clima y precio interno FNC.
-- Crear semanas comparables sin etiquetar consultas actuales como historicas.
-- Validar continuidad, cobertura y faltantes antes de calcular tendencias.
+- Consumir `datos/visualizacion/series_visualizacion.csv`.
+- Priorizar contexto comercial, evolucion de Caldas y comparacion departamental.
+- Mantener lenguaje descriptivo, sin score ni semaforos de riesgo.
+- Probarlas con el usuario antes de fijar la interfaz definitiva.
