@@ -1,23 +1,25 @@
 # Continuidad técnica entre IAs - Monitor Agro Colombia
 
-Bitácora operativa para asistentes con acceso al repositorio. Registra el punto
-exacto de avance y lo que no se puede inferir leyendo el código rápidamente.
-Las reglas, contratos y comandos permanentes viven únicamente en `CLAUDE.md`.
+Bitácora operativa para asistentes con acceso al repositorio. Contiene solo el
+estado y los hallazgos que no conviene reconstruir en cada relevo. El contrato
+técnico estable está en `CLAUDE.md`; la estrategia de producto está en
+`BRIEFING_CHAT.md`.
 
 ## Cómo retomar
 
 1. Leer `CLAUDE.md` completo.
 2. Leer este archivo.
 3. Ejecutar `git status --short` y `git log --oneline -8`.
-4. No asumir que una tarea pendiente sigue pendiente si Git o las pruebas
-   demuestran lo contrario.
+4. Verificar con código y pruebas cualquier dato operativo que pueda haber
+   cambiado desde la fecha de actualización.
 
-`BRIEFING_CHAT.md` no es requisito para programar: está diseñado para chats
-estratégicos sin acceso al repositorio.
+No es necesario leer `BRIEFING_CHAT.md` para una tarea puramente técnica. Sí
+debe leerse cuando el cambio dependa de audiencia, utilidad, jerarquía visual o
+una decisión de producto.
 
 ---
 
-## Punto de control actual
+## Punto de control
 
 Actualizado: **2026-06-22**.
 
@@ -27,37 +29,21 @@ Actualizado: **2026-06-22**.
   experto y el score continúan pausados por decisión del usuario.
 - Próximo trabajo: recoger y aplicar feedback de comprensión/utilidad del
   dashboard. No diseñar todavía el score definitivo.
-- `BRIEFING_CHAT.md` entra ahora al control de versiones y debe mantenerse como
-  resumen estratégico, no como registro de cada cambio técnico.
-
-Commits más recientes:
-
-- `d85359d` - Corregir tema e interacción del dashboard.
-- `f9c4a89` - Crear dashboard básico para feedback.
-- `f586b3b` - Preparar datos y metadatos para visualizaciones.
-- `cde861d` - Agregar indicadores de tendencia y comparación.
-- `4a24e51` - Construir backfill histórico semanal desde 2023.
-- `3ef2d23` - Agregar modo histórico a fuentes numéricas.
-- `9536939` - Agregar controles de calidad para snapshots.
-- `f46198b` - Actualizar contexto tras pivote a Colombia.
+- Git es la fuente de verdad del historial; no mantener aquí una copia de
+  `git log`.
 
 ---
 
-## Estado verificable por bloque
+## Estado verificable
 
-### Fuentes, unión y calidad
+### Cobertura y calidad
 
-- Fuentes activas: café ICE y USD/COP por yfinance, precio interno y Excel
-  histórico FNC, clima por Open-Meteo y noticias nacionales por GDELT.
 - El pivote de comparación LatAm a ocho departamentos cafeteros colombianos
   está completo de extremo a extremo.
 - Un snapshot completo contiene exactamente 35 filas: 3 comerciales y 32
   climáticas (8 departamentos por 4 variables).
-- La unión conserva `fecha_snapshot` y `fecha_dato`; no se oculta que las
-  fuentes pueden tener fechas de disponibilidad diferentes.
-- La calidad clasifica componentes como `OK`, `VACIO`, `INCOMPLETO` o
-  `FECHA_FUTURA`. Un snapshot existente solo se reemplaza con autorización
-  explícita.
+- La unión conserva `fecha_snapshot` y `fecha_dato`; las fuentes pueden tener
+  fechas de disponibilidad diferentes.
 - El snapshot inicial `snapshot_2026-06-21.csv` precede esa validación y tiene
   un FX fechado un día después del snapshot. Se conserva como evidencia; las
   corridas nuevas bloquean esa inconsistencia.
@@ -72,30 +58,16 @@ Commits más recientes:
 - Mercado y FNC usan el último dato disponible de cada semana. Clima suma
   lluvia y calcula mínima, máxima y promedio semanal.
 
-### Indicadores y preparación visual
+### Indicadores, preparación visual y dashboard
 
-- `procesar/indicadores.py` produce cambios semanales, cambios de 4 semanas,
-  medias móviles de 4 y 12 semanas, anomalía histórica y comparación
-  departamental.
-- La anomalía compara contra hasta 52 semanas previas, exige 26 observaciones
-  y no usa datos futuros.
 - Ranking 1 significa valor numérico más alto; no significa mejor, oportunidad
   ni menor riesgo.
 - Validación: 44.946 filas derivadas, 180 semanas, rankings de 1 a 8 y cero
   duplicados.
-- `procesar/visualizacion.py` genera 6.300 filas listas para gráficos, 35 filas
-  de resumen y un catálogo de 7 variables. Incluye etiquetas, colores,
-  municipio de referencia e índice base 100 para las tres series comerciales.
-
-### Dashboard para feedback
-
-- Aplicación: `app.py`, Streamlit 1.58.0 y Plotly 6.8.0.
+- La preparación visual genera 6.300 filas listas para gráficos, 35 filas de
+  resumen y un catálogo de 7 variables.
 - `Panorama nacional` muestra café ICE, USD/COP y precio interno FNC. No cambia
   al elegir departamento porque esas series tienen alcance global/nacional.
-- La vista departamental muestra cuatro métricas climáticas, lluvia con media
-  móvil y temperaturas mínima, promedio y máxima.
-- `Comparación` muestra los ocho departamentos y la historia del seleccionado
-  frente a la mediana.
 - Al cambiar departamento se activa su pestaña y aparece el municipio de
   referencia. No existe selector municipal: por ahora hay una coordenada
   representativa por departamento.
@@ -126,11 +98,10 @@ Commits más recientes:
 
 ---
 
-## Límites del siguiente cambio
+## Límites vigentes
 
-- No iniciar score ni interpretación agronómica hasta que el usuario entregue
-  feedback e información experta. Las preguntas de producto están en
-  `BRIEFING_CHAT.md`.
+- No iniciar score ni interpretación agronómica hasta recibir feedback e
+  información experta. Las razones y preguntas están en `BRIEFING_CHAT.md`.
 - Mantener commits entre unidades de trabajo validadas.
 - No convertir el selector departamental en selector municipal sin ampliar
   primero la cobertura de datos.
@@ -146,7 +117,7 @@ Commits más recientes:
   sin escribir bytecode.
 - Las operaciones de Git pueden requerir permisos para escribir en `.git`.
 
-## Cómo mantener esta bitácora
+## Mantenimiento
 
 Actualizarla solo cuando cambie el estado técnico, una decisión vigente, una
 limitación, una validación relevante o el próximo paso. Reemplazar información

@@ -1,5 +1,7 @@
 # Briefing estratégico - Monitor Agro Colombia
 
+Vigencia del briefing: **22 de junio de 2026**.
+
 ## Cómo usar este archivo
 
 Este documento permite iniciar un chat nuevo sobre estrategia, diseño o
@@ -9,6 +11,10 @@ de otros archivos. Puede entregarse por sí solo a una IA web normal.
 El chat debe ayudar a pensar el producto y convertir decisiones en próximos
 pasos claros. No debe inventar avances técnicos, datos o conocimiento cafetero
 que aquí aparezcan como pendientes.
+
+Este es el único documento que debe poder viajar solo. Por eso incluye un
+resumen mínimo del producto y su estado, aunque esos hechos también existan en
+el repositorio.
 
 ---
 
@@ -202,3 +208,24 @@ Después del feedback, el orden recomendado es:
 - No asumir que más funciones hacen mejor el producto.
 - No pedir acceso al código para discutir estrategia; este briefing contiene el
   contexto necesario para hacerlo.
+
+---
+
+## Cómo devolver decisiones al proyecto
+
+Cuando el chat produzca una decisión firme, debe entregarla al usuario en este
+formato para incorporarla después a este briefing o al repositorio:
+
+```text
+Decisión confirmada:
+- Qué se decidió:
+- Por qué:
+- A quién beneficia:
+- Qué cambia en el producto:
+- Qué queda pendiente o fuera de alcance:
+```
+
+Actualizar este archivo únicamente con decisiones estratégicas confirmadas,
+cambios de audiencia, prioridades, preguntas expertas resueltas o nuevo
+feedback de usuarias. No registrar commits, rutas, errores de ejecución ni
+detalles de implementación; esos pertenecen a la continuidad técnica.
