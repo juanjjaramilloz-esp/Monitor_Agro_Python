@@ -1,0 +1,204 @@
+# Briefing estratégico - Monitor Agro Colombia
+
+## Cómo usar este archivo
+
+Este documento permite iniciar un chat nuevo sobre estrategia, diseño o
+dirección del proyecto sin depender de conversaciones anteriores, del código ni
+de otros archivos. Puede entregarse por sí solo a una IA web normal.
+
+El chat debe ayudar a pensar el producto y convertir decisiones en próximos
+pasos claros. No debe inventar avances técnicos, datos o conocimiento cafetero
+que aquí aparezcan como pendientes.
+
+---
+
+## La creadora y lo que busca
+
+La creadora es estudiante de Negocios Internacionales, próxima a graduarse,
+autodidacta en análisis de datos y radicada en Manizales, Colombia. Quiere
+orientarse hacia roles de análisis de negocios/datos que conecten comercio,
+economía y geopolítica.
+
+Este proyecto cumple dos objetivos:
+
+1. Ser una pieza de portafolio que demuestre criterio de negocio, manejo de
+   datos y capacidad de construir una herramienta completa.
+2. Llegar a ser útil para personas reales del sector cafetero colombiano.
+
+La comunicación debe ser en español, directa, práctica y clara para una persona
+principiante en programación. Conviene explicar el porqué sin condescendencia,
+proponer pasos pequeños y terminables, y evitar ampliar el alcance sin una razón
+de producto.
+
+---
+
+## Qué es el producto
+
+**Monitor Agro Colombia** es un monitor semanal de las condiciones comerciales
+y climáticas que rodean al café colombiano. Combina:
+
+- precio interno de referencia de la Federación Nacional de Cafeteros (FNC);
+- precio internacional del café arábica ICE Coffee C;
+- tasa de cambio USD/COP;
+- lluvia y temperaturas en ocho departamentos cafeteros;
+- señales nacionales de noticias, todavía secundarias.
+
+Los ocho departamentos iniciales son Huila, Antioquia, Tolima, Cauca, Nariño,
+Caldas, Risaralda y Quindío. Cada uno usa por ahora un municipio como referencia
+climática; esto no representa toda su diversidad interna.
+
+El proyecto nació comparando cinco países latinoamericanos, pero se reorientó a
+Colombia porque las beneficiarias reales trabajan con el sector cafetero
+nacional. El contexto internacional se mantiene mediante el precio ICE y el
+tipo de cambio. La intención es ganar profundidad y utilidad, no exhibir más
+países sin una necesidad clara.
+
+---
+
+## Para quién se diseña
+
+Hay dos beneficiarias principales y dos lentes complementarios:
+
+- **Tía vinculada a CRECE:** lente económico, comercial y de investigación.
+  Le sirven tendencias, comparaciones, fuentes citables y metodología clara.
+- **Mamá vinculada a Fundación Manuel Mejía:** lente del productor y
+  pedagógico. Le sirve entender cómo clima, precio y costos pueden traducirse
+  en condiciones relevantes para caficultores y procesos de formación.
+
+Ellas y sus colegas son las usuarias directas; el tablero no está pensado para
+que un caficultor lo opere necesariamente. Debe sentirse ejecutivo y riguroso,
+pero comprensible.
+
+La prioridad aproximada sigue siendo 60% portafolio y 40% utilidad inmediata.
+Una mejora gana valor cuando fortalece ambos objetivos.
+
+---
+
+## Estado actual, explicado sin código
+
+Ya existe un MVP funcional con:
+
+- histórico semanal desde enero de 2023, con 180 semanas completas;
+- tres variables comerciales nacionales/globales;
+- cuatro variables climáticas para cada uno de los ocho departamentos;
+- tendencias, cambios, promedios móviles, anomalías estadísticas neutrales y
+  comparaciones entre departamentos;
+- un dashboard local con tres vistas: panorama nacional, detalle climático del
+  departamento elegido y comparación entre departamentos;
+- filtros de periodo y departamento;
+- tema visual claro y selección departamental visible mediante su municipio de
+  referencia.
+
+El dashboard actual es una herramienta para obtener feedback, no el producto
+final. Todavía no contiene un score de oportunidad/riesgo ni interpreta que un
+valor sea bueno o malo.
+
+Importante: el panorama comercial no cambia al seleccionar departamento porque
+precio internacional, USD/COP y precio FNC son variables globales o nacionales.
+El selector sí cambia las vistas climáticas departamentales.
+
+---
+
+## Decisiones estratégicas vigentes
+
+- **MVP antes que sofisticación:** probar comprensión y utilidad antes de
+  construir más capas.
+- **Colombia antes que LatAm:** profundidad subnacional para usuarias reales.
+- **Precio interno FNC como centro del lente productor:** el precio ICE es
+  contexto internacional, no sustituto del precio recibido localmente.
+- **Lenguaje neutral por ahora:** ranking alto significa mayor valor numérico,
+  no mejor resultado ni menor riesgo.
+- **No construir el score a ciegas:** primero se necesita conocimiento experto
+  sobre cosecha, clima, costos y lectura del negocio cafetero.
+- **Credibilidad visible:** el producto final debe explicar fuentes,
+  metodología, alcance y limitaciones.
+
+---
+
+## Información experta pendiente
+
+Estas preguntas deben resolverse con las beneficiarias o fuentes cafeteras
+confiables antes de diseñar el score:
+
+1. Calendario de cosecha y floración por región, y qué clima preocupa en cada
+   etapa.
+2. Qué define una buena o mala semana para el productor: precio, costos, margen
+   u otra combinación.
+3. Cómo incorporar costos de producción e insumos, incluidos fertilizantes
+   sensibles al dólar.
+4. Si resulta útil mostrar condiciones favorables para roya y broca.
+5. Qué unidades usa su público: carga, arroba, factor de rendimiento u otras.
+6. Qué fuentes y reportes consultan hoy, para complementar en vez de duplicar.
+7. Si la prima o diferencial de los suaves colombianos debe aparecer.
+
+Ya está confirmado que trabajan con alcance nacional, no únicamente con Caldas.
+
+---
+
+## Oportunidades de producto ya identificadas
+
+No son compromisos automáticos; deben priorizarse con feedback:
+
+- **Margen aproximado del productor:** precio interno menos costo de producción
+  de referencia, con metodología y limitaciones explícitas.
+- **Dos lentes de lectura:** comercial/institucional y productor/pedagógico, en
+  lugar de un único número que mezcle objetivos diferentes.
+- **Calendario fenológico regional:** permitiría interpretar clima según la
+  etapa del cultivo.
+- **Señales de roya y broca:** solo si son defendibles con los datos y útiles
+  para las beneficiarias.
+- **Brief semanal exportable:** una página útil para informes, reuniones o
+  contenidos de formación.
+- **Capa metodológica:** diccionario de datos, fuentes, fecha de actualización,
+  cobertura y explicación del futuro score.
+- **Automatización semanal y publicación:** después de estabilizar contenido e
+  interfaz.
+
+---
+
+## Riesgos y límites conocidos
+
+- Algunas fuentes comerciales provienen de scraping y pueden cambiar.
+- La fuente de noticias puede limitar consultas; no debe tratarse una noticia
+  aislada como un hecho confirmado.
+- Una coordenada municipal no describe todo un departamento.
+- Una anomalía estadística no equivale por sí sola a riesgo agronómico.
+- Un score sin calendario productivo, costos y validación experta parecería
+  preciso, pero sería conceptualmente débil.
+- El proyecto sigue en Git local y aún no está automatizado ni publicado como
+  producto final.
+
+---
+
+## Próximo objetivo
+
+Recoger feedback sobre las visualizaciones básicas antes de retomar el score.
+En particular:
+
+- qué vista se entiende y cuál confunde;
+- qué información ayuda a tomar o preparar una decisión;
+- qué dato falta para que el tablero sea útil en CRECE o Fundación Manuel
+  Mejía;
+- si Caldas debe seguir siendo el foco inicial;
+- qué debería poder exportarse o compartirse.
+
+Después del feedback, el orden recomendado es:
+
+1. Ajustar la interfaz y la jerarquía de información.
+2. Incorporar conocimiento cafetero confirmado.
+3. Diseñar y documentar los dos lentes o scores, si siguen teniendo sentido.
+4. Crear el brief ejecutivo exportable.
+5. Automatizar, publicar y preparar la narrativa de portafolio/LinkedIn.
+
+---
+
+## Cómo debe ayudar el nuevo chat
+
+- Separar hechos confirmados, supuestos y recomendaciones.
+- Hacer preguntas solo cuando la respuesta cambie una decisión importante.
+- Dar una recomendación clara cuando existan varias opciones, explicando el
+  trade-off.
+- Mantener el foco en utilidad para las beneficiarias y señal de portafolio.
+- No asumir que más funciones hacen mejor el producto.
+- No pedir acceso al código para discutir estrategia; este briefing contiene el
+  contexto necesario para hacerlo.

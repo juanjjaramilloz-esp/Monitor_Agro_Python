@@ -1,352 +1,155 @@
-# Contexto entre IAs - Monitor Agro Colombia
+# Continuidad técnica entre IAs - Monitor Agro Colombia
 
-Este archivo sirve como bitacora de continuidad para trabajar alternando entre
-asistentes, IDEs y sesiones. Antes de retomar el proyecto, leer en este orden:
+Bitácora operativa para asistentes con acceso al repositorio. Registra el punto
+exacto de avance y lo que no se puede inferir leyendo el código rápidamente.
+Las reglas, contratos y comandos permanentes viven únicamente en `CLAUDE.md`.
 
-1. `CLAUDE.md` - reglas, fases y contratos del proyecto.
-2. `CONTEXTO_IAS.md` - novedades, decisiones recientes y punto exacto de avance.
-3. `git log --oneline -5` y `git status --short` - confirmar historial y arbol limpio.
+## Cómo retomar
 
-Regla practica: cuando una IA o el usuario cierre una unidad de trabajo
-validada, registrar aqui lo importante y hacer commit.
+1. Leer `CLAUDE.md` completo.
+2. Leer este archivo.
+3. Ejecutar `git status --short` y `git log --oneline -8`.
+4. No asumir que una tarea pendiente sigue pendiente si Git o las pruebas
+   demuestran lo contrario.
+
+`BRIEFING_CHAT.md` no es requisito para programar: está diseñado para chats
+estratégicos sin acceso al repositorio.
 
 ---
 
-## Estado actual
+## Punto de control actual
 
-Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
-**Colombia**, comparando sus departamentos cafeteros entre si.
+Actualizado: **2026-06-22**.
 
-Fase actual: **visualizaciones basicas implementadas** para feedback sobre 180
-semanas historicas. Bloques 4 y 5 pausados por decision del usuario.
+- El MVP descriptivo ya tiene fuentes, controles de calidad, histórico desde
+  2023, indicadores neutrales, preparación visual y dashboard básico.
+- La etapa actual es **feedback de visualizaciones**. El conocimiento cafetero
+  experto y el score continúan pausados por decisión del usuario.
+- Próximo trabajo: recoger y aplicar feedback de comprensión/utilidad del
+  dashboard. No diseñar todavía el score definitivo.
+- `BRIEFING_CHAT.md` entra ahora al control de versiones y debe mantenerse como
+  resumen estratégico, no como registro de cada cambio técnico.
 
-Siguiente paso recomendado: recoger feedback del usuario y usuarias potenciales
-sobre las visualizaciones antes de fijar la interfaz o retomar el score.
+Commits más recientes:
 
-Commits relevantes:
-
-- `3ef2d23` - Agregar modo historico a fuentes numericas.
+- `d85359d` - Corregir tema e interacción del dashboard.
+- `f9c4a89` - Crear dashboard básico para feedback.
+- `f586b3b` - Preparar datos y metadatos para visualizaciones.
+- `cde861d` - Agregar indicadores de tendencia y comparación.
+- `4a24e51` - Construir backfill histórico semanal desde 2023.
+- `3ef2d23` - Agregar modo histórico a fuentes numéricas.
 - `9536939` - Agregar controles de calidad para snapshots.
-- `53dfbf4` - Pivote a Colombia: retrofit geografico end-to-end.
-- `8db29b7` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
-- `e47bd1c` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
-- `4791a62` - Fase 1d: implementar `fuentes/noticias.py` con GDELT.
-- `e14bfad` - Fase 1c: implementar `fuentes/clima.py` con Open-Meteo.
-- `cc08a46` - Fase 1b: implementar `fuentes/cafe.py` con yfinance.
-- `6410d74` - Fase 1a: implementar `fuentes/fx.py` con yfinance.
-- `d0767f0` - Fase 0: esqueleto y contratos base.
+- `f46198b` - Actualizar contexto tras pivote a Colombia.
 
 ---
 
-## Convenciones que no se deben romper
+## Estado verificable por bloque
 
-- Cada modulo en `fuentes/` expone una unica funcion publica `obtener()`.
-- Las fuentes numericas devuelven exactamente:
-  `fecha`, `geografia`, `variable`, `valor`, `unidad`, `fuente`.
-- Noticias devuelve exactamente:
-  `fecha`, `geografia`, `titulo`, `url`, `fuente`, `idioma`, `tono`, `categoria`.
-- `geografia` tiene tres niveles: `GLOBAL` (cafe), `COLOMBIA` (FX, precio
-  interno, noticias) y nombre de departamento cafetero (clima).
-- Si una fuente falla, debe devolver un `DataFrame` vacio con columnas correctas.
-- Todo parametro editable debe vivir en `config.py`.
-- No mezclar fases en un mismo cambio.
-- Hacer commits entre cambios validados para poder alternar entre asistentes.
+### Fuentes, unión y calidad
 
----
+- Fuentes activas: café ICE y USD/COP por yfinance, precio interno y Excel
+  histórico FNC, clima por Open-Meteo y noticias nacionales por GDELT.
+- El pivote de comparación LatAm a ocho departamentos cafeteros colombianos
+  está completo de extremo a extremo.
+- Un snapshot completo contiene exactamente 35 filas: 3 comerciales y 32
+  climáticas (8 departamentos por 4 variables).
+- La unión conserva `fecha_snapshot` y `fecha_dato`; no se oculta que las
+  fuentes pueden tener fechas de disponibilidad diferentes.
+- La calidad clasifica componentes como `OK`, `VACIO`, `INCOMPLETO` o
+  `FECHA_FUTURA`. Un snapshot existente solo se reemplaza con autorización
+  explícita.
+- El snapshot inicial `snapshot_2026-06-21.csv` precede esa validación y tiene
+  un FX fechado un día después del snapshot. Se conserva como evidencia; las
+  corridas nuevas bloquean esa inconsistencia.
 
-## Hallazgos y decisiones tecnicas
+### Histórico
 
-### FX - Fase 1a
+- `procesar/historico.py` acepta rangos, excluye semanas parciales y actualiza
+  de forma idempotente.
+- Rango validado: `2023-01-08` a `2026-06-14`, 180 semanas completas.
+- Resultados validados: 33.368 filas diarias y 6.300 filas semanales, sin nulos
+  ni duplicados y con 35 indicadores por semana.
+- Mercado y FNC usan el último dato disponible de cada semana. Clima suma
+  lluvia y calcula mínima, máxima y promedio semanal.
 
-- Tras el pivote a Colombia, FX queda reducido a una sola fila USD/COP.
-- Se usa `config.TICKER_FX = "USDCOP=X"` y `config.MONEDA = "COP"`.
-- La salida usa `geografia = "COLOMBIA"`, variable `fx_usd_local`, unidad
-  `COP/USD`, fuente `yfinance`.
-- Frankfurter/BCE no cubre COP; por eso se usa yfinance.
-- `yfinance` puede devolver columnas `MultiIndex`; para extraer cierre se usa
-  `datos["Close"]` y, si es `DataFrame`, `iloc[:, 0]`.
+### Indicadores y preparación visual
 
-### Cafe - Fase 1b
+- `procesar/indicadores.py` produce cambios semanales, cambios de 4 semanas,
+  medias móviles de 4 y 12 semanas, anomalía histórica y comparación
+  departamental.
+- La anomalía compara contra hasta 52 semanas previas, exige 26 observaciones
+  y no usa datos futuros.
+- Ranking 1 significa valor numérico más alto; no significa mejor, oportunidad
+  ni menor riesgo.
+- Validación: 44.946 filas derivadas, 180 semanas, rankings de 1 a 8 y cero
+  duplicados.
+- `procesar/visualizacion.py` genera 6.300 filas listas para gráficos, 35 filas
+  de resumen y un catálogo de 7 variables. Incluye etiquetas, colores,
+  municipio de referencia e índice base 100 para las tres series comerciales.
 
-- Se usa `config.TICKER_CAFE_ARABICA = "KC=F"`.
-- El precio del cafe es global, por eso `geografia = "GLOBAL"`.
-- Variable: `precio_cafe_arabica`.
-- Unidad: `USc/lb`.
-- Fuente fragil: `yfinance` raspa Yahoo Finance y puede romperse.
-- Ultima validacion real: `2026-06-18`, valor aproximado `256.10 USc/lb`.
+### Dashboard para feedback
 
-### Clima - Fase 1c
-
-- Se usa Open-Meteo con coordenadas de `config.REGIONES_CAFE`.
-- Las regiones activas son 8 departamentos cafeteros: Huila, Antioquia,
-  Tolima, Cauca, Narino, Caldas, Risaralda y Quindio.
-- Variables configuradas:
-  `temperature_2m_min`, `temperature_2m_max`, `precipitation_sum`.
-- Mapeo de salida diario:
-  `temp_min` (`grados C`), `temp_max` (`grados C`), `precipitacion` (`mm`).
-- En la union semanal se agregan 4 variables por departamento:
-  `precipitacion_semanal`, `temp_min_semanal`, `temp_max_semanal`,
-  `temp_promedio_semanal`.
-
-### Noticias - Fase 1d
-
-- Se usa `gdeltdoc` con `GdeltDoc` y `Filters`.
-- `gdeltdoc` esta en `requirements.txt` y fue instalado en `.venv`.
-- Se agrego `NOTICIAS_MAX_REGISTROS = 25` en `config.py`.
-- Tras el pivote, GDELT se consulta solo a nivel nacional con
-  `config.PAIS_FIPS = "CO"` y `geografia = "COLOMBIA"`.
-- Ultima validacion real devolvio `RateLimitError`; el fallback funciono y
-  devolvio `DataFrame` vacio con columnas correctas.
-- La normalizacion fue probada con un DataFrame artificial estilo GDELT:
-  `seendate`, `title`, `url`, `language` -> contrato de noticias.
-- `tono` queda como `NaN` float; `categoria` queda pendiente para fase posterior.
-
-### Precio interno FNC - fuente extra (scraping)
-
-- Modulo: `fuentes/precio_interno.py`. Variable `precio_interno_referencia`,
-  `geografia = "COLOMBIA"`, unidad `COP/carga_125kg`, fuente `FNC`, `valor`
-  entero.
-- Fuente elegida: la **pagina de estadisticas cafeteras** de la FNC
-  (`config.URL_PRECIO_INTERNO_FNC`), por estabilidad. Es WordPress/Elementor:
-  el HTML lo entrega el servidor (no requiere JS). El precio esta en el menu de
-  cabecera ("Precio interno de referencia: $X.XXX.XXX") y la fecha en un bloque
-  "Fecha: AAAA-MM-DD".
-- **Descartado el PDF de precios por ciudad**: agrega fragilidad (otro parseo,
-  otro formato) y la diferencia frente al precio de referencia unico es minima
-  para el objetivo del monitor. Anotado por si se quiere granularidad luego.
-- **Excel historico** de la FNC: anotado como fuente futura para series de
-  tiempo del precio interno; no se usa ahora (el monitor es puntual/semanal).
-- Formato colombiano: "$2.110.000" -> el punto es separador de MILES. Se limpia
-  quitando "$" y los puntos -> `2110000` (int). Bug clasico evitado: NO leerlo
-  como float decimal (2.11). Se agrego una banda de plausibilidad
-  (500.000-10.000.000) que ademas atrapa ese error de parseo.
-- Dependencia nueva: `beautifulsoup4` (agregada a `requirements.txt` e instalada
-  en `.venv`). Se usa `User-Agent` de navegador en la peticion.
-- Misma fragilidad declarada que el cafe: si cambia la maquetacion, el modulo
-  devuelve `DataFrame` vacio con columnas correctas (regla del contrato).
-- Validacion real (`python -m fuentes.precio_interno`): 1 fila,
-  `2026-06-18`, `2.110.000 COP/carga_125kg`.
-- Para historico, el modulo descubre en la pagina FNC el Excel mas reciente de
-  "Precios, area y produccion de cafe". La hoja diaria contiene datos desde
-  2003; el backfill activo filtra desde 2023. Se usa `openpyxl` para leerla.
-
-### Pivote a Colombia (retrofit geografico)
-
-- Decision de producto: el monitor deja de comparar paises de LatAm y pasa a
-  comparar los **departamentos cafeteros de Colombia** entre si. Mas honesto y
-  accionable para el foco real (cafe colombiano).
-- Paises LatAm retirados (Brasil, Peru, Honduras, Mexico): **recuperables en el
-  historial de git**, no se borran del proyecto, solo de la config activa.
-- `config.PAISES` -> reemplazado por `config.REGIONES_CAFE`: 8 departamentos
-  (Huila, Antioquia, Tolima, Cauca, Narino, Caldas, Risaralda, Quindio), cada
-  uno con un municipio cafetero representativo y su lat/lon para Open-Meteo.
-- FX: se reduce a **solo USD/COP** (`config.TICKER_FX`, `config.MONEDA`). Se
-  quitaron las otras cuatro monedas.
-- Geografia nacional: `config.GEOGRAFIA_PAIS = "COLOMBIA"` y
-  `config.PAIS_FIPS = "CO"` (GDELT).
-- **Rename de columna `pais` -> `geografia`** en todas las fuentes numericas y
-  en noticias, mas `procesar/unir.py` y docs. Motivo: la columna ahora mezcla
-  tres niveles (GLOBAL / COLOMBIA / departamento); `pais` ya no describe bien.
-- `precio_interno` **integrado a la union**: es una fila puntual de COLOMBIA, se
-  trata igual que FX/cafe (rename `fecha`->`fecha_dato`, se le agrega
-  `fecha_snapshot`).
-- `noticias.py`: ahora consulta GDELT **solo a nivel nacional** (un solo query
-  con `PAIS_FIPS`), no pais por pais.
-- `precio_interno.py`: solo el rename de columna; la logica del scraper NO se
-  toco.
-- Validacion del flujo (`python -m procesar.unir`): **35 filas** = 1 cafe
-  (GLOBAL) + 1 FX (COLOMBIA) + 1 precio interno (COLOMBIA) + 32 clima
-  (8 departamentos x 4 variables). Snapshot regenerado:
-  `datos/snapshots/snapshot_2026-06-21.csv`.
+- Aplicación: `app.py`, Streamlit 1.58.0 y Plotly 6.8.0.
+- `Panorama nacional` muestra café ICE, USD/COP y precio interno FNC. No cambia
+  al elegir departamento porque esas series tienen alcance global/nacional.
+- La vista departamental muestra cuatro métricas climáticas, lluvia con media
+  móvil y temperaturas mínima, promedio y máxima.
+- `Comparación` muestra los ocho departamentos y la historia del seleccionado
+  frente a la mediana.
+- Al cambiar departamento se activa su pestaña y aparece el municipio de
+  referencia. No existe selector municipal: por ahora hay una coordenada
+  representativa por departamento.
+- El tema claro está fijado en `.streamlit/config.toml`; los colores editables
+  se centralizan en `config.py`.
+- Validación tras el último ajuste: 27 pruebas unitarias, prueba funcional
+  Caldas/Manizales -> Huila/Pitalito sin excepciones y endpoint de salud `ok`.
+- URL local mientras el servidor esté corriendo: `http://localhost:8501`.
 
 ---
 
-## Limitaciones del entorno encontradas
+## Hallazgos que pueden evitar retrabajo
 
-- El sandbox a veces bloquea red usando proxy local `127.0.0.1:9`.
-- Para validar fuentes reales puede ser necesario ejecutar con permisos de red.
-- `py_compile` sobre `fuentes/noticias.py` fallo por permisos escribiendo en
-  `__pycache__`; se valido importando con `PYTHONDONTWRITEBYTECODE=1`.
-- `git add` y `git commit` pueden requerir permisos escalados porque escriben en
-  `.git`.
-
----
-
-## Decisiones del usuario
-
-- El proyecto se mantiene como MVP primero; luego se mejora para LinkedIn.
-- El resultado final deseado debe impresionar como herramienta analitica, no
-  solo como scripts: ranking/score semanal, narrativa ejecutiva y dashboard.
-- Usuarios/beneficiarias potenciales reales: personas del ecosistema cafetero
-  en Manizales/Caldas, incluyendo entorno profesional de CRECE, Gobernacion y
-  Fundacion Manuel Mejia.
-- El usuario quiere mantener el habito de commits entre cambios, sin importar
-  que asistente hizo el trabajo.
-- El usuario quiere que este archivo registre novedades, decisiones del chat,
-  hallazgos y cualquier instruccion relevante para que otras IAs retomen bien.
-- `BRIEFING_CHAT.md` se deja quieto por ahora; sirve para darle contexto a una
-  IA web en un chat nuevo.
-- Antes de hacer score, el usuario quiere revisar bien el proyecto y pensar
-  mejoras/funciones que hagan el MVP mas completo.
-- El usuario decidio pausar los bloques 4 (conocimiento cafetero) y 5 (score)
-  mientras recibe informacion y feedback de visualizaciones basicas.
+- yfinance puede devolver columnas `MultiIndex`; la normalización actual ya
+  contempla que `datos["Close"]` resulte ser un `DataFrame`.
+- El precio FNC colombiano usa puntos como separadores de miles. El parser
+  convierte, por ejemplo, `$2.110.000` a `2110000` y aplica una banda de
+  plausibilidad para evitar interpretarlo como `2.11`.
+- El Excel histórico FNC se descubre desde la página de estadísticas y contiene
+  precio diario desde 2003; el backfill activo lo filtra desde 2023.
+- GDELT puede responder `RateLimitError`. El fallback vacío funciona, pero
+  sigue pendiente decidir otra estrategia si el límite se vuelve recurrente.
+- El PDF FNC por ciudad fue descartado por fragilidad y escasa diferencia
+  frente al precio nacional. No reabrir esa decisión sin una necesidad de
+  producto concreta.
+- Las coordenadas climáticas son referencias municipales y no representan toda
+  la variación interna de cada departamento.
 
 ---
 
-## Preguntas abiertas / no asumir
+## Límites del siguiente cambio
 
-- No definir todavia score final sin mas criterio del negocio cafetero.
-- Si GDELT sigue con `RateLimitError`, falta decidir si se reintenta con otra
-  estrategia o se complementa con otra fuente.
-- Falta recibir feedback sobre las visualizaciones basicas antes de fijar su
-  estructura definitiva.
-
----
-
-## Backfill historico - Bloque 2
-
-- Modulo ejecutable: `python -m procesar.historico`.
-- Rango inicial configurable: `2023-01-01` hasta hoy menos 5 dias por el retraso
-  de disponibilidad del archivo climatico.
-- Fuentes con `obtener(desde, hasta)`: USD/COP, cafe, clima y precio interno FNC.
-- Semana comparable: lunes a domingo; semanas parciales se excluyen.
-- Mercado y FNC: ultimo dato disponible de la semana.
-- Clima: lluvia acumulada, minima, maxima y promedio de pares diarios.
-- Persistencia idempotente: una nueva corrida reemplaza la misma clave, no la
-  duplica.
-- Archivos generados:
-  `datos/historico/historico_diario.csv` y
-  `datos/historico/historico_semanal.csv`.
-- Validacion real: 33.368 filas diarias y 6.300 filas semanales.
-- Cobertura: 180 semanas desde `2023-01-08` hasta `2026-06-14`; todas con 35
-  indicadores, 8 departamentos climaticos, cero nulos y cero duplicados.
+- No iniciar score ni interpretación agronómica hasta que el usuario entregue
+  feedback e información experta. Las preguntas de producto están en
+  `BRIEFING_CHAT.md`.
+- Mantener commits entre unidades de trabajo validadas.
+- No convertir el selector departamental en selector municipal sin ampliar
+  primero la cobertura de datos.
 
 ---
 
-## Indicadores utiles - Bloque 3
+## Restricciones operativas observadas
 
-- Modulo ejecutable: `python -m procesar.indicadores`.
-- Salida completa: `datos/indicadores/indicadores_semanales.csv` (derivada y
-  regenerable; no se versiona para evitar crecimiento innecesario de Git).
-- Resumen versionado: `datos/indicadores/resumen_ultima_semana.csv`.
-- Indicadores temporales: cambio absoluto semanal; cambios porcentuales de 1 y
-  4 semanas para precios, FX y lluvia; promedios moviles de 4 y 12 semanas.
-- Anomalia: z-score del valor actual contra hasta 52 semanas anteriores, con
-  minimo 26 observaciones y sin usar datos futuros.
-- Comparacion climatica: ranking, percentil y diferencia frente a la mediana de
-  los 8 departamentos.
-- Ranking 1 = valor numerico mas alto; NO significa mejor ni menor riesgo.
-- Validacion real: 44.946 filas, 180 semanas, cero nulos, cero duplicados y
-  rankings entre 1 y 8. Resumen reciente: 35 filas para `2026-06-14`.
+- La red del sandbox puede quedar bloqueada por un proxy local; las validaciones
+  reales de fuentes pueden requerir permisos de red.
+- En Windows, `py_compile` o pruebas que crean temporales pueden fallar al
+  limpiar `__pycache__` o `%TEMP%`; se puede validar sintaxis con `ast.parse`
+  sin escribir bytecode.
+- Las operaciones de Git pueden requerir permisos para escribir en `.git`.
 
----
+## Cómo mantener esta bitácora
 
-## Preparacion visual - Bloque 3.5
-
-- Modulo ejecutable: `python -m procesar.visualizacion`.
-- Dataset principal: `datos/visualizacion/series_visualizacion.csv`, derivado y
-  regenerable; contiene 6.300 filas (una por serie base y semana).
-- Resumen versionado: `datos/visualizacion/resumen_visual.csv` (35 filas).
-- Catalogo versionado: `datos/visualizacion/catalogo_variables.csv` (7 filas).
-- Metadatos: etiqueta y descripcion humana, categoria, color, decimales, tipo y
-  orden geografico, municipio de referencia, anio, mes y semana ISO.
-- Mercado: USD/COP, cafe internacional y precio FNC incluyen indice base 100
-  desde `2023-01-08` para compararlos aunque tengan unidades distintas.
-- Anomalias se describen como por encima/debajo de su historia; no como riesgo.
-- Direccion de cambio solo usa `Sube`, `Baja`, `Sin cambio` o `Sin comparacion`.
-- Validacion real: 6.300 filas, 180 semanas, cero duplicados y cero metadatos
-  obligatorios faltantes.
-
----
-
-## Visualizaciones basicas para feedback
-
-- Aplicacion: `streamlit run app.py` y abrir `http://localhost:8501`.
-- Dependencias fijadas: `streamlit==1.58.0` y `plotly==6.8.0`.
-- Vista `Panorama nacional`: tres metricas comerciales y evolucion en indice
-  base 100; sus valores no cambian por departamento porque su alcance es
-  Colombia/global.
-- Vista departamental: 4 metricas, precipitacion con promedio de 4 semanas y
-  temperaturas minima, promedio y maxima. Departamento inicial: Caldas.
-- Vista `Comparacion`: variable y semana seleccionables, barras de los 8
-  departamentos e historia del seleccionado frente a la mediana.
-- Filtros: 6 meses, 1 ano o todo el historico; selector de departamento. Al
-  cambiarlo se activa la pestana departamental y se muestra tambien el
-  municipio de referencia, para que el efecto del filtro sea inmediato.
-- Tema claro explicito en `.streamlit/config.toml`; los colores principales se
-  centralizan en `config.py` para evitar mezclas de contraste con el tema local
-  del navegador.
-- Lenguaje neutral: deltas sin colores bueno/malo, ranking por magnitud y nota
-  explicita de que la coordenada municipal no representa todo el departamento.
-- Validacion funcional con `streamlit.testing`: 3 pestanas, 7 metricas, 5
-  graficos y cero excepciones en la carga inicial.
-- Servidor validado con endpoint de salud `ok` en puerto 8501.
-- Revision visual automatizada pendiente: Chrome capturo el esqueleto antes de
-  cargar y la instalacion temporal de Playwright fue bloqueada por limite del
-  entorno. Se requiere feedback visual directo del usuario.
-- Feedback visual recibido: se corrigio el bajo contraste de sidebar, cabecera,
-  pestanas y metricas. No se agrego un selector municipal: el dataset contiene
-  por ahora una sola coordenada municipal de referencia por departamento.
-
----
-
-## Como actualizar este archivo
-
-Actualizarlo cuando ocurra cualquiera de estas cosas:
-
-- Se complete una fase o subfase.
-- Se haga un commit relevante.
-- Una fuente revele una limitacion nueva.
-- El usuario tome una decision de producto, metodologia o estilo.
-- Se agregue una dependencia, variable de configuracion o restriccion operativa.
-- Se descubra algo necesario para que otra IA no repita trabajo.
-
-Formato recomendado para nuevas entradas:
-
-```text
-### YYYY-MM-DD - Titulo breve
-
-- Que cambio.
-- Que se valido.
-- Que limitacion o decision queda.
-- Commit relacionado, si existe.
-```
-
-### Unir - Fase 2
-
-- Esquema de salida: `fecha_snapshot`, `fecha_dato`, `geografia`, `variable`,
-  `valor`, `unidad`, `fuente`.
-- Decision de fechas: se mantienen dos columnas separadas.
-  `fecha_snapshot` = hoy (parametrizable para pruebas).
-  `fecha_dato` = fecha real del ultimo dato disponible segun la fuente.
-  Motivo: las fuentes no comparten exactamente el mismo dia (yfinance devuelve
-  el ultimo cierre disponible, Open-Meteo cierra el dia anterior), y ocultar
-  esa diferencia seria deshonesto para un proyecto de portafolio.
-- Clima: se agrega de diario a semanal con cuatro variables por departamento:
-  `precipitacion_semanal` (suma), `temp_min_semanal` (min de minimas),
-  `temp_max_semanal` (max de maximas), `temp_promedio_semanal` (media de
-  puntos medios diarios). `fecha_dato` = dia mas reciente de la ventana.
-- Primer snapshot validado: `datos/snapshots/snapshot_2026-06-21.csv`,
-  35 filas = 1 cafe (GLOBAL) + 1 FX USD/COP (COLOMBIA) + 1 precio interno FNC
-  (COLOMBIA) + 32 clima (8 departamentos x 4 variables).
-- Ese primer snapshot es anterior a la capa de calidad: contiene un FX con
-  `fecha_dato=2026-06-22`, posterior a `fecha_snapshot=2026-06-21`. Se conserva
-  sin inventar ni cambiar datos; las corridas nuevas bloquean esa inconsistencia.
-- Si una fuente devuelve vacio, la union omite esa parte sin romper.
-- El reporte de calidad marca cada componente como `OK`, `VACIO`, `INCOMPLETO`
-  o `FECHA_FUTURA`.
-- La temperatura promedio semanal empareja minima y maxima por fecha.
-- Un snapshot existente solo se reemplaza usando `sobrescribir=True`.
-- Snapshot guardado como CSV (utf-8, sin indice): legible y diff-eable en git.
-- Pruebas: `python -m unittest discover -s tests -v`.
-
----
-
-## Proxima tarea sugerida
-
-Recoger feedback de las visualizaciones basicas:
-
-- Revisar jerarquia, comprension y utilidad de las tres vistas.
-- Confirmar si Caldas debe permanecer como foco inicial.
-- Anotar graficos o textos que las usuarias consideren confusos o faltantes.
-- No iniciar score ni tablero definitivo hasta recibir ese feedback.
+Actualizarla solo cuando cambie el estado técnico, una decisión vigente, una
+limitación, una validación relevante o el próximo paso. Reemplazar información
+obsoleta en vez de acumular versiones contradictorias. No copiar secciones de
+`CLAUDE.md` ni convertirla en un changelog completo; Git ya conserva ese
+historial.
