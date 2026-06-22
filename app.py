@@ -39,20 +39,27 @@ def _estilos() -> None:
             --monitor-texto: {colores['texto']};
             --monitor-secundario: {colores['texto_secundario']};
             --monitor-fondo: {colores['fondo']};
+            --monitor-sidebar: {colores['sidebar']};
             --monitor-superficie: {colores['superficie']};
             --monitor-borde: {colores['borde']};
             --monitor-acento: {colores['acento']};
         }}
         .stApp {{ background: var(--monitor-fondo); color: var(--monitor-texto); }}
+        [data-testid="stHeader"] {{ background: var(--monitor-fondo); }}
         .block-container {{ max-width: 1440px; padding-top: 1.5rem; padding-bottom: 3rem; }}
-        h1, h2, h3 {{ color: var(--monitor-texto); letter-spacing: 0; }}
+        h1, h2, h3, p, label {{ color: var(--monitor-texto); letter-spacing: 0; }}
         h1 {{ font-size: 2rem; margin-bottom: 0.25rem; }}
         h2 {{ font-size: 1.35rem; margin-top: 1rem; }}
         h3 {{ font-size: 1rem; }}
         [data-testid="stSidebar"] {{
-            background: #EFF3EE;
+            background: var(--monitor-sidebar);
             border-right: 1px solid var(--monitor-borde);
         }}
+        [data-testid="stSidebar"] h1,
+        [data-testid="stSidebar"] h2,
+        [data-testid="stSidebar"] h3,
+        [data-testid="stSidebar"] p,
+        [data-testid="stSidebar"] label {{ color: var(--monitor-texto) !important; }}
         [data-testid="stMetric"] {{
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
@@ -61,16 +68,25 @@ def _estilos() -> None:
             padding: 0.8rem 0.9rem;
             min-height: 128px;
         }}
-        [data-testid="stMetricLabel"] {{ color: var(--monitor-secundario); }}
-        [data-testid="stMetricValue"] {{ font-size: 1.55rem; }}
+        [data-testid="stMetricLabel"] {{ color: var(--monitor-secundario) !important; }}
+        [data-testid="stMetricValue"] {{
+            color: var(--monitor-texto) !important;
+            font-size: 1.55rem;
+        }}
+        [data-testid="stMetricDelta"] {{ color: var(--monitor-secundario) !important; }}
         [data-testid="stPlotlyChart"] {{
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
             border-radius: 6px;
         }}
         .stTabs [data-baseweb="tab-list"] {{ gap: 1.25rem; }}
-        .stTabs [data-baseweb="tab"] {{ padding-left: 0; padding-right: 0; }}
-        .stTabs [aria-selected="true"] {{ color: var(--monitor-acento); }}
+        .stTabs [data-baseweb="tab"] {{
+            color: var(--monitor-secundario) !important;
+            padding-left: 0;
+            padding-right: 0;
+        }}
+        .stTabs [data-baseweb="tab"] p {{ color: inherit !important; }}
+        .stTabs [aria-selected="true"] {{ color: var(--monitor-acento) !important; }}
         @media (max-width: 768px) {{
             .block-container {{ padding: 1rem 0.8rem 2rem; }}
             h1 {{ font-size: 1.65rem; }}
@@ -378,21 +394,23 @@ periodo = st.sidebar.segmented_control(
     width="stretch",
 )
 departamento = st.sidebar.selectbox(
-    "Departamento",
+    "Departamento / zona de referencia",
     options=DEPARTAMENTOS,
     index=DEPARTAMENTOS.index(GEOGRAFIA_PRIORITARIA),
 )
 municipio = datos.loc[
     datos["geografia"] == departamento, "municipio_referencia"
 ].iloc[0]
-st.sidebar.caption(f"Referencia climática: {municipio}")
+st.sidebar.markdown(f"**Referencia climática:** {municipio}")
 st.sidebar.caption("Ranking 1 = valor numérico más alto, no mejor resultado.")
 
 semanas = PERIODOS_VISUALIZACION[periodo or "1 año"]
 filtrados = _filtrar_periodo(datos, semanas)
 
 tab_panorama, tab_departamento, tab_comparacion = st.tabs(
-    ["Panorama", departamento, "Comparación"]
+    ["Panorama nacional", f"{departamento} · {municipio}", "Comparación"],
+    default=f"{departamento} · {municipio}",
+    key=f"vistas_{departamento}",
 )
 
 with tab_panorama:

@@ -52,6 +52,7 @@ COLORES_INTERFAZ = {
     "texto": "#17211B",
     "texto_secundario": "#5F6B63",
     "fondo": "#F7F8F5",
+    "sidebar": "#EFF3EE",
     "superficie": "#FFFFFF",
     "borde": "#DDE3DD",
     "acento": "#176B4D",

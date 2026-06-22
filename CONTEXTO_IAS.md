@@ -263,12 +263,19 @@ Commits relevantes:
 
 - Aplicacion: `streamlit run app.py` y abrir `http://localhost:8501`.
 - Dependencias fijadas: `streamlit==1.58.0` y `plotly==6.8.0`.
-- Vista `Panorama`: tres metricas comerciales y evolucion en indice base 100.
+- Vista `Panorama nacional`: tres metricas comerciales y evolucion en indice
+  base 100; sus valores no cambian por departamento porque su alcance es
+  Colombia/global.
 - Vista departamental: 4 metricas, precipitacion con promedio de 4 semanas y
   temperaturas minima, promedio y maxima. Departamento inicial: Caldas.
 - Vista `Comparacion`: variable y semana seleccionables, barras de los 8
   departamentos e historia del seleccionado frente a la mediana.
-- Filtros: 6 meses, 1 ano o todo el historico; selector de departamento.
+- Filtros: 6 meses, 1 ano o todo el historico; selector de departamento. Al
+  cambiarlo se activa la pestana departamental y se muestra tambien el
+  municipio de referencia, para que el efecto del filtro sea inmediato.
+- Tema claro explicito en `.streamlit/config.toml`; los colores principales se
+  centralizan en `config.py` para evitar mezclas de contraste con el tema local
+  del navegador.
 - Lenguaje neutral: deltas sin colores bueno/malo, ranking por magnitud y nota
   explicita de que la coordenada municipal no representa todo el departamento.
 - Validacion funcional con `streamlit.testing`: 3 pestanas, 7 metricas, 5
@@ -277,6 +284,9 @@ Commits relevantes:
 - Revision visual automatizada pendiente: Chrome capturo el esqueleto antes de
   cargar y la instalacion temporal de Playwright fue bloqueada por limite del
   entorno. Se requiere feedback visual directo del usuario.
+- Feedback visual recibido: se corrigio el bajo contraste de sidebar, cabecera,
+  pestanas y metricas. No se agrego un selector municipal: el dataset contiene
+  por ahora una sola coordenada municipal de referencia por departamento.
 
 ---
 

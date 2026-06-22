@@ -78,8 +78,9 @@ streamlit run app.py
 
 Luego abre `http://localhost:8501`. El tablero tiene tres vistas:
 
-- `Panorama`: café, USD/COP y precio interno en una escala base 100.
-- Departamento: lluvia y temperaturas de la referencia municipal elegida.
+- `Panorama nacional`: café, USD/COP y precio interno en una escala base 100.
+- Departamento: lluvia y temperaturas de la referencia municipal elegida. Al
+  cambiar el departamento, el tablero abre esta vista automáticamente.
 - `Comparación`: ranking semanal y evolución frente a la mediana departamental.
 
 Esta es una versión para feedback. No contiene score ni semáforos de riesgo.
