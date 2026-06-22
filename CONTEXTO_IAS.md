@@ -17,13 +17,14 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para agroexportacion latinoamericana,
 con foco inicial en cafe.
 
-Fase actual: **Fase 1 completa**.
+Fase actual: **Fase 2 completa**.
 
-Siguiente paso natural: **Fase 2 - unir fuentes y guardar el primer snapshot en
-`datos/snapshots/`**.
+Siguiente paso natural: **Fase 3 - score: metodologia del indice de
+oportunidad/riesgo por pais, con datos reales en mano**.
 
 Commits relevantes:
 
+- `(Fase 2)` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
 - `4791a62` - Fase 1d: implementar `fuentes/noticias.py` con GDELT.
 - `e14bfad` - Fase 1c: implementar `fuentes/clima.py` con Open-Meteo.
 - `cc08a46` - Fase 1b: implementar `fuentes/cafe.py` con yfinance.
@@ -138,16 +139,32 @@ Formato recomendado para nuevas entradas:
 - Commit relacionado, si existe.
 ```
 
+### Unir - Fase 2
+
+- Esquema de salida: `fecha_snapshot`, `fecha_dato`, `pais`, `variable`,
+  `valor`, `unidad`, `fuente`.
+- Decision de fechas: se mantienen dos columnas separadas.
+  `fecha_snapshot` = hoy (parametrizable para pruebas).
+  `fecha_dato` = fecha real del ultimo dato disponible segun la fuente.
+  Motivo: las fuentes no comparten exactamente el mismo dia (yfinance devuelve
+  el ultimo cierre disponible, Open-Meteo cierra el dia anterior), y ocultar
+  esa diferencia seria deshonesto para un proyecto de portafolio.
+- Clima: se agrega de diario a semanal con cuatro variables por pais:
+  `precipitacion_semanal` (suma), `temp_min_semanal` (min de minimas),
+  `temp_max_semanal` (max de maximas), `temp_promedio_semanal` (media de
+  puntos medios diarios). `fecha_dato` = dia mas reciente de la ventana.
+- Primer snapshot validado: `datos/snapshots/snapshot_2026-06-21.csv`,
+  26 filas (5 FX + 1 cafe + 20 clima = 5 paises x 4 variables).
+- Si una fuente devuelve vacio, la union omite esa parte sin romper.
+- Snapshot guardado como CSV (utf-8, sin indice): legible y diff-eable en git.
+
 ---
 
 ## Proxima tarea sugerida
 
-Implementar **Fase 2 - `procesar/unir.py`**:
+Implementar **Fase 3 - `procesar/score.py`**:
 
-- Llamar las fuentes ya implementadas.
-- Unir datos numericos en una tabla semanal.
-- Decidir como representar fechas distintas entre fuentes:
-  mantener fecha real del dato y/o agregar una fecha de snapshot semanal.
-- Guardar el primer snapshot en `datos/snapshots/`.
-- Verificar con `python main.py` o un comando aislado equivalente.
-- Registrar aqui la decision tomada y hacer commit.
+- Definir la metodologia del indice de oportunidad/riesgo por pais.
+- Usar los datos reales del snapshot como base de diseno.
+- Registrar la metodologia en CONTEXTO_IAS.md y en el propio modulo.
+- Hacer commit al validar.
