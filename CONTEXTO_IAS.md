@@ -17,14 +17,19 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para agroexportacion latinoamericana,
 con foco inicial en cafe.
 
-Fase actual: **Fase 2 completa**.
+Fase actual: **Fase 2 completa + fuente extra `precio_interno` (FNC) anadida**.
 
-Siguiente paso natural: **Fase 3 - score: metodologia del indice de
-oportunidad/riesgo por pais, con datos reales en mano**.
+Nota de secuencia: el usuario etiqueto esta tarea como "Fase 3", pero en la
+practica fue agregar una nueva fuente numerica (`fuentes/precio_interno.py`),
+no el score. El score (Fase 3 segun CLAUDE.md) sigue pendiente.
+
+Siguiente paso natural: **integrar `precio_interno` en `procesar/unir.py`** (no
+esta incluida aun en la union) y luego **Fase 3 - score**.
 
 Commits relevantes:
 
-- `(Fase 2)` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
+- `(precio_interno)` - Fuente extra: `fuentes/precio_interno.py` (scraping FNC).
+- `e47bd1c` - Fase 2: implementar `procesar/unir.py` y primer snapshot.
 - `4791a62` - Fase 1d: implementar `fuentes/noticias.py` con GDELT.
 - `e14bfad` - Fase 1c: implementar `fuentes/clima.py` con Open-Meteo.
 - `cc08a46` - Fase 1b: implementar `fuentes/cafe.py` con yfinance.
@@ -91,6 +96,32 @@ Commits relevantes:
 - La normalizacion fue probada con un DataFrame artificial estilo GDELT:
   `seendate`, `title`, `url`, `language` -> contrato de noticias.
 - `tono` queda como `NaN` float; `categoria` queda pendiente para fase posterior.
+
+### Precio interno FNC - fuente extra (scraping)
+
+- Modulo: `fuentes/precio_interno.py`. Variable `precio_interno_referencia`,
+  `pais = "COLOMBIA"`, unidad `COP/carga_125kg`, fuente `FNC`, `valor` entero.
+- Fuente elegida: la **pagina de estadisticas cafeteras** de la FNC
+  (`config.URL_PRECIO_INTERNO_FNC`), por estabilidad. Es WordPress/Elementor:
+  el HTML lo entrega el servidor (no requiere JS). El precio esta en el menu de
+  cabecera ("Precio interno de referencia: $X.XXX.XXX") y la fecha en un bloque
+  "Fecha: AAAA-MM-DD".
+- **Descartado el PDF de precios por ciudad**: agrega fragilidad (otro parseo,
+  otro formato) y la diferencia frente al precio de referencia unico es minima
+  para el objetivo del monitor. Anotado por si se quiere granularidad luego.
+- **Excel historico** de la FNC: anotado como fuente futura para series de
+  tiempo del precio interno; no se usa ahora (el monitor es puntual/semanal).
+- Formato colombiano: "$2.110.000" -> el punto es separador de MILES. Se limpia
+  quitando "$" y los puntos -> `2110000` (int). Bug clasico evitado: NO leerlo
+  como float decimal (2.11). Se agrego una banda de plausibilidad
+  (500.000-10.000.000) que ademas atrapa ese error de parseo.
+- Dependencia nueva: `beautifulsoup4` (agregada a `requirements.txt` e instalada
+  en `.venv`). Se usa `User-Agent` de navegador en la peticion.
+- Misma fragilidad declarada que el cafe: si cambia la maquetacion, el modulo
+  devuelve `DataFrame` vacio con columnas correctas (regla del contrato).
+- Validacion real (`python -m fuentes.precio_interno`): 1 fila,
+  `2026-06-18`, `2.110.000 COP/carga_125kg`.
+- Pendiente: aun NO esta integrada en `procesar/unir.py`.
 
 ---
 

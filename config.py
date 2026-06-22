@@ -86,6 +86,13 @@ TICKER_CAFE_ROBUSTA = None
 # La key NO va aquí: se lee de la variable de entorno ALPHAVANTAGE_API_KEY.
 
 # ---------------------------------------------------------------------------
+# Precio interno de referencia FNC (Colombia)
+# ---------------------------------------------------------------------------
+# Página de estadísticas cafeteras de la Federación Nacional de Cafeteros.
+# Se raspa el HTML del servidor (no requiere JS). Es scraping: frágil.
+URL_PRECIO_INTERNO_FNC = "https://federaciondecafeteros.org/wp/estadisticas-cafeteras/"
+
+# ---------------------------------------------------------------------------
 # Clima (Fase 1c) — Open-Meteo
 # ---------------------------------------------------------------------------
 # Variables diarias a pedir por zona cafetera.

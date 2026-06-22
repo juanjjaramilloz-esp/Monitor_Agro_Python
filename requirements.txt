@@ -11,6 +11,7 @@ pandas          # manejo de datos / DataFrames
 requests        # llamadas HTTP (Open-Meteo, Frankfurter, Banco Mundial)
 yfinance        # precio del café (KC=F) y FX de respaldo
 gdeltdoc        # cliente de la GDELT DOC 2.0 API (noticias)
+beautifulsoup4  # parseo HTML del precio interno FNC (scraping)
 
 # --- Reporte / resumen con IA (Fase 4) ---
 # anthropic     # descomentar en la Fase 4 si usamos Claude API para el resumen
