@@ -17,11 +17,11 @@ validada, registrar aqui lo importante y hacer commit.
 Proyecto: monitor semanal de condiciones para la agroexportacion de cafe de
 **Colombia**, comparando sus departamentos cafeteros entre si.
 
-Fase actual: **Bloque 3.5 - preparacion visual completado** sobre 180 semanas
-historicas completas. Bloques 4 y 5 pausados por decision del usuario.
+Fase actual: **visualizaciones basicas implementadas** para feedback sobre 180
+semanas historicas. Bloques 4 y 5 pausados por decision del usuario.
 
-Siguiente paso recomendado: crear **visualizaciones basicas** y recoger
-feedback. Despues se retomara conocimiento cafetero y score.
+Siguiente paso recomendado: recoger feedback del usuario y usuarias potenciales
+sobre las visualizaciones antes de fijar la interfaz o retomar el score.
 
 Commits relevantes:
 
@@ -259,6 +259,27 @@ Commits relevantes:
 
 ---
 
+## Visualizaciones basicas para feedback
+
+- Aplicacion: `streamlit run app.py` y abrir `http://localhost:8501`.
+- Dependencias fijadas: `streamlit==1.58.0` y `plotly==6.8.0`.
+- Vista `Panorama`: tres metricas comerciales y evolucion en indice base 100.
+- Vista departamental: 4 metricas, precipitacion con promedio de 4 semanas y
+  temperaturas minima, promedio y maxima. Departamento inicial: Caldas.
+- Vista `Comparacion`: variable y semana seleccionables, barras de los 8
+  departamentos e historia del seleccionado frente a la mediana.
+- Filtros: 6 meses, 1 ano o todo el historico; selector de departamento.
+- Lenguaje neutral: deltas sin colores bueno/malo, ranking por magnitud y nota
+  explicita de que la coordenada municipal no representa todo el departamento.
+- Validacion funcional con `streamlit.testing`: 3 pestanas, 7 metricas, 5
+  graficos y cero excepciones en la carga inicial.
+- Servidor validado con endpoint de salud `ok` en puerto 8501.
+- Revision visual automatizada pendiente: Chrome capturo el esqueleto antes de
+  cargar y la instalacion temporal de Playwright fue bloqueada por limite del
+  entorno. Se requiere feedback visual directo del usuario.
+
+---
+
 ## Como actualizar este archivo
 
 Actualizarlo cuando ocurra cualquiera de estas cosas:
@@ -313,9 +334,9 @@ Formato recomendado para nuevas entradas:
 
 ## Proxima tarea sugerida
 
-Crear visualizaciones basicas para feedback:
+Recoger feedback de las visualizaciones basicas:
 
-- Consumir `datos/visualizacion/series_visualizacion.csv`.
-- Priorizar contexto comercial, evolucion de Caldas y comparacion departamental.
-- Mantener lenguaje descriptivo, sin score ni semaforos de riesgo.
-- Probarlas con el usuario antes de fijar la interfaz definitiva.
+- Revisar jerarquia, comprension y utilidad de las tres vistas.
+- Confirmar si Caldas debe permanecer como foco inicial.
+- Anotar graficos o textos que las usuarias consideren confusos o faltantes.
+- No iniciar score ni tablero definitivo hasta recibir ese feedback.

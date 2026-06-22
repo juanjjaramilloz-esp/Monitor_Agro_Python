@@ -22,5 +22,10 @@ datos/indicadores/indicadores_semanales.csv
 # Dataset visual derivado; el resumen y catálogo sí se versionan
 datos/visualizacion/series_visualizacion.csv
 
+# Archivos locales de ejecución y verificación visual
+streamlit.*.log
+.tmp_chrome/
+.tmp_screens/
+
 # Nota: datos/snapshots/ SÍ se versiona a propósito: es el histórico semanal
 # y sirve como evidencia de que el monitor corre en el tiempo.

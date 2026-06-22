@@ -43,6 +43,21 @@ VARIABLES_INDICE_BASE_100 = {
 }
 UMBRAL_ANOMALIA_MODERADA = 1.0
 UMBRAL_ANOMALIA_ALTA = 2.0
+PERIODOS_VISUALIZACION = {
+    "6 meses": 26,
+    "1 año": 52,
+    "Todo": None,
+}
+COLORES_INTERFAZ = {
+    "texto": "#17211B",
+    "texto_secundario": "#5F6B63",
+    "fondo": "#F7F8F5",
+    "superficie": "#FFFFFF",
+    "borde": "#DDE3DD",
+    "acento": "#176B4D",
+    "comparacion": "#8A8178",
+    "rejilla": "#E7EBE7",
+}
 
 # Metadatos de presentación. Las etiquetas no alteran los datos ni el score.
 CATALOGO_VARIABLES = {

@@ -12,6 +12,7 @@ para analizar tendencias antes de construir un score.
 - Histórico semanal: 180 semanas completas, con 35 indicadores por semana.
 - Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
 - Preparación visual: etiquetas humanas, categorías, colores e índice base 100.
+- Dashboard básico: mercado, departamento y comparación climática interactiva.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
 - Pendiente: criterios cafeteros, score, reporte y dashboard.
@@ -68,6 +69,20 @@ python -m procesar.visualizacion
 
 Este paso agrega etiquetas legibles, orden estable, municipio de referencia,
 colores y escalas comparables. No genera score ni interpreta riesgo.
+
+## Cómo abrir las visualizaciones
+
+```powershell
+streamlit run app.py
+```
+
+Luego abre `http://localhost:8501`. El tablero tiene tres vistas:
+
+- `Panorama`: café, USD/COP y precio interno en una escala base 100.
+- Departamento: lluvia y temperaturas de la referencia municipal elegida.
+- `Comparación`: ranking semanal y evolución frente a la mediana departamental.
+
+Esta es una versión para feedback. No contiene score ni semáforos de riesgo.
 
 ## Archivos de resultados
 
