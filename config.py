@@ -200,6 +200,10 @@ FNC_PREFIJO_HOJA_PRECIO_DIARIO = "1. Precio Interno Diario"
 FNC_FILA_ENCABEZADO_HISTORICO = 5
 FNC_COLUMNA_FECHA_HISTORICO = "Fecha"
 FNC_COLUMNA_PRECIO_HISTORICO = "Precio Interno ($/125 Kg)"
+FNC_PREFIJO_HOJA_PRODUCCION_MENSUAL = "8. Producción mensual"
+FNC_FILA_ENCABEZADO_PRODUCCION = 5
+FNC_COLUMNA_FECHA_PRODUCCION = "Mes"
+FNC_COLUMNA_VALOR_PRODUCCION = "Producción"
 
 # ---------------------------------------------------------------------------
 # Clima (Fase 1c) — Open-Meteo
