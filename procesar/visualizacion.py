@@ -154,6 +154,7 @@ def preparar_descarga_comercial(tabla: pd.DataFrame) -> pd.DataFrame:
         "etiqueta_variable",
         "valor",
         "unidad",
+        "cadencia",
         "cambio_1s_pct",
         "cambio_4s_pct",
         "cambio_1m_pct",
@@ -162,13 +163,15 @@ def preparar_descarga_comercial(tabla: pd.DataFrame) -> pd.DataFrame:
         "fuente",
         "geografia",
     ]
-    mercado = tabla[tabla["categoria"].eq("Mercado")].copy()
+    mercado = tabla[tabla["categoria"].isin(["Mercado", "Producción"])].copy()
     mercado = mercado[columnas].rename(
         columns={
             "semana_fin": "semana_cierre",
             "etiqueta_variable": "indicador",
             "cambio_1s_pct": "cambio_semanal_pct",
             "cambio_4s_pct": "cambio_4_semanas_pct",
+            "cambio_1m_pct": "cambio_mensual_pct",
+            "cambio_12m_pct": "cambio_interanual_pct",
             "geografia": "alcance_geografico",
         }
     )

@@ -113,6 +113,8 @@ def _leer_series(ruta: str, marca_tiempo: float) -> pd.DataFrame:
         "cambio_1s_absoluto",
         "cambio_1s_pct",
         "cambio_4s_pct",
+        "cambio_1m_pct",
+        "cambio_12m_pct",
         "promedio_movil_4s",
         "promedio_movil_12s",
         "anomalia_z_52s",
@@ -213,6 +215,23 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
     figura.add_hline(y=100, line_dash="dot", line_color="#9CA39D", line_width=1)
     figura.update_layout(title="Evolución comercial comparable · base 100")
     return _layout(figura, 430)
+
+
+def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
+    datos = tabla[tabla["variable"].eq("produccion_nacional")]
+    figura = go.Figure(
+        go.Bar(
+            x=datos["fecha_dato"],
+            y=datos["valor"],
+            marker_color=CATALOGO_VARIABLES["produccion_nacional"]["color"],
+            name="Producción mensual",
+            hovertemplate=(
+                "%{x|%b %Y}<br>%{y:,.1f} miles de sacos de 60 kg<extra></extra>"
+            ),
+        )
+    )
+    figura.update_layout(title="Producción nacional registrada · mensual", bargap=0.18)
+    return _layout(figura, 350)
 
 
 def _grafico_lluvia(tabla: pd.DataFrame, departamento: str) -> go.Figure:
@@ -394,7 +413,7 @@ def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
 
 def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
     """Resume cobertura y fecha real del último dato de cada serie comercial."""
-    mercado = tabla[tabla["categoria"].eq("Mercado")].copy()
+    mercado = tabla[tabla["categoria"].isin(["Mercado", "Producción"])].copy()
     indices = mercado.groupby("variable")["semana_fin"].idxmax()
     ultimos = mercado.loc[indices]
     filas = []
@@ -407,9 +426,54 @@ def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
                 "Unidad": fila["unidad"],
                 "Fuente": metadatos["nombre"],
                 "Alcance": metadatos["alcance"],
+                "Cadencia": fila["cadencia"],
             }
         )
     return pd.DataFrame(filas)
+
+
+def _bloque_produccion(tabla_filtrada: pd.DataFrame, tabla_completa: pd.DataFrame) -> None:
+    """Muestra producción sin convertir su publicación mensual en dato semanal."""
+    periodo = tabla_filtrada[tabla_filtrada["variable"].eq("produccion_nacional")]
+    if periodo.empty:
+        st.info("No hay un dato mensual de producción publicado dentro del periodo elegido.")
+        return
+
+    serie = tabla_completa[
+        tabla_completa["variable"].eq("produccion_nacional")
+    ].sort_values("fecha_dato")
+    ultima_periodo = periodo.sort_values("fecha_dato").iloc[-1]
+    ultima_completa = serie[serie["fecha_dato"].eq(ultima_periodo["fecha_dato"])].iloc[-1]
+    columnas = st.columns([1, 1, 2])
+    columnas[0].metric(
+        "Producción nacional · mensual",
+        f"{_numero_es(float(ultima_periodo['valor']), 1)} mil sacos de 60 kg",
+        help="Producción registrada de café verde equivalente publicada por la FNC.",
+    )
+    cambio_mensual = ultima_completa["cambio_1m_pct"]
+    cambio_anual = ultima_completa["cambio_12m_pct"]
+    columnas[1].metric(
+        "Mes del dato",
+        pd.Timestamp(ultima_periodo["fecha_dato"]).strftime("%m/%Y"),
+        delta=(
+            f"{_numero_es(float(cambio_mensual), 1)}% frente al mes anterior"
+            if pd.notna(cambio_mensual)
+            else None
+        ),
+        delta_color="off",
+    )
+    columnas[2].markdown(
+        f"**Cambio interanual:** "
+        f"{_numero_es(float(cambio_anual), 1) + '%' if pd.notna(cambio_anual) else 'Sin dato'}  \n"
+        f"**Fuente:** FNC  \n"
+        f"**Cadencia:** mensual, sin relleno semanal"
+    )
+    st.plotly_chart(
+        _grafico_produccion(periodo),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
+    )
 
 
 def _metodologia_comercial() -> pd.DataFrame:
@@ -552,6 +616,8 @@ with tab_panorama:
         hide_index=True,
         width="stretch",
     )
+    st.subheader("Producción nacional")
+    _bloque_produccion(filtrados, datos)
     descarga = preparar_descarga_comercial(filtrados)
     nombre_archivo = (
         f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
