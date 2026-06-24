@@ -4,7 +4,12 @@ import unittest
 import pandas as pd
 
 from procesar.calidad import COLUMNAS_HISTORICO_SEMANAL
-from procesar.visualizacion import _estado_anomalia, crear_resumen_visual, preparar
+from procesar.visualizacion import (
+    _estado_anomalia,
+    crear_resumen_visual,
+    preparar,
+    preparar_descarga_comercial,
+)
 
 
 class PreparacionVisualTests(unittest.TestCase):
@@ -72,6 +77,17 @@ class PreparacionVisualTests(unittest.TestCase):
         self.assertEqual(_estado_anomalia(-1.1), "Por debajo de su historia")
         self.assertEqual(_estado_anomalia(0.2), "Dentro de su rango histórico")
         self.assertEqual(_estado_anomalia(None), "Sin historial suficiente")
+
+    def test_descarga_comercial_conserva_trazabilidad(self) -> None:
+        resultado = preparar(self._historico())
+
+        descarga = preparar_descarga_comercial(resultado)
+
+        self.assertEqual(len(descarga), 5)
+        self.assertIn("fecha_dato", descarga.columns)
+        self.assertIn("fuente", descarga.columns)
+        self.assertIn("unidad", descarga.columns)
+        self.assertEqual(descarga.iloc[0]["indicador"], "Tasa de cambio USD/COP")
 
 
 if __name__ == "__main__":

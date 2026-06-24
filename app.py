@@ -10,10 +10,15 @@ from config import (
     CATALOGO_VARIABLES,
     COLORES_INTERFAZ,
     DEPARTAMENTOS,
+    FUENTES_COMERCIALES,
     GEOGRAFIA_PRIORITARIA,
     PERIODOS_VISUALIZACION,
 )
-from procesar.visualizacion import RUTA_SERIES, ejecutar as preparar_visualizacion
+from procesar.visualizacion import (
+    RUTA_SERIES,
+    ejecutar as preparar_visualizacion,
+    preparar_descarga_comercial,
+)
 
 
 CONFIG_GRAFICO = {
@@ -101,7 +106,7 @@ def _estilos() -> None:
 @st.cache_data(show_spinner=False)
 def _leer_series(ruta: str, marca_tiempo: float) -> pd.DataFrame:
     del marca_tiempo
-    tabla = pd.read_csv(ruta, parse_dates=["semana_fin"])
+    tabla = pd.read_csv(ruta, parse_dates=["semana_fin", "fecha_dato"])
     numericas = [
         "valor",
         "indice_base_100",
@@ -349,6 +354,44 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
         )
 
 
+def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Resume cobertura y fecha real del último dato de cada serie comercial."""
+    mercado = tabla[tabla["categoria"].eq("Mercado")].copy()
+    indices = mercado.groupby("variable")["semana_fin"].idxmax()
+    ultimos = mercado.loc[indices]
+    filas = []
+    for _, fila in ultimos.iterrows():
+        metadatos = FUENTES_COMERCIALES[fila["variable"]]
+        filas.append(
+            {
+                "Indicador": fila["etiqueta_variable"],
+                "Último dato": pd.Timestamp(fila["fecha_dato"]).strftime("%d/%m/%Y"),
+                "Unidad": fila["unidad"],
+                "Fuente": metadatos["nombre"],
+                "Alcance": metadatos["alcance"],
+            }
+        )
+    return pd.DataFrame(filas)
+
+
+def _metodologia_comercial() -> pd.DataFrame:
+    """Devuelve la metodología comercial en el orden visible del catálogo."""
+    filas = []
+    variables = sorted(
+        FUENTES_COMERCIALES,
+        key=lambda variable: CATALOGO_VARIABLES[variable]["orden"],
+    )
+    for variable in variables:
+        metadatos = FUENTES_COMERCIALES[variable]
+        filas.append(
+            {
+                "Indicador": CATALOGO_VARIABLES[variable]["etiqueta"],
+                "Tratamiento semanal": metadatos["metodo"],
+            }
+        )
+    return pd.DataFrame(filas)
+
+
 def _metricas_clima(tabla: pd.DataFrame, departamento: str) -> None:
     ultima = tabla["semana_fin"].max()
     datos = tabla[(tabla["semana_fin"] == ultima) & (tabla["geografia"] == departamento)]
@@ -379,11 +422,12 @@ def _metricas_clima(tabla: pd.DataFrame, departamento: str) -> None:
 _estilos()
 datos = _cargar_datos()
 ultima_semana = datos["semana_fin"].max()
+semanas_disponibles_total = datos["semana_fin"].nunique()
 
 st.title("Monitor Agro Colombia")
 st.caption(
     "Condiciones comerciales y climáticas del café colombiano · "
-    f"180 semanas · datos hasta {ultima_semana:%d/%m/%Y}"
+    f"{semanas_disponibles_total} semanas · datos hasta {ultima_semana:%d/%m/%Y}"
 )
 
 st.sidebar.header("Filtros")
@@ -425,6 +469,35 @@ with tab_panorama:
         "Índice base 100 desde enero de 2023: permite comparar dirección y magnitud "
         "relativa entre series con unidades distintas."
     )
+    descarga = preparar_descarga_comercial(filtrados)
+    nombre_archivo = (
+        f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
+        f"{filtrados['semana_fin'].max():%Y%m%d}.csv"
+    )
+    st.download_button(
+        "Descargar series comerciales (CSV)",
+        data=descarga.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig"),
+        file_name=nombre_archivo,
+        mime="text/csv",
+        width="stretch",
+        help="Incluye valores, variaciones, unidad, fuente, alcance y fecha real del dato.",
+    )
+    with st.expander("Cobertura y metodología comercial"):
+        st.markdown(
+            "Las tres series se comparan semanalmente, pero conservan su unidad y "
+            "la fecha real del dato. El índice base 100 facilita comparar tendencias; "
+            "no convierte las variables a una misma unidad ni demuestra causalidad."
+        )
+        st.dataframe(
+            _resumen_fuentes_comerciales(filtrados),
+            hide_index=True,
+            width="stretch",
+        )
+        st.dataframe(
+            _metodologia_comercial(),
+            hide_index=True,
+            width="stretch",
+        )
 
 with tab_departamento:
     st.subheader(f"{departamento} · referencia {municipio}")

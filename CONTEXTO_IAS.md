@@ -21,14 +21,19 @@ una decisión de producto.
 
 ## Punto de control
 
-Actualizado: **2026-06-22**.
+Actualizado: **2026-06-24**.
 
 - El MVP descriptivo ya tiene fuentes, controles de calidad, histórico desde
   2023, indicadores neutrales, preparación visual y dashboard básico.
-- La etapa actual es **feedback de visualizaciones**. El conocimiento cafetero
-  experto y el score continúan pausados por decisión del usuario.
-- Próximo trabajo: recoger y aplicar feedback de comprensión/utilidad del
-  dashboard. No diseñar todavía el score definitivo.
+- Se recibió feedback de la beneficiaria vinculada a CRECE. La prioridad
+  inmediata es convertir el panorama comercial en una herramienta reutilizable
+  para investigación, informes y reuniones; la capa climática se conserva, pero
+  no se amplía a partir de este feedback.
+- El conocimiento cafetero experto y el score continúan pausados por decisión
+  del usuario.
+- Próximo trabajo: fortalecer la lectura comercial y preparar un brief
+  ejecutivo exportable. Después se investigará una fuente defendible de
+  producción/productividad territorial.
 - Git es la fuente de verdad del historial; no mantener aquí una copia de
   `git log`.
 
@@ -68,13 +73,17 @@ Actualizado: **2026-06-22**.
   resumen y un catálogo de 7 variables.
 - `Panorama nacional` muestra café ICE, USD/COP y precio interno FNC. No cambia
   al elegir departamento porque esas series tienen alcance global/nacional.
+- El panorama comercial permite descargar el periodo filtrado en CSV con fecha
+  real del dato, unidad, variaciones, fuente y alcance. También muestra cobertura
+  y tratamiento semanal de cada serie.
+- Los periodos disponibles incluyen 3 y 6 meses, 1 y 3 años y todo el histórico.
 - Al cambiar departamento se activa su pestaña y aparece el municipio de
   referencia. No existe selector municipal: por ahora hay una coordenada
   representativa por departamento.
 - El tema claro está fijado en `.streamlit/config.toml`; los colores editables
   se centralizan en `config.py`.
-- Validación tras el último ajuste: 27 pruebas unitarias, prueba funcional
-  Caldas/Manizales -> Huila/Pitalito sin excepciones y endpoint de salud `ok`.
+- Validación tras el último ajuste: 28 pruebas unitarias, ejecución funcional
+  de Streamlit sin excepciones y endpoint de salud `ok`.
 - URL local mientras el servidor esté corriendo: `http://localhost:8501`.
 
 ---

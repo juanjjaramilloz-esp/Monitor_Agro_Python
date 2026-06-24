@@ -44,9 +44,28 @@ VARIABLES_INDICE_BASE_100 = {
 UMBRAL_ANOMALIA_MODERADA = 1.0
 UMBRAL_ANOMALIA_ALTA = 2.0
 PERIODOS_VISUALIZACION = {
+    "3 meses": 13,
     "6 meses": 26,
     "1 año": 52,
+    "3 años": 156,
     "Todo": None,
+}
+FUENTES_COMERCIALES = {
+    "precio_interno_referencia": {
+        "nombre": "Federación Nacional de Cafeteros (FNC)",
+        "alcance": "Colombia",
+        "metodo": "Precio interno diario; se conserva el último dato disponible de cada semana.",
+    },
+    "precio_cafe_arabica": {
+        "nombre": "Yahoo Finance / futuro ICE Coffee C",
+        "alcance": "Global",
+        "metodo": "Cierre diario del futuro KC=F; se conserva el último dato disponible de cada semana.",
+    },
+    "fx_usd_local": {
+        "nombre": "Yahoo Finance / USD-COP",
+        "alcance": "Colombia",
+        "metodo": "Cierre diario de USDCOP=X; se conserva el último dato disponible de cada semana.",
+    },
 }
 COLORES_INTERFAZ = {
     "texto": "#17211B",

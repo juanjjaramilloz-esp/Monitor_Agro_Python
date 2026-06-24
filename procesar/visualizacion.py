@@ -143,6 +143,34 @@ def preparar(
     return tabla
 
 
+def preparar_descarga_comercial(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Crea una tabla comercial legible y trazable para reutilización externa."""
+    columnas = [
+        "semana_fin",
+        "fecha_dato",
+        "variable",
+        "etiqueta_variable",
+        "valor",
+        "unidad",
+        "cambio_1s_pct",
+        "cambio_4s_pct",
+        "indice_base_100",
+        "fuente",
+        "geografia",
+    ]
+    mercado = tabla[tabla["categoria"].eq("Mercado")].copy()
+    mercado = mercado[columnas].rename(
+        columns={
+            "semana_fin": "semana_cierre",
+            "etiqueta_variable": "indicador",
+            "cambio_1s_pct": "cambio_semanal_pct",
+            "cambio_4s_pct": "cambio_4_semanas_pct",
+            "geografia": "alcance_geografico",
+        }
+    )
+    return mercado.sort_values(["semana_cierre", "variable"]).reset_index(drop=True)
+
+
 def crear_resumen_visual(tabla: pd.DataFrame) -> pd.DataFrame:
     """Filtra la última semana conservando metadatos listos para tarjetas."""
     ultima = pd.to_datetime(tabla["semana_fin"]).max().date()

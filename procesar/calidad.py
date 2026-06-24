@@ -51,6 +51,7 @@ COLUMNAS_INDICADORES = [
 
 COLUMNAS_VISUALIZACION = [
     "semana_fin",
+    "fecha_dato",
     "anio",
     "mes",
     "semana_iso",

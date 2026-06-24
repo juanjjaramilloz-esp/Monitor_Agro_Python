@@ -1,6 +1,6 @@
 # Briefing estratégico - Monitor Agro Colombia
 
-Vigencia del briefing: **22 de junio de 2026**.
+Vigencia del briefing: **24 de junio de 2026**.
 
 ## Cómo usar este archivo
 
@@ -66,7 +66,10 @@ países sin una necesidad clara.
 Hay dos beneficiarias principales y dos lentes complementarios:
 
 - **Tía vinculada a CRECE:** lente económico, comercial y de investigación.
-  Le sirven tendencias, comparaciones, fuentes citables y metodología clara.
+  Trabaja integrando información sobre productores, territorios, productividad,
+  sostenibilidad, precios, mercado y programas de apoyo. Le sirven series
+  limpias y comparables, tendencias, fuentes citables, metodología clara y
+  salidas reutilizables en análisis, informes, presentaciones y reuniones.
 - **Mamá vinculada a Fundación Manuel Mejía:** lente del productor y
   pedagógico. Le sirve entender cómo clima, precio y costos pueden traducirse
   en condiciones relevantes para caficultores y procesos de formación.
@@ -118,6 +121,15 @@ El selector sí cambia las vistas climáticas departamentales.
   sobre cosecha, clima, costos y lectura del negocio cafetero.
 - **Credibilidad visible:** el producto final debe explicar fuentes,
   metodología, alcance y limitaciones.
+- **Integrar antes que multiplicar:** para CRECE, el valor principal está en
+  reducir el trabajo de buscar, limpiar, comparar y verificar varias fuentes,
+  no en añadir indicadores sin una pregunta de uso.
+- **Reutilización como función central:** los datos y gráficos deben poder
+  descargarse o exportarse con periodo, unidad, fuente y fecha claramente
+  identificados.
+- **Lente comercial y de investigación primero:** fortalecer la lectura conjunta
+  del precio interno FNC, Coffee C y USD/COP antes de ampliar el componente
+  climático o construir interpretaciones causales.
 
 ---
 
@@ -139,6 +151,24 @@ confiables antes de diseñar el score:
 
 Ya está confirmado que trabajan con alcance nacional, no únicamente con Caldas.
 
+## Feedback confirmado de CRECE
+
+La beneficiaria de CRECE trabaja principalmente desde la investigación y el
+análisis, conectando la realidad del productor con las dinámicas económicas,
+comerciales e institucionales del sector. Sus entregables incluyen informes
+técnicos, presentaciones, cifras para reuniones, propuestas, boletines y
+reportes con periodicidad variable, además de solicitudes rápidas.
+
+El problema principal no es encontrar un precio puntual. Es reunir series
+limpias, comparables y actualizadas desde fuentes oficiales o especializadas,
+depurarlas y comprobar su consistencia antes de usarlas.
+
+Las preguntas de mayor valor futuro conectan precio, producción, productividad,
+costos, territorio y condiciones del productor. Por ejemplo, cambios en
+ingresos, exposición de municipios o tipos de productores y relaciones entre
+mercado, decisiones en finca, sostenibilidad y bienestar. Estas preguntas
+requieren nuevas fuentes y no deben fingirse con los datos actuales.
+
 ---
 
 ## Oportunidades de producto ya identificadas
@@ -157,6 +187,11 @@ No son compromisos automáticos; deben priorizarse con feedback:
   contenidos de formación.
 - **Capa metodológica:** diccionario de datos, fuentes, fecha de actualización,
   cobertura y explicación del futuro score.
+- **Descarga para análisis:** series filtradas y tablas comerciales listas para
+  reutilizar, conservando fecha, unidad y fuente.
+- **Producción y productividad territorial:** primera ampliación de datos a
+  investigar después de consolidar la capa comercial. Debe evaluarse cobertura,
+  periodicidad y nivel geográfico antes de incorporarla.
 - **Automatización semanal y publicación:** después de estabilizar contenido e
   interfaz.
 
@@ -178,23 +213,20 @@ No son compromisos automáticos; deben priorizarse con feedback:
 
 ## Próximo objetivo
 
-Recoger feedback sobre las visualizaciones básicas antes de retomar el score.
-En particular:
+Convertir el panorama comercial en una herramienta reutilizable para
+investigación y preparación de entregables. El orden de trabajo confirmado es:
 
-- qué vista se entiende y cuál confunde;
-- qué información ayuda a tomar o preparar una decisión;
-- qué dato falta para que el tablero sea útil en CRECE o Fundación Manuel
-  Mejía;
-- si Caldas debe seguir siendo el foco inicial;
-- qué debería poder exportarse o compartirse.
+1. Hacer visibles cobertura, fechas, unidades, fuentes y metodología.
+2. Permitir descargar las series comerciales filtradas y reutilizar sus cifras.
+3. Fortalecer la lectura conjunta de precio interno FNC, Coffee C y USD/COP.
+4. Crear un brief ejecutivo exportable para informes y reuniones.
+5. Investigar una fuente defendible de producción/productividad territorial.
+6. Probar el flujo con una tarea real de CRECE y ajustar según ese uso.
+7. Retomar costos, margen, exposición y posibles scores solo cuando existan
+   datos y conocimiento experto suficientes.
 
-Después del feedback, el orden recomendado es:
-
-1. Ajustar la interfaz y la jerarquía de información.
-2. Incorporar conocimiento cafetero confirmado.
-3. Diseñar y documentar los dos lentes o scores, si siguen teniendo sentido.
-4. Crear el brief ejecutivo exportable.
-5. Automatizar, publicar y preparar la narrativa de portafolio/LinkedIn.
+La capa climática existente se conserva, pero este feedback no justifica
+ampliarla ni priorizar nuevas funciones climáticas.
 
 ---
 
