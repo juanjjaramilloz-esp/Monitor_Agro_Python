@@ -215,8 +215,9 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - Una anomalía estadística no equivale por sí sola a riesgo agronómico.
 - Un score sin calendario productivo, costos y validación experta parecería
   preciso, pero sería conceptualmente débil.
-- El proyecto sigue en Git local y aún no está automatizado ni publicado como
-  producto final.
+- El código está respaldado en GitHub y la aplicación está publicada y
+  funcional en Streamlit Community Cloud. La actualización automática de datos
+  todavía no está implementada.
 
 ---
 
@@ -225,7 +226,8 @@ No son compromisos automáticos; deben priorizarse con feedback:
 Convertir el panorama comercial en una herramienta reutilizable para
 investigación y preparación de entregables. El orden de trabajo confirmado es:
 
-1. Probar el kit y el brief con una tarea real de CRECE.
+1. Compartir la aplicación publicada y probar el kit y el brief con una tarea
+   real de CRECE.
 2. Ajustar contenido, jerarquía y formato según ese uso.
 3. Evaluar después si hace falta producción territorial u otra nueva fuente.
 4. Considerar PDF solo si la usuaria lo necesita; Markdown es la salida inicial.

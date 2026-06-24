@@ -33,6 +33,8 @@ Actualizado: **2026-06-24**.
   del usuario.
 - La primera ampliación confirmada es producción **nacional mensual** FNC. No
   se incorporó producción departamental o municipal.
+- El repositorio tiene remoto `origin` en GitHub y la aplicación está
+  desplegada, activa y funcional en Streamlit Community Cloud.
 - Próximo trabajo: validar el kit de consulta, descarga y brief con una tarea
   real de CRECE antes de ampliar datos o formatos.
 - Git es la fuente de verdad del historial; no mantener aquí una copia de
@@ -80,7 +82,8 @@ Actualizado: **2026-06-24**.
   real del dato, unidad, variaciones, fuente y alcance. También muestra cobertura
   y tratamiento semanal de cada serie.
 - Producción aparece como bloque mensual separado, con cambio mensual e
-  interanual, fecha real y sin relleno semanal.
+  interanual, fecha real y sin relleno semanal. Las barras tienen ancho fijo y
+  representan una observación por mes, sin sugerir continuidad semanal.
 - El rango puede elegirse con presets o fechas personalizadas. El mismo periodo
   genera un brief Markdown descargable con cifras, lectura neutral, fuentes,
   cobertura, cadencias y limitaciones.
@@ -91,7 +94,8 @@ Actualizado: **2026-06-24**.
 - El tema claro está fijado en `.streamlit/config.toml`; los colores editables
   se centralizan en `config.py`.
 - Validación tras el último ajuste: 34 pruebas unitarias, ejecución funcional
-  de Streamlit sin excepciones y endpoint de salud `ok`.
+  de Streamlit sin excepciones, endpoint de salud `ok` y despliegue funcional
+  en Streamlit Community Cloud.
 - URL local mientras el servidor esté corriendo: `http://localhost:8501`.
 
 ---
