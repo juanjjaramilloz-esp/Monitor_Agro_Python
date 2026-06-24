@@ -18,7 +18,8 @@ No necesita instalar nada. Todo funciona desde el navegador.
 - **Consultar la producción nacional mensual** registrada por la FNC.
 - **Comparar el clima** (lluvia y temperaturas) de ocho departamentos cafeteros.
 - **Descargar las series** del periodo que elija, en CSV, con fecha real del
-  dato, unidad y fuente; y generar un **brief en Markdown** listo para un informe.
+  dato, unidad y fuente; y generar un **brief en PDF** con las gráficas, las
+  variaciones y las fuentes, listo para un informe o una reunión.
 - **Explorar escenarios** de precio interno y margen con el simulador.
 
 ---
@@ -28,7 +29,7 @@ No necesita instalar nada. Todo funciona desde el navegador.
 1. **Panorama nacional.** Precio internacional del café, USD/COP y precio
    interno FNC en una escala base 100 para compararlos en un mismo gráfico, más
    la producción nacional mensual. Aquí están las descargas por periodo: las
-   series comerciales en CSV y un brief en Markdown.
+   series comerciales en CSV y un brief en PDF con las gráficas.
 2. **Departamento.** Lluvia y temperaturas del departamento elegido, usando un
    municipio como referencia climática.
 3. **Simulador.** Escenarios de precio interno y margen al mover supuestos de

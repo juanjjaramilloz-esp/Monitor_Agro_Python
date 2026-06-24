@@ -24,7 +24,8 @@ una decisión de producto.
 Actualizado: **2026-06-24**.
 
 - El MVP descriptivo ya tiene fuentes, controles de calidad, histórico desde
-  2023, indicadores neutrales, preparación visual, dashboard y brief Markdown.
+  2023, indicadores neutrales, preparación visual, dashboard y brief del periodo
+  en PDF con gráficas.
 - Se recibió feedback de la beneficiaria vinculada a CRECE. La prioridad
   inmediata es convertir el panorama comercial en una herramienta reutilizable
   para investigación, informes y reuniones; la capa climática se conserva, pero
@@ -101,8 +102,13 @@ Actualizado: **2026-06-24**.
   interanual, fecha real y sin relleno semanal. Las barras tienen ancho fijo y
   representan una observación por mes, sin sugerir continuidad semanal.
 - El rango puede elegirse con presets o fechas personalizadas. El mismo periodo
-  genera un brief Markdown descargable con cifras, lectura neutral, fuentes,
-  cobertura, cadencias y limitaciones.
+  genera un brief en PDF descargable (`reporte/pdf.py`, `generar_pdf_brief`) con
+  las dos gráficas comerciales, la tabla de variaciones, la cobertura/fuentes y
+  las limitaciones. Las gráficas del PDF se dibujan con matplotlib (sin
+  navegador), no con Plotly; se descartó kaleido porque se colgaba con Plotly 6.8
+  en Windows y exigiría Chrome del sistema en Streamlit Cloud. La generación va
+  con `st.cache_data` y un botón que habilita la descarga del periodo activo.
+  El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
 - Los periodos disponibles incluyen 3 y 6 meses, 1 y 3 años y todo el histórico.
 - La pestaña `Simulador` permite mover Coffee C, USD/COP, precio FNC base,
   costo de producción y número de cargas. Muestra precio interno proyectado,
@@ -142,6 +148,9 @@ Actualizado: **2026-06-24**.
   con su ventana histórica actual.
 - GDELT puede responder `RateLimitError`. El fallback vacío funciona, pero
   sigue pendiente decidir otra estrategia si el límite se vuelve recurrente.
+- Para imágenes del PDF no usar `plotly` + `kaleido`: kaleido 0.2.1 se cuelga con
+  Plotly 6.8 en Python 3.13/Windows y kaleido v1 necesita Chrome del sistema
+  (frágil en Streamlit Cloud). Las gráficas del brief se generan con matplotlib.
 - El PDF FNC por ciudad fue descartado por fragilidad y escasa diferencia
   frente al precio nacional. No reabrir esa decisión sin una necesidad de
   producto concreta.

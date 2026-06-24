@@ -16,7 +16,7 @@ para analizar tendencias antes de construir un score.
 - Dashboard publicado: panorama comercial, producción mensual y detalle
   climático departamental.
 - Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
-  ejecutivo en Markdown.
+  ejecutivo en PDF con las gráficas (matplotlib + reportlab).
 - Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,
   costo por carga y volumen, con margen bruto, mapa de sensibilidad e informe
   del escenario descargable en Markdown.
@@ -87,7 +87,8 @@ streamlit run app.py
 Luego abre `http://localhost:8501`. El tablero tiene tres vistas:
 
 - `Panorama nacional`: café, USD/COP y precio interno en una escala base 100,
-  producción nacional mensual y descargas por periodo.
+  producción nacional mensual, descarga de series en CSV y brief del periodo en
+  PDF con las gráficas.
 - Departamento: lluvia y temperaturas de la referencia municipal elegida. Al
   cambiar el departamento, el tablero abre esta vista automáticamente.
 - `Simulador`: escenarios de precio interno y margen al modificar Coffee C,

@@ -35,10 +35,8 @@ from procesar.visualizacion import (
     ejecutar as preparar_visualizacion,
     preparar_descarga_comercial,
 )
-from reporte.generar import (
-    generar as generar_brief,
-    generar_informe_simulador,
-)
+from reporte.generar import generar_informe_simulador
+from reporte.pdf import generar_pdf_brief
 
 
 CONFIG_GRAFICO = {
@@ -830,6 +828,20 @@ def _metricas_clima(tabla: pd.DataFrame, departamento: str) -> None:
         )
 
 
+@st.cache_data(show_spinner="Preparando el brief en PDF…")
+def _brief_pdf(inicio: pd.Timestamp, fin: pd.Timestamp, marca_datos: float) -> bytes:
+    """Genera el PDF del periodo; la caché solo se invalida si cambian los datos."""
+    del marca_datos
+    periodo = _filtrar_fechas(datos, inicio, fin)
+    return generar_pdf_brief(
+        inicio=inicio,
+        fin=fin,
+        periodo=periodo,
+        variaciones=_variaciones_mercado(datos),
+        cobertura=_resumen_fuentes_comerciales(periodo),
+    )
+
+
 _estilos()
 datos = _cargar_datos()
 ultima_semana = datos["semana_fin"].max()
@@ -940,7 +952,7 @@ with tab_panorama:
     )
     inicio_brief = pd.Timestamp(filtrados["semana_fin"].min())
     fin_brief = pd.Timestamp(filtrados["semana_fin"].max())
-    brief = generar_brief(datos, inicio_brief, fin_brief)
+    clave_pdf = f"{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}"
     col_csv, col_brief = st.columns(2)
     col_csv.download_button(
         "Descargar series comerciales (CSV)",
@@ -951,12 +963,12 @@ with tab_panorama:
         help="Incluye valores, variaciones, unidad, fuente, alcance y fecha real del dato.",
     )
     col_brief.download_button(
-        "Descargar brief del periodo (Markdown)",
-        data=brief.encode("utf-8"),
-        file_name=f"brief_monitor_agro_{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}.md",
-        mime="text/markdown",
+        "Descargar brief del periodo (PDF)",
+        data=_brief_pdf(inicio_brief, fin_brief, Path(RUTA_SERIES).stat().st_mtime),
+        file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
+        mime="application/pdf",
         width="stretch",
-        help="Resumen trazable de precios, dólar y producción para informes y reuniones.",
+        help="Documento con las gráficas, las variaciones y las fuentes del periodo.",
     )
     with st.expander("Cobertura y metodología comercial"):
         st.markdown(

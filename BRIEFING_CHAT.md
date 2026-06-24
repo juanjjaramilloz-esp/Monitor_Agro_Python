@@ -99,7 +99,8 @@ Ya existe un MVP funcional con:
 - un dashboard publicado con tres vistas: panorama nacional, detalle climático
   del departamento elegido y simulador;
 - filtros de periodo y departamento;
-- selector de fechas personalizadas, descarga CSV y brief Markdown por periodo;
+- selector de fechas personalizadas, descarga CSV y brief en PDF por periodo,
+  con las gráficas, las variaciones y las fuentes incluidas;
 - simulador de supuestos para Coffee C, USD/COP, precio FNC y costo por carga,
   con margen bruto, mapa de sensibilidad e informe del escenario descargable;
 - tema visual claro y selección departamental visible mediante su municipio de
@@ -248,7 +249,8 @@ investigación y preparación de entregables. El orden de trabajo confirmado es:
 3. Validar si el simulador ayuda a responder preguntas reales y si requiere
    prima, costos regionales o escenarios guardables.
 4. Evaluar después si hace falta producción territorial u otra nueva fuente.
-5. Considerar PDF solo si la usuaria lo necesita; Markdown es la salida inicial.
+5. El brief del periodo ya es un PDF con gráficas, tablas y fuentes; queda
+   validar con CRECE si el formato y el contenido sirven para sus entregables.
 6. Retomar posibles scores solo cuando existan datos y conocimiento experto
    suficientes.
 
