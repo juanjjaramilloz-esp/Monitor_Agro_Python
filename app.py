@@ -164,6 +164,16 @@ def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
     return tabla[tabla["semana_fin"] >= inicio].copy()
 
 
+def _filtrar_fechas(
+    tabla: pd.DataFrame,
+    inicio: pd.Timestamp,
+    fin: pd.Timestamp,
+) -> pd.DataFrame:
+    """Filtra un rango inclusivo de cierres semanales."""
+    fechas = pd.to_datetime(tabla["semana_fin"])
+    return tabla[(fechas >= inicio) & (fechas <= fin)].copy()
+
+
 def _layout(figura: go.Figure, altura: int = 400) -> go.Figure:
     colores = COLORES_INTERFAZ
     figura.update_layout(
@@ -354,6 +364,34 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
         )
 
 
+def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Resume cambios semanales, de 4 semanas y de 52 semanas sin causalidad."""
+    filas = []
+    for variable in ["precio_interno_referencia", "precio_cafe_arabica", "fx_usd_local"]:
+        serie = tabla[tabla["variable"].eq(variable)].sort_values("semana_fin")
+        if serie.empty:
+            continue
+        actual = serie.iloc[-1]
+
+        def cambio(periodos: int) -> float | None:
+            if len(serie) <= periodos:
+                return None
+            anterior = float(serie.iloc[-periodos - 1]["valor"])
+            if anterior == 0:
+                return None
+            return (float(actual["valor"]) / anterior - 1) * 100
+
+        filas.append(
+            {
+                "Indicador": actual["etiqueta_variable"],
+                "Semanal": cambio(1),
+                "Mensual (4 sem.)": cambio(4),
+                "Anual (52 sem.)": cambio(52),
+            }
+        )
+    return pd.DataFrame(filas)
+
+
 def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
     """Resume cobertura y fecha real del último dato de cada serie comercial."""
     mercado = tabla[tabla["categoria"].eq("Mercado")].copy()
@@ -426,17 +464,48 @@ semanas_disponibles_total = datos["semana_fin"].nunique()
 
 st.title("Monitor Agro Colombia")
 st.caption(
-    "Condiciones comerciales y climáticas del café colombiano · "
+    "Herramienta de consulta y reporte para integrar, comparar y exportar "
+    "evidencia comercial del café colombiano · "
     f"{semanas_disponibles_total} semanas · datos hasta {ultima_semana:%d/%m/%Y}"
+)
+st.markdown(
+    "Explore series para análisis, informes y reuniones. El panorama nacional "
+    "permite leer conjuntamente precio interno FNC, Coffee C y USD/COP; las "
+    "vistas territoriales conservan el contexto climático ya disponible."
 )
 
 st.sidebar.header("Filtros")
-periodo = st.sidebar.segmented_control(
-    "Periodo",
-    options=list(PERIODOS_VISUALIZACION),
-    default="1 año",
-    width="stretch",
+tipo_periodo = st.sidebar.radio(
+    "Rango de análisis",
+    options=["Periodo predefinido", "Fechas personalizadas"],
 )
+if tipo_periodo == "Periodo predefinido":
+    periodo = st.sidebar.segmented_control(
+        "Periodo",
+        options=list(PERIODOS_VISUALIZACION),
+        default="1 año",
+        width="stretch",
+    )
+    semanas = PERIODOS_VISUALIZACION[periodo or "1 año"]
+    filtrados = _filtrar_periodo(datos, semanas)
+else:
+    fecha_minima = datos["semana_fin"].min().date()
+    fecha_maxima = datos["semana_fin"].max().date()
+    rango = st.sidebar.date_input(
+        "Fechas de cierre",
+        value=(max(fecha_minima, fecha_maxima - pd.Timedelta(days=365)), fecha_maxima),
+        min_value=fecha_minima,
+        max_value=fecha_maxima,
+        format="DD/MM/YYYY",
+    )
+    if isinstance(rango, (tuple, list)) and len(rango) == 2:
+        filtrados = _filtrar_fechas(
+            datos,
+            pd.Timestamp(rango[0]),
+            pd.Timestamp(rango[1]),
+        )
+    else:
+        filtrados = _filtrar_periodo(datos, PERIODOS_VISUALIZACION["1 año"])
 departamento = st.sidebar.selectbox(
     "Departamento / zona de referencia",
     options=DEPARTAMENTOS,
@@ -448,9 +517,6 @@ municipio = datos.loc[
 st.sidebar.markdown(f"**Referencia climática:** {municipio}")
 st.sidebar.caption("Ranking 1 = valor numérico más alto, no mejor resultado.")
 
-semanas = PERIODOS_VISUALIZACION[periodo or "1 año"]
-filtrados = _filtrar_periodo(datos, semanas)
-
 tab_panorama, tab_departamento, tab_comparacion = st.tabs(
     ["Panorama nacional", f"{departamento} · {municipio}", "Comparación"],
     default=f"{departamento} · {municipio}",
@@ -458,6 +524,11 @@ tab_panorama, tab_departamento, tab_comparacion = st.tabs(
 )
 
 with tab_panorama:
+    st.subheader("Lectura conjunta comercial")
+    st.caption(
+        "Movimiento descriptivo de las tres series. Las variaciones no implican "
+        "causalidad ni califican el resultado como favorable o desfavorable."
+    )
     _metricas_mercado(filtrados)
     st.plotly_chart(
         _grafico_mercado(filtrados),
@@ -468,6 +539,18 @@ with tab_panorama:
     st.caption(
         "Índice base 100 desde enero de 2023: permite comparar dirección y magnitud "
         "relativa entre series con unidades distintas."
+    )
+    st.dataframe(
+        _variaciones_mercado(datos).style.format(
+            {
+                "Semanal": "{:+.1f}%",
+                "Mensual (4 sem.)": "{:+.1f}%",
+                "Anual (52 sem.)": "{:+.1f}%",
+            },
+            na_rep="Sin dato",
+        ),
+        hide_index=True,
+        width="stretch",
     )
     descarga = preparar_descarga_comercial(filtrados)
     nombre_archivo = (
