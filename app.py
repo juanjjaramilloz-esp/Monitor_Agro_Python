@@ -402,23 +402,33 @@ def _grafico_sensibilidad(
                 [1, "#176B4D"],
             ],
             colorbar=dict(title="COP/carga", tickformat=",.0f"),
-            hoverinfo="skip",
-        )
-    )
-    # Capa de puntos transparente: el Heatmap no emite eventos de clic, pero un
-    # Scatter sí. Con hovermode "closest", un clic elige el punto más cercano.
-    figura.add_trace(
-        go.Scatter(
-            x=matriz["tasa_cambio"],
-            y=matriz["precio_ny"],
-            mode="markers",
-            marker=dict(size=18, color="rgba(0,0,0,0)"),
-            customdata=matriz["precio_fnc_proyectado"],
             hovertemplate=(
                 "USD/COP: %{x:,.0f}<br>"
                 "Coffee C: %{y:.1f} US¢/lb<br>"
-                "Precio FNC: $%{customdata:,.0f}<extra></extra>"
+                "Precio FNC: $%{z:,.0f}<extra></extra>"
             ),
+        )
+    )
+    # Rejilla fina e invisible para capturar el clic con precisión: el Heatmap no
+    # emite eventos de clic, pero un Scatter sí. Con hovermode "closest" el clic
+    # elige el punto más cercano; al ser densa, ese punto queda casi donde se
+    # hizo clic. El hover lo sigue dando el heatmap (esta capa lo deja pasar).
+    resolucion = 45
+    tasa_min, tasa_max = float(matriz["tasa_cambio"].min()), float(matriz["tasa_cambio"].max())
+    ny_min, ny_max = float(matriz["precio_ny"].min()), float(matriz["precio_ny"].max())
+    rejilla_x, rejilla_y = [], []
+    for indice_ny in range(resolucion):
+        ny = ny_min + indice_ny * (ny_max - ny_min) / (resolucion - 1)
+        for indice_tasa in range(resolucion):
+            rejilla_x.append(tasa_min + indice_tasa * (tasa_max - tasa_min) / (resolucion - 1))
+            rejilla_y.append(ny)
+    figura.add_trace(
+        go.Scatter(
+            x=rejilla_x,
+            y=rejilla_y,
+            mode="markers",
+            marker=dict(size=12, color="rgba(0,0,0,0)"),
+            hoverinfo="skip",
             showlegend=False,
             name="celdas",
         )
@@ -512,8 +522,10 @@ def _aplicar_clic_sensibilidad(
     if estado is not None and hasattr(estado, "get"):
         seleccion = estado.get("selection") or {}
         puntos = seleccion.get("points", []) if hasattr(seleccion, "get") else []
-    if puntos and puntos[0].get("x") is not None:
-        punto = puntos[0]
+    # Excluye el marcador del escenario (curva 2) para que no capture el clic.
+    candidatos = [p for p in puntos if p.get("curve_number") != 2] or puntos
+    if candidatos and candidatos[0].get("x") is not None:
+        punto = candidatos[0]
         firma = (punto["x"], punto["y"])
         if st.session_state.get("sens_firma") != firma:
             st.session_state["sim_tasa"] = _ajustar_a_paso(

@@ -67,9 +67,11 @@ factor de rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
 (prefijo `sim_`) y un botón "Restablecer valores predeterminados" (callback
 `_restablecer_simulador` que limpia esas claves). El escenario se fija con
 sliders o haciendo clic en el mapa de sensibilidad: el Heatmap no emite eventos
-de clic, así que se superpone un Scatter transparente (capa "celdas") y con
-`hovermode="closest"` + `on_select="rerun"` un clic elige el punto de grilla más
-cercano; la matriz se alinea al rango exacto de los sliders. Muestra precio
+de clic, así que se superpone una rejilla fina e invisible (Scatter 45×45, capa
+"celdas") y con `hovermode="closest"` + `on_select="rerun"` un clic elige el punto
+más cercano (al ser densa, queda casi donde se hizo clic). El parser descarta la
+curva del marcador del escenario. La matriz coloreada se alinea al rango exacto
+de los sliders y el heatmap conserva el hover de precios. Muestra precio
 proyectado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
 = margen) y la matriz. Botón para descargar un informe Markdown
 (`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé
