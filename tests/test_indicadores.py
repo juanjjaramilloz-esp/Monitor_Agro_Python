@@ -49,6 +49,33 @@ class IndicadoresTemporalesTests(unittest.TestCase):
         self.assertAlmostEqual(anomalia["valor"], 10.0)
         self.assertEqual(anomalia["observaciones"], 26)
 
+    def test_produccion_calcula_cambios_mensual_e_interanual(self) -> None:
+        inicio = pd.Timestamp("2025-01-01")
+        filas = []
+        for indice in range(13):
+            fecha = (inicio + pd.DateOffset(months=indice)).date()
+            semana = fecha + timedelta(days=6 - fecha.weekday())
+            filas.append(
+                [
+                    semana,
+                    fecha,
+                    "COLOMBIA",
+                    "produccion_nacional",
+                    100.0 + indice * 10,
+                    "miles_sacos_60kg",
+                    "FNC",
+                    1,
+                ]
+            )
+        historico = pd.DataFrame(filas, columns=COLUMNAS_HISTORICO_SEMANAL)
+
+        resultado = calcular(historico)
+        indicadores = set(resultado["indicador"])
+
+        self.assertIn("cambio_1m_pct", indicadores)
+        self.assertIn("cambio_12m_pct", indicadores)
+        self.assertNotIn("cambio_1s_pct", indicadores)
+
 
 class ComparacionesDepartamentalesTests(unittest.TestCase):
     def setUp(self) -> None:

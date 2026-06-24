@@ -40,12 +40,15 @@ de producto.
 
 ## Qué es el producto
 
-**Monitor Agro Colombia** es un monitor semanal de las condiciones comerciales
-y climáticas que rodean al café colombiano. Combina:
+**Monitor Agro Colombia** se está consolidando como un kit de consulta y
+reporte del que se extrae evidencia para análisis, informes y reuniones.
+Conserva su pipeline y snapshots, pero su valor visible no es solo consultar
+una semana: es integrar, comparar y exportar series. Combina:
 
 - precio interno de referencia de la Federación Nacional de Cafeteros (FNC);
 - precio internacional del café arábica ICE Coffee C;
 - tasa de cambio USD/COP;
+- producción nacional mensual registrada por la FNC;
 - lluvia y temperaturas en ocho departamentos cafeteros;
 - señales nacionales de noticias, todavía secundarias.
 
@@ -89,12 +92,14 @@ Ya existe un MVP funcional con:
 
 - histórico semanal desde enero de 2023, con 180 semanas completas;
 - tres variables comerciales nacionales/globales;
+- producción nacional mensual desde enero de 2023;
 - cuatro variables climáticas para cada uno de los ocho departamentos;
 - tendencias, cambios, promedios móviles, anomalías estadísticas neutrales y
   comparaciones entre departamentos;
 - un dashboard local con tres vistas: panorama nacional, detalle climático del
   departamento elegido y comparación entre departamentos;
 - filtros de periodo y departamento;
+- selector de fechas personalizadas, descarga CSV y brief Markdown por periodo;
 - tema visual claro y selección departamental visible mediante su municipio de
   referencia.
 
@@ -130,6 +135,10 @@ El selector sí cambia las vistas climáticas departamentales.
 - **Lente comercial y de investigación primero:** fortalecer la lectura conjunta
   del precio interno FNC, Coffee C y USD/COP antes de ampliar el componente
   climático o construir interpretaciones causales.
+- **Kit de consulta y reporte:** el brief exportable por periodo es una salida
+  central, no un complemento tardío del tablero.
+- **Cadencia honesta por serie:** precio, dólar y clima conservan su tratamiento
+  semanal; producción se muestra únicamente en sus meses publicados.
 
 ---
 
@@ -190,8 +199,8 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - **Descarga para análisis:** series filtradas y tablas comerciales listas para
   reutilizar, conservando fecha, unidad y fuente.
 - **Producción y productividad territorial:** primera ampliación de datos a
-  investigar después de consolidar la capa comercial. Debe evaluarse cobertura,
-  periodicidad y nivel geográfico antes de incorporarla.
+  evaluar más adelante. La ampliación confirmada actual es solo producción
+  nacional mensual; el nivel departamental o municipal queda fuera de alcance.
 - **Automatización semanal y publicación:** después de estabilizar contenido e
   interfaz.
 
@@ -216,13 +225,11 @@ No son compromisos automáticos; deben priorizarse con feedback:
 Convertir el panorama comercial en una herramienta reutilizable para
 investigación y preparación de entregables. El orden de trabajo confirmado es:
 
-1. Hacer visibles cobertura, fechas, unidades, fuentes y metodología.
-2. Permitir descargar las series comerciales filtradas y reutilizar sus cifras.
-3. Fortalecer la lectura conjunta de precio interno FNC, Coffee C y USD/COP.
-4. Crear un brief ejecutivo exportable para informes y reuniones.
-5. Investigar una fuente defendible de producción/productividad territorial.
-6. Probar el flujo con una tarea real de CRECE y ajustar según ese uso.
-7. Retomar costos, margen, exposición y posibles scores solo cuando existan
+1. Probar el kit y el brief con una tarea real de CRECE.
+2. Ajustar contenido, jerarquía y formato según ese uso.
+3. Evaluar después si hace falta producción territorial u otra nueva fuente.
+4. Considerar PDF solo si la usuaria lo necesita; Markdown es la salida inicial.
+5. Retomar costos, margen, exposición y posibles scores solo cuando existan
    datos y conocimiento experto suficientes.
 
 La capa climática existente se conserva, pero este feedback no justifica

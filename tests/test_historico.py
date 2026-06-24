@@ -72,6 +72,34 @@ class AgregacionHistoricaTests(unittest.TestCase):
 
         self.assertEqual(set(resultado["semana_fin"]), {date(2026, 1, 11)})
 
+    def test_produccion_mensual_no_se_rellena_semanalmente(self) -> None:
+        tabla = pd.DataFrame(
+            [
+                [
+                    date(2026, 1, 1),
+                    "COLOMBIA",
+                    "produccion_nacional",
+                    900.0,
+                    "miles_sacos_60kg",
+                    "FNC",
+                ],
+                [
+                    date(2026, 2, 1),
+                    "COLOMBIA",
+                    "produccion_nacional",
+                    1000.0,
+                    "miles_sacos_60kg",
+                    "FNC",
+                ],
+            ],
+            columns=COLUMNAS_DIARIAS,
+        )
+
+        resultado = agregar_semanal(tabla, date(2026, 2, 28))
+
+        self.assertEqual(len(resultado), 2)
+        self.assertEqual(resultado["fecha_dato"].nunique(), 2)
+
 
 class PersistenciaHistoricaTests(unittest.TestCase):
     def test_combinar_es_idempotente_y_prefiere_dato_nuevo(self) -> None:
