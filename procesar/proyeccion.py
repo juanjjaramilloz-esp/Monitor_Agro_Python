@@ -69,12 +69,16 @@ def proyectar_precio_fnc(
     precio_ny_base: float,
     tasa_cambio_escenario: float,
     precio_ny_escenario: float,
+    factor_rendimiento: float | None = None,
+    factor_referencia: float | None = None,
 ) -> float:
     """
     Desplaza el precio FNC proporcionalmente al producto Coffee C × USD/COP.
 
-    El precio FNC observado sirve como ancla. La prima, calidad, pasilla,
-    factor de rendimiento y costos de acopio no se modelan por separado.
+    El precio FNC observado sirve como ancla. Opcionalmente aplica un ajuste
+    aproximado por factor de rendimiento (referencia ÷ factor): un factor menor
+    sube el precio y uno mayor lo baja. La prima, calidad, pasilla y los costos
+    de acopio no se modelan por separado.
     """
     valores = [
         precio_fnc_base,
@@ -87,7 +91,12 @@ def proyectar_precio_fnc(
         raise ValueError("proyeccion: todos los precios y tasas deben ser positivos")
     factor_fx = tasa_cambio_escenario / tasa_cambio_base
     factor_cafe = precio_ny_escenario / precio_ny_base
-    return float(precio_fnc_base * factor_fx * factor_cafe)
+    precio = precio_fnc_base * factor_fx * factor_cafe
+    if factor_rendimiento is not None and factor_referencia is not None:
+        if factor_rendimiento <= 0 or factor_referencia <= 0:
+            raise ValueError("proyeccion: el factor de rendimiento debe ser positivo")
+        precio *= factor_referencia / factor_rendimiento
+    return float(precio)
 
 
 def calcular_escenario(
@@ -98,6 +107,8 @@ def calcular_escenario(
     precio_ny_escenario: float,
     costo_produccion_carga: float,
     cargas: int,
+    factor_rendimiento: float | None = None,
+    factor_referencia: float | None = None,
 ) -> ResultadoEscenario:
     """Calcula precio proyectado, ingresos, costos y margen bruto estimado."""
     if costo_produccion_carga < 0:
@@ -111,6 +122,8 @@ def calcular_escenario(
         precio_ny_base,
         tasa_cambio_escenario,
         precio_ny_escenario,
+        factor_rendimiento,
+        factor_referencia,
     )
     margen_carga = precio - costo_produccion_carga
     ingreso_total = precio * cargas
@@ -141,6 +154,8 @@ def crear_matriz_sensibilidad(
     precio_ny_base: float,
     tasas_cambio: list[float],
     precios_ny: list[float],
+    factor_rendimiento: float | None = None,
+    factor_referencia: float | None = None,
 ) -> pd.DataFrame:
     """Construye una matriz de precios FNC proyectados para dos variables."""
     filas = []
@@ -156,6 +171,8 @@ def crear_matriz_sensibilidad(
                         precio_ny_base,
                         tasa_cambio,
                         precio_ny,
+                        factor_rendimiento,
+                        factor_referencia,
                     ),
                 }
             )

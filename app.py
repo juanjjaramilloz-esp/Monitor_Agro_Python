@@ -15,6 +15,8 @@ from config import (
     COSTO_PRODUCCION_REFERENCIA,
     COSTO_PRODUCCION_URL,
     DEPARTAMENTOS,
+    FACTOR_RENDIMIENTO_RANGO,
+    FACTOR_RENDIMIENTO_REFERENCIA,
     FUENTES_COMERCIALES,
     GEOGRAFIA_PRIORITARIA,
     PERIODOS_VISUALIZACION,
@@ -48,6 +50,7 @@ CONFIG_GRAFICO = {
 
 st.set_page_config(
     page_title="Monitor Agro Colombia",
+    page_icon="☕",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -425,12 +428,16 @@ def _grafico_sensibilidad(
     return _layout(figura, 470)
 
 
-def _puntos_escenario(base: float, factores: tuple[float, float]) -> list[float]:
-    """Genera puntos equidistantes para la matriz sin añadir dependencias."""
-    minimo = base * factores[0]
-    maximo = base * factores[1]
+def _puntos_lineales(minimo: float, maximo: float) -> list[float]:
+    """Puntos equidistantes que cubren exactamente el rango de los controles."""
     paso = (maximo - minimo) / (PROYECCION_PUNTOS_MATRIZ - 1)
     return [minimo + indice * paso for indice in range(PROYECCION_PUNTOS_MATRIZ)]
+
+
+def _ajustar_a_paso(valor: float, minimo: float, maximo: float, paso: float) -> float:
+    """Redondea al paso del control y mantiene el valor dentro del rango."""
+    ajustado = round(valor / paso) * paso
+    return float(min(max(ajustado, minimo), maximo))
 
 
 def _resumen_cuenta(resultado: ResultadoEscenario, cargas: int) -> None:
@@ -479,6 +486,35 @@ def _resumen_cuenta(resultado: ResultadoEscenario, cargas: int) -> None:
     )
 
 
+def _aplicar_clic_sensibilidad(
+    minimo_fx: float,
+    maximo_fx: float,
+    minimo_cafe: float,
+    maximo_cafe: float,
+) -> None:
+    """Lleva un clic en el mapa de sensibilidad a los sliders del escenario."""
+    estado = st.session_state.get("sens_sel")
+    puntos = estado.get("selection", {}).get("points", []) if isinstance(estado, dict) else []
+    if puntos and puntos[0].get("x") is not None:
+        punto = puntos[0]
+        firma = (punto["x"], punto["y"])
+        if st.session_state.get("sens_firma") != firma:
+            st.session_state["sim_tasa"] = _ajustar_a_paso(
+                float(punto["x"]), minimo_fx, maximo_fx, 10.0
+            )
+            st.session_state["sim_ny"] = _ajustar_a_paso(
+                float(punto["y"]), minimo_cafe, maximo_cafe, 1.0
+            )
+            st.session_state["sens_firma"] = firma
+    # Mantiene los valores guardados dentro del rango vigente si cambió la base.
+    st.session_state["sim_tasa"] = _ajustar_a_paso(
+        st.session_state["sim_tasa"], minimo_fx, maximo_fx, 10.0
+    )
+    st.session_state["sim_ny"] = _ajustar_a_paso(
+        st.session_state["sim_ny"], minimo_cafe, maximo_cafe, 1.0
+    )
+
+
 def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
     """Renderiza controles y resultados del escenario económico."""
     bases = obtener_bases(tabla)
@@ -519,36 +555,46 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         )
         st.markdown(
             "**Fórmula:** precio FNC base × (USD/COP escenario ÷ USD/COP base) "
-            "× (Coffee C escenario ÷ Coffee C base). La prima o diferencial, "
-            "calidad, pasilla, factor de rendimiento y acopio no se modelan por separado."
+            "× (Coffee C escenario ÷ Coffee C base) × (factor referencia ÷ factor "
+            "de rendimiento). El ajuste por factor es aproximado, no la fórmula "
+            "oficial. La prima o diferencial, calidad, pasilla y acopio no se "
+            "modelan por separado."
         )
 
-    minimo_fx = floor(
-        tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[0] / 50
-    ) * 50
-    maximo_fx = ceil(
-        tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[1] / 50
-    ) * 50
-    minimo_cafe = floor(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[0])
-    maximo_cafe = ceil(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[1])
+    minimo_fx = float(floor(tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[0] / 50) * 50)
+    maximo_fx = float(ceil(tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[1] / 50) * 50)
+    minimo_cafe = float(floor(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[0]))
+    maximo_cafe = float(ceil(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[1]))
+
+    st.session_state.setdefault(
+        "sim_tasa", _ajustar_a_paso(tasa_cambio_base, minimo_fx, maximo_fx, 10.0)
+    )
+    st.session_state.setdefault(
+        "sim_ny", _ajustar_a_paso(precio_ny_base, minimo_cafe, maximo_cafe, 1.0)
+    )
+    _aplicar_clic_sensibilidad(minimo_fx, maximo_fx, minimo_cafe, maximo_cafe)
 
     control_1, control_2 = st.columns(2)
     tasa_escenario = control_1.slider(
         "Tasa de cambio del escenario · COP/USD",
-        min_value=float(minimo_fx),
-        max_value=float(maximo_fx),
-        value=float(round(tasa_cambio_base / 10) * 10),
+        min_value=minimo_fx,
+        max_value=maximo_fx,
         step=10.0,
+        key="sim_tasa",
     )
     precio_ny_escenario = control_2.slider(
         "Coffee C del escenario · US¢/lb",
-        min_value=float(minimo_cafe),
-        max_value=float(maximo_cafe),
-        value=float(round(precio_ny_base)),
+        min_value=minimo_cafe,
+        max_value=maximo_cafe,
         step=1.0,
+        key="sim_ny",
+    )
+    st.caption(
+        "Mueve los sliders o haz clic en una celda del mapa de sensibilidad para "
+        "fijar ese escenario."
     )
 
-    control_3, control_4 = st.columns(2)
+    control_3, control_4, control_5 = st.columns(3)
     costo_produccion = control_3.number_input(
         "Costo de producción · COP por carga de 125 kg",
         min_value=0.0,
@@ -564,6 +610,19 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         value=PROYECCION_CARGAS_PREDETERMINADAS,
         step=1,
     )
+    factor_rendimiento = control_5.number_input(
+        "Factor de rendimiento",
+        min_value=FACTOR_RENDIMIENTO_RANGO[0],
+        max_value=FACTOR_RENDIMIENTO_RANGO[1],
+        value=float(FACTOR_RENDIMIENTO_REFERENCIA),
+        step=1.0,
+        format="%.0f",
+        help=(
+            "Kg de café pergamino seco por carga de excelso; 94 es la referencia "
+            "FNC. Un factor menor (mejor rendimiento) sube el precio recibido; uno "
+            "mayor lo baja. Ajuste aproximado, no la fórmula oficial."
+        ),
+    )
 
     resultado = calcular_escenario(
         precio_fnc_base,
@@ -573,6 +632,8 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         precio_ny_escenario,
         costo_produccion,
         cargas,
+        factor_rendimiento,
+        FACTOR_RENDIMIENTO_REFERENCIA,
     )
 
     metricas = st.columns(4)
@@ -618,20 +679,25 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         )
         _resumen_cuenta(resultado, cargas)
     with grafico_2:
-        tasas = _puntos_escenario(tasa_cambio_base, PROYECCION_RANGO_FACTOR_FX)
-        precios_ny = _puntos_escenario(precio_ny_base, PROYECCION_RANGO_FACTOR_CAFE)
+        tasas = _puntos_lineales(minimo_fx, maximo_fx)
+        precios_ny = _puntos_lineales(minimo_cafe, maximo_cafe)
         matriz = crear_matriz_sensibilidad(
             precio_fnc_base,
             tasa_cambio_base,
             precio_ny_base,
             tasas,
             precios_ny,
+            factor_rendimiento,
+            FACTOR_RENDIMIENTO_REFERENCIA,
         )
         st.plotly_chart(
             _grafico_sensibilidad(matriz, tasa_escenario, precio_ny_escenario),
             width="stretch",
             theme=None,
             config=CONFIG_GRAFICO,
+            on_select="rerun",
+            selection_mode="points",
+            key="sens_sel",
         )
 
     informe = generar_informe_simulador(
@@ -649,6 +715,8 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         costo_referencia=COSTO_PRODUCCION_REFERENCIA,
         costo_fecha=COSTO_PRODUCCION_FECHA,
         costo_fuente=COSTO_PRODUCCION_FUENTE,
+        factor_rendimiento=factor_rendimiento,
+        factor_referencia=FACTOR_RENDIMIENTO_REFERENCIA,
     )
     st.download_button(
         "Descargar informe del escenario (Markdown)",
@@ -901,6 +969,9 @@ municipio = datos.loc[
 ].iloc[0]
 st.sidebar.markdown(f"**Referencia climática:** {municipio}")
 
+st.sidebar.divider()
+st.sidebar.caption("Autor: Juan José Jaramillo")
+
 tab_panorama, tab_departamento, tab_proyeccion = st.tabs(
     [
         "Panorama nacional",
@@ -1016,5 +1087,6 @@ with tab_proyeccion:
 st.divider()
 st.caption(
     "Fuentes: FNC, Open-Meteo y Yahoo Finance vía yfinance. "
-    "Visualización exploratoria; no contiene score de oportunidad o riesgo."
+    "Visualización exploratoria; no contiene score de oportunidad o riesgo. "
+    "Autor: Juan José Jaramillo."
 )

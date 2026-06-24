@@ -114,6 +114,13 @@ PROYECCION_PUNTOS_MATRIZ = 9
 PROYECCION_CARGAS_PREDETERMINADAS = 1
 PROYECCION_CARGAS_MAXIMAS = 1_000
 
+# Factor de rendimiento FNC: kg de café pergamino seco para una carga de
+# excelso. 94 es la referencia con la que se publica el precio interno. Un
+# factor menor (mejor rendimiento) sube el precio recibido; uno mayor lo baja.
+# El ajuste del simulador es aproximado (proporcional), no la fórmula oficial.
+FACTOR_RENDIMIENTO_REFERENCIA = 94.0
+FACTOR_RENDIMIENTO_RANGO = (84.0, 104.0)
+
 # Metadatos de presentación. Las etiquetas no alteran los datos ni el score.
 CATALOGO_VARIABLES = {
     "fx_usd_local": {

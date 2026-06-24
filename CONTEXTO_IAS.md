@@ -1,193 +1,116 @@
-# Continuidad técnica entre IAs - Monitor Agro Colombia
+# Continuidad técnica — Monitor Agro Colombia
 
-Bitácora operativa para asistentes con acceso al repositorio. Contiene solo el
-estado y los hallazgos que no conviene reconstruir en cada relevo. El contrato
-técnico estable está en `CLAUDE.md`; la estrategia de producto está en
+Bitácora operativa para asistentes con acceso al repo. Solo estado y hallazgos
+que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 `BRIEFING_CHAT.md`.
 
-## Cómo retomar
+**Cómo retomar:** leer `CLAUDE.md` y este archivo; correr `git status --short` y
+`git log --oneline -8`; verificar con código/pruebas cualquier dato operativo.
+`BRIEFING_CHAT.md` solo si la tarea depende de audiencia o producto.
 
-1. Leer `CLAUDE.md` completo.
-2. Leer este archivo.
-3. Ejecutar `git status --short` y `git log --oneline -8`.
-4. Verificar con código y pruebas cualquier dato operativo que pueda haber
-   cambiado desde la fecha de actualización.
+## Punto de control (2026-06-24)
 
-No es necesario leer `BRIEFING_CHAT.md` para una tarea puramente técnica. Sí
-debe leerse cuando el cambio dependa de audiencia, utilidad, jerarquía visual o
-una decisión de producto.
-
----
-
-## Punto de control
-
-Actualizado: **2026-06-24**.
-
-- El MVP descriptivo ya tiene fuentes, controles de calidad, histórico desde
-  2023, indicadores neutrales, preparación visual, dashboard y brief del periodo
-  en PDF con gráficas.
-- Se recibió feedback de la beneficiaria vinculada a CRECE. La prioridad
-  inmediata es convertir el panorama comercial en una herramienta reutilizable
-  para investigación, informes y reuniones; la capa climática se conserva, pero
-  no se amplía a partir de este feedback.
-- El conocimiento cafetero experto y el score continúan pausados por decisión
-  del usuario.
-- Existe un simulador de escenarios separado del score. Desplaza el último
-  precio FNC observado en proporción al producto Coffee C × USD/COP, permite
-  editar el costo por carga y calcula margen bruto para un volumen supuesto.
-  No modela prima, calidad, pasilla, logística, impuestos ni causalidad.
-- La primera ampliación confirmada es producción **nacional mensual** FNC. No
-  se incorporó producción departamental o municipal.
-- El repositorio tiene remoto `origin` en GitHub y la aplicación está
-  desplegada en Streamlit Community Cloud. El despliegue público con simulador
-  fue verificado por el usuario y carga correctamente.
-- Se hizo una ronda de pulido de interfaz para acercar el tablero a un producto:
-  se retiró la pestaña `Comparación`, se renombró la sección a "Producción
-  nacional mensual", se quitaron textos de cadencia y del ranking, se reorganizó
-  el panorama (descargas lado a lado) y se afinó el CSS (radios, sombras suaves,
-  botones de descarga con acento). El simulador gana un informe descargable.
-- `ACERCA_DE.md` es la guía de contexto para visitantes de la app pública (no de
-  instalación); `README.md` sigue siendo la guía técnica de ejecución local.
-- Próximo trabajo: validar el kit, el brief y el simulador con una tarea real de
-  CRECE antes de ampliar datos o formatos.
-- Git es la fuente de verdad del historial; no mantener aquí una copia de
-  `git log`.
-
----
+- MVP descriptivo completo: fuentes, calidad, histórico desde 2023, indicadores
+  neutrales, preparación visual, dashboard y brief del periodo en PDF con gráficas.
+- Prioridad (feedback CRECE): convertir el panorama comercial en herramienta
+  reutilizable para investigación/informes/reuniones. La capa climática se
+  conserva pero no se amplía. Score y conocimiento experto siguen pausados.
+- Simulador separado del score: desplaza el último precio FNC proporcional a
+  Coffee C × USD/COP, ajusta por factor de rendimiento (aprox.), edita costo por
+  carga y calcula margen bruto. No modela prima, calidad, pasilla, logística,
+  impuestos ni causalidad.
+- Única ampliación de datos confirmada: producción nacional mensual FNC (no
+  departamental/municipal).
+- Remoto `origin` en GitHub; app desplegada en Streamlit Community Cloud,
+  verificada por el usuario. `ACERCA_DE.md` = guía para visitantes de la app
+  pública; `README.md` = guía técnica local.
+- Próximo: validar kit, brief y simulador con una tarea real de CRECE antes de
+  ampliar datos o formatos.
 
 ## Estado verificable
 
-### Cobertura y calidad
+**Cobertura/calidad.** Pivote LatAm → 8 departamentos cafeteros completo.
+Snapshot completo = 36 filas (3 comerciales semanales, 1 producción mensual, 32
+clima). La unión conserva `fecha_snapshot` y `fecha_dato`. El snapshot inicial
+`snapshot_2026-06-21.csv` tiene un FX fechado un día después; se conserva como
+evidencia y las corridas nuevas bloquean esa inconsistencia.
 
-- El pivote de comparación LatAm a ocho departamentos cafeteros colombianos
-  está completo de extremo a extremo.
-- Un snapshot completo nuevo contiene 36 filas: 3 comerciales semanales, 1 de
-  producción nacional mensual y 32 climáticas.
-- La unión conserva `fecha_snapshot` y `fecha_dato`; las fuentes pueden tener
-  fechas de disponibilidad diferentes.
-- El snapshot inicial `snapshot_2026-06-21.csv` precede esa validación y tiene
-  un FX fechado un día después del snapshot. Se conserva como evidencia; las
-  corridas nuevas bloquean esa inconsistencia.
+**Histórico (`procesar/historico.py`).** Acepta rangos, excluye semanas
+parciales, idempotente. Validado `2023-01-08`→`2026-06-14`: 180 semanas, 33.409
+observaciones de fuente, 6.341 filas agregadas, sin nulos ni duplicados (41
+filas extra = meses de producción 2023-01..2026-05, sin repetir en semanas).
+Mercado y FNC usan el último dato semanal; producción conserva el mes publicado;
+clima suma lluvia y agrega min/max/promedio.
 
-### Histórico
+**Indicadores/visual.** Ranking 1 = mayor valor numérico (no mejor/oportunidad/
+menor riesgo). Derivados: 45.015 filas, rankings 1-8, sin duplicados. Visual:
+6.341 filas para gráficos, 35 de resumen reciente, catálogo de 8 variables.
 
-- `procesar/historico.py` acepta rangos, excluye semanas parciales y actualiza
-  de forma idempotente.
-- Rango validado: `2023-01-08` a `2026-06-14`, 180 semanas completas.
-- Resultados validados: 33.409 observaciones de fuente y 6.341 filas agregadas,
-  sin nulos ni duplicados. Las 41 filas adicionales son meses de producción
-  entre enero de 2023 y mayo de 2026; no se repiten en semanas intermedias.
-- Mercado y precio FNC usan el último dato disponible de cada semana.
-  Producción conserva el mes real publicado. Clima suma lluvia y calcula
-  mínima, máxima y promedio semanal.
+**Dashboard (3 pestañas).** `Panorama nacional`, detalle climático del
+departamento y `Simulador` (la pestaña `Comparación` se retiró; recuperable en
+git). El panorama no cambia al elegir departamento (series global/nacional);
+permite descargar el periodo en CSV (fecha real, unidad, variaciones, fuente,
+alcance) y un brief en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas,
+variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`,
+descarga en un clic). El brief Markdown (`reporte.generar.generar`) se conserva
+como pieza testeada. Producción es un bloque mensual aparte (cambio mensual e
+interanual, fecha real, barras de ancho fijo, sin relleno semanal). Periodos: 3
+y 6 meses, 1 y 3 años, todo. Al cambiar departamento se activa su pestaña con su
+municipio; no hay selector municipal (una coordenada por departamento). Nombre
+del autor (Juan José Jaramillo) al pie del sidebar y del pie de página. Tema
+claro en `.streamlit/config.toml`; colores en `config.py`.
 
-### Indicadores, preparación visual y dashboard
+**Simulador.** Controles: Coffee C, USD/COP, precio FNC base, costo, cargas y
+factor de rendimiento (ref. 94 en `config.py`). El escenario se fija con sliders
+o haciendo clic en una celda del mapa de sensibilidad (`st.plotly_chart` con
+`on_select`); la matriz se alinea al rango exacto de los sliders. Muestra precio
+proyectado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
+= margen) y la matriz. Botón para descargar un informe Markdown
+(`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé
+abril 2026 (editable).
 
-- Ranking 1 significa valor numérico más alto; no significa mejor, oportunidad
-  ni menor riesgo.
-- Validación: 45.015 filas derivadas, 180 semanas, rankings de 1 a 8 y cero
-  duplicados.
-- La preparación visual genera 6.341 filas listas para gráficos, 35 filas de
-  resumen reciente y un catálogo de 8 variables.
-- El tablero tiene tres pestañas: `Panorama nacional`, el detalle climático del
-  departamento elegido y `Simulador`. La pestaña `Comparación` (ranking semanal
-  y evolución frente a la mediana departamental) se retiró para acercar la
-  herramienta a un producto enfocado; sigue recuperable en el historial de git.
-- `Panorama nacional` muestra café ICE, USD/COP y precio interno FNC. No cambia
-  al elegir departamento porque esas series tienen alcance global/nacional.
-- El panorama comercial permite descargar el periodo filtrado en CSV con fecha
-  real del dato, unidad, variaciones, fuente y alcance. También muestra cobertura
-  y tratamiento semanal de cada serie.
-- Producción aparece como bloque mensual separado, con cambio mensual e
-  interanual, fecha real y sin relleno semanal. Las barras tienen ancho fijo y
-  representan una observación por mes, sin sugerir continuidad semanal.
-- El rango puede elegirse con presets o fechas personalizadas. El mismo periodo
-  genera un brief en PDF descargable (`reporte/pdf.py`, `generar_pdf_brief`) con
-  las dos gráficas comerciales, la tabla de variaciones, la cobertura/fuentes y
-  las limitaciones. Las gráficas del PDF se dibujan con matplotlib (sin
-  navegador), no con Plotly; se descartó kaleido porque se colgaba con Plotly 6.8
-  en Windows y exigiría Chrome del sistema en Streamlit Cloud. La generación va
-  con `st.cache_data` y un botón que habilita la descarga del periodo activo.
-  El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
-- Los periodos disponibles incluyen 3 y 6 meses, 1 y 3 años y todo el histórico.
-- La pestaña `Simulador` permite mover Coffee C, USD/COP, precio FNC base,
-  costo de producción y número de cargas. Muestra precio interno proyectado,
-  ingreso, costo, margen por carga, margen total y una matriz de sensibilidad.
-  El resumen económico se presenta como una cuenta (ingreso − costo = margen)
-  y existe un botón para descargar un informe Markdown del escenario con los
-  supuestos, resultados, metodología y limitaciones
-  (`reporte.generar.generar_informe_simulador`).
-- El costo inicial es el costo medio nacional FEPCafé de abril de 2026:
-  1.624.000 COP por carga de 125 kg, publicado en el reporte mensual de mayo de
-  2026. La interfaz muestra fecha, fuente y permite sustituirlo por un supuesto
-  de finca.
-- Al cambiar departamento se activa su pestaña y aparece el municipio de
-  referencia. No existe selector municipal: por ahora hay una coordenada
-  representativa por departamento.
-- El tema claro está fijado en `.streamlit/config.toml`; los colores editables
-  se centralizan en `config.py`.
-- Validación tras el último ajuste: 39 pruebas unitarias, arranque local de
-  Streamlit headless con endpoint de salud `ok` y sin excepciones, e informe del
-  simulador generado y revisado. La versión pública con simulador ya fue
-  verificada por el usuario.
-- URL local mientras el servidor esté corriendo: `http://localhost:8501`.
+**Validación última.** 39 pruebas unitarias; Streamlit headless con salud `ok`
+sin excepciones; PDF e informe generados y revisados; factor de rendimiento
+verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
+hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
+contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
+`http://localhost:8501`.
 
----
+## Hallazgos que evitan retrabajo
 
-## Hallazgos que pueden evitar retrabajo
-
-- yfinance puede devolver columnas `MultiIndex`; la normalización actual ya
-  contempla que `datos["Close"]` resulte ser un `DataFrame`.
-- El precio FNC colombiano usa puntos como separadores de miles. El parser
-  convierte, por ejemplo, `$2.110.000` a `2110000` y aplica una banda de
-  plausibilidad para evitar interpretarlo como `2.11`.
-- El Excel histórico FNC se descubre desde la página de estadísticas y contiene
-  precio diario desde 2003; el backfill activo lo filtra desde 2023.
-- Ese mismo descargable contiene la hoja de producción registrada mensual desde
-  1956. El proyecto conserva solo enero de 2023 a mayo de 2026 por coherencia
-  con su ventana histórica actual.
-- GDELT puede responder `RateLimitError`. El fallback vacío funciona, pero
-  sigue pendiente decidir otra estrategia si el límite se vuelve recurrente.
-- Para imágenes del PDF no usar `plotly` + `kaleido`: kaleido 0.2.1 se cuelga con
-  Plotly 6.8 en Python 3.13/Windows y kaleido v1 necesita Chrome del sistema
-  (frágil en Streamlit Cloud). Las gráficas del brief se generan con matplotlib.
-- El PDF FNC por ciudad fue descartado por fragilidad y escasa diferencia
-  frente al precio nacional. No reabrir esa decisión sin una necesidad de
-  producto concreta.
-- Las coordenadas climáticas son referencias municipales y no representan toda
-  la variación interna de cada departamento.
-- El simulador está calibrado al precio FNC observado. Usa transmisión
-  proporcional de Coffee C y USD/COP; no reproduce la fórmula oficial completa
-  ni debe presentarse como predicción.
-- La fórmula aplicada es: precio FNC base × (USD/COP escenario ÷ USD/COP base)
-  × (Coffee C escenario ÷ Coffee C base). El margen bruto resta el costo por
-  carga editable y lo multiplica por el número de cargas.
-
----
+- yfinance puede devolver `MultiIndex`; la normalización contempla `datos["Close"]`
+  como `DataFrame`.
+- El precio FNC usa puntos como miles; el parser convierte `$2.110.000`→`2110000`
+  con banda de plausibilidad (evita leer `2.11`).
+- El Excel FNC (desde la página de estadísticas) trae precio diario desde 2003 y
+  producción mensual desde 1956; se filtran a 2023+ (producción hasta 2026-05).
+- GDELT puede dar `RateLimitError`; el fallback vacío funciona (estrategia
+  alterna pendiente si se vuelve recurrente).
+- PDF: no usar `plotly`+`kaleido` (kaleido 0.2.1 se cuelga con Plotly 6.8 en
+  Python 3.13/Windows; v1 exige Chrome). Gráficas del brief con matplotlib.
+- El PDF FNC por ciudad se descartó (frágil, poca diferencia con el nacional).
+- Coordenadas climáticas = referencias municipales, no toda la variación interna.
+- Simulador: transmisión proporcional anclada al FNC observado; fórmula = FNC
+  base × (USD/COP esc ÷ base) × (Coffee C esc ÷ base) × (94 ÷ factor); no es la
+  fórmula oficial ni una predicción.
 
 ## Límites vigentes
 
-- No iniciar score ni interpretación agronómica hasta recibir feedback e
-  información experta. Las razones y preguntas están en `BRIEFING_CHAT.md`.
-- Mantener commits entre unidades de trabajo validadas.
-- No convertir el selector departamental en selector municipal sin ampliar
-  primero la cobertura de datos.
+- No iniciar score ni interpretación agronómica sin feedback e info experta
+  (razones/preguntas en `BRIEFING_CHAT.md`).
+- Commits entre unidades de trabajo validadas.
+- No volver municipal el selector departamental sin ampliar antes la cobertura.
 
----
+## Restricciones operativas
 
-## Restricciones operativas observadas
-
-- La red del sandbox puede quedar bloqueada por un proxy local; las validaciones
-  reales de fuentes pueden requerir permisos de red.
-- En Windows, `py_compile` o pruebas que crean temporales pueden fallar al
-  limpiar `__pycache__` o `%TEMP%`; se puede validar sintaxis con `ast.parse`
-  sin escribir bytecode.
-- Las operaciones de Git pueden requerir permisos para escribir en `.git`.
+- El proxy del sandbox puede bloquear la red; validar fuentes reales puede
+  requerir permisos.
+- En Windows, `py_compile`/temporales pueden fallar al limpiar `__pycache__`/
+  `%TEMP%`; validar sintaxis con `ast.parse`.
+- Git puede requerir permisos para escribir en `.git`.
 
 ## Mantenimiento
 
-Actualizarla solo cuando cambie el estado técnico, una decisión vigente, una
-limitación, una validación relevante o el próximo paso. Reemplazar información
-obsoleta en vez de acumular versiones contradictorias. No copiar secciones de
-`CLAUDE.md` ni convertirla en un changelog completo; Git ya conserva ese
-historial.
+Actualizar solo al cambiar estado, decisión, limitación, validación relevante o
+próximo paso. Reemplazar lo obsoleto, no acumular. No copiar `CLAUDE.md` ni
+volverla changelog (Git ya guarda el historial). Mantenerla corta.

@@ -200,6 +200,8 @@ def generar_informe_simulador(
     costo_referencia: float,
     costo_fecha: date | pd.Timestamp,
     costo_fuente: str,
+    factor_rendimiento: float | None = None,
+    factor_referencia: float | None = None,
     fecha_generacion: date | None = None,
 ) -> str:
     """Genera un informe Markdown con los supuestos y resultados del escenario."""
@@ -233,6 +235,14 @@ def generar_informe_simulador(
         f"{_numero(precio_ny_escenario, 2)} |",
         f"| Costo de producción (COP/carga 125 kg) | {_numero(costo_produccion, 0)} | — |",
         f"| Volumen (cargas de 125 kg) | {cargas} | — |",
+        *(
+            [
+                f"| Factor de rendimiento | {_numero(factor_referencia, 0)} (referencia) "
+                f"| {_numero(factor_rendimiento, 0)} |"
+            ]
+            if factor_rendimiento is not None and factor_referencia is not None
+            else []
+        ),
         "",
         "## Resultados",
         "",
@@ -247,10 +257,17 @@ def generar_informe_simulador(
         "## Metodología",
         "",
         "Precio FNC proyectado = precio FNC base × (USD/COP escenario ÷ USD/COP base) "
-        "× (Coffee C escenario ÷ Coffee C base).",
+        "× (Coffee C escenario ÷ Coffee C base)"
+        + (
+            " × (factor referencia ÷ factor de rendimiento)"
+            if factor_rendimiento is not None and factor_referencia is not None
+            else ""
+        )
+        + ".",
         "",
-        "El margen bruto resta el costo por carga editable y lo multiplica por el número "
-        "de cargas.",
+        "El ajuste por factor de rendimiento es aproximado, no la fórmula oficial de "
+        "la FNC. El margen bruto resta el costo por carga editable y lo multiplica por "
+        "el número de cargas.",
         "",
         "## Alcance y limitaciones",
         "",
