@@ -19,6 +19,7 @@ from procesar.visualizacion import (
     ejecutar as preparar_visualizacion,
     preparar_descarga_comercial,
 )
+from reporte.generar import generar as generar_brief
 
 
 CONFIG_GRAFICO = {
@@ -630,6 +631,17 @@ with tab_panorama:
         mime="text/csv",
         width="stretch",
         help="Incluye valores, variaciones, unidad, fuente, alcance y fecha real del dato.",
+    )
+    inicio_brief = pd.Timestamp(filtrados["semana_fin"].min())
+    fin_brief = pd.Timestamp(filtrados["semana_fin"].max())
+    brief = generar_brief(datos, inicio_brief, fin_brief)
+    st.download_button(
+        "Descargar brief del periodo (Markdown)",
+        data=brief.encode("utf-8"),
+        file_name=f"brief_monitor_agro_{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}.md",
+        mime="text/markdown",
+        width="stretch",
+        help="Resumen trazable de precios, dólar y producción para informes y reuniones.",
     )
     with st.expander("Cobertura y metodología comercial"):
         st.markdown(
