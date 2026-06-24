@@ -1,0 +1,62 @@
+name: Actualización semanal de datos
+
+# Recolecta las fuentes y refresca el histórico versionado. Streamlit Community
+# Cloud redespliega solo al recibir el push. Las fuentes por scraping (FNC) o
+# yfinance pueden fallar de forma puntual: los pasos de datos toleran errores y
+# el commit ocurre únicamente si hay cambios reales en datos/.
+
+on:
+  schedule:
+    # Sábados 10:00 UTC (~05:00 Colombia). El retraso climático es de 5 días,
+    # así que el sábado ya cierra la semana del domingo anterior.
+    - cron: "0 10 * * 6"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actualizar-datos
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      # El histórico es idempotente y hace merge; basta refrescar una ventana
+      # reciente en vez de redescargar todo desde 2023.
+      - name: Actualizar histórico (últimos 120 días)
+        continue-on-error: true
+        run: python -m procesar.historico --desde "$(date -u -d '120 days ago' +%Y-%m-%d)"
+
+      - name: Recalcular indicadores
+        continue-on-error: true
+        run: python -m procesar.indicadores
+
+      - name: Preparar series de visualización
+        continue-on-error: true
+        run: python -m procesar.visualizacion
+
+      - name: Confirmar cambios si los hay
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/
+          if git diff --cached --quiet; then
+            echo "Sin cambios en datos; no se hace commit."
+          else
+            git commit -m "Datos: actualización automática semanal ($(date -u +%Y-%m-%d))"
+            git push
+          fi

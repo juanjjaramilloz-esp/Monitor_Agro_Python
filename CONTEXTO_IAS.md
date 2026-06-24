@@ -24,8 +24,13 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 - Remoto `origin` en GitHub; app desplegada en Streamlit Community Cloud,
   verificada por el usuario. `ACERCA_DE.md` = guía para visitantes de la app
   pública; `README.md` = guía técnica local.
-- Próximo: validar kit, brief y simulador con una tarea real de CRECE antes de
-  ampliar datos o formatos.
+- Fase 6 (automatización) implementada: `.github/workflows/actualizar-datos.yml`
+  refresca el histórico y hace commit/push semanal (cron sábados 10:00 UTC +
+  `workflow_dispatch`). Pendiente: validar la primera corrida real en el runner
+  (las fuentes por scraping/yfinance pueden fallar allí; los pasos toleran error
+  y solo commitea si hay cambios). Aún falta producir un snapshot semanal en CI.
+- Próximo: lanzar la primera corrida manual del workflow y validar kit, brief y
+  simulador con una tarea real de CRECE.
 
 ## Estado verificable
 
@@ -97,6 +102,12 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
 - PDF: no usar `plotly`+`kaleido` (kaleido 0.2.1 se cuelga con Plotly 6.8 en
   Python 3.13/Windows; v1 exige Chrome). Gráficas del brief con matplotlib.
 - El PDF FNC por ciudad se descartó (frágil, poca diferencia con el nacional).
+- Automatización (`actualizar-datos.yml`): el histórico es idempotente y hace
+  merge, por eso el workflow refresca solo una ventana de 120 días (no desde
+  2023). `procesar.visualizacion` recalcula indicadores en memoria desde
+  `historico_semanal.csv`, así que basta versionar el histórico para que el app
+  refresque; el push dispara el redespliegue de Streamlit. GitHub deshabilita
+  los cron tras 60 días de inactividad del repo.
 - Coordenadas climáticas = referencias municipales, no toda la variación interna.
 - Simulador: transmisión proporcional anclada al FNC observado; fórmula = FNC
   base × (USD/COP esc ÷ base) × (Coffee C esc ÷ base) × (94 ÷ factor); no es la
