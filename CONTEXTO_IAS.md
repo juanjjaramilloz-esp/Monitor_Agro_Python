@@ -38,9 +38,11 @@ Actualizado: **2026-06-24**.
 - La primera ampliación confirmada es producción **nacional mensual** FNC. No
   se incorporó producción departamental o municipal.
 - El repositorio tiene remoto `origin` en GitHub y la aplicación está
-  desplegada, activa y funcional en Streamlit Community Cloud.
-- Próximo trabajo: validar el kit de consulta, descarga y brief con una tarea
-  real de CRECE antes de ampliar datos o formatos.
+  desplegada en Streamlit Community Cloud. La versión del simulador fue enviada
+  a `main`; queda pendiente comprobar que el redespliegue público terminó y que
+  la pestaña carga correctamente.
+- Próximo trabajo: verificar el despliegue público y validar el kit, el brief y
+  el simulador con una tarea real de CRECE antes de ampliar datos o formatos.
 - Git es la fuente de verdad del historial; no mantener aquí una copia de
   `git log`.
 
@@ -96,16 +98,17 @@ Actualizado: **2026-06-24**.
   costo de producción y número de cargas. Muestra precio interno proyectado,
   ingreso, costo, margen por carga, margen total y una matriz de sensibilidad.
 - El costo inicial es el costo medio nacional FEPCafé de abril de 2026:
-  1.624.000 COP por carga de 125 kg. La interfaz muestra fecha, fuente y
-  permite sustituirlo por un supuesto de finca.
+  1.624.000 COP por carga de 125 kg, publicado en el reporte mensual de mayo de
+  2026. La interfaz muestra fecha, fuente y permite sustituirlo por un supuesto
+  de finca.
 - Al cambiar departamento se activa su pestaña y aparece el municipio de
   referencia. No existe selector municipal: por ahora hay una coordenada
   representativa por departamento.
 - El tema claro está fijado en `.streamlit/config.toml`; los colores editables
   se centralizan en `config.py`.
-- Validación tras el último ajuste: 39 pruebas unitarias, ejecución funcional
-  de Streamlit sin excepciones, endpoint de salud `ok` y despliegue funcional
-  en Streamlit Community Cloud.
+- Validación tras el último ajuste: 39 pruebas unitarias, ejecución local de
+  Streamlit sin excepciones, endpoint de salud `ok` y controles interactivos
+  probados. La verificación de la versión pública con simulador sigue pendiente.
 - URL local mientras el servidor esté corriendo: `http://localhost:8501`.
 
 ---
@@ -132,6 +135,9 @@ Actualizado: **2026-06-24**.
 - El simulador está calibrado al precio FNC observado. Usa transmisión
   proporcional de Coffee C y USD/COP; no reproduce la fórmula oficial completa
   ni debe presentarse como predicción.
+- La fórmula aplicada es: precio FNC base × (USD/COP escenario ÷ USD/COP base)
+  × (Coffee C escenario ÷ Coffee C base). El margen bruto resta el costo por
+  carga editable y lo multiplica por el número de cargas.
 
 ---
 

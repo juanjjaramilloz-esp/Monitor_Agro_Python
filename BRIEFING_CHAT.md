@@ -130,8 +130,9 @@ El selector sí cambia las vistas climáticas departamentales.
   precio FNC observado proporcionalmente a Coffee C y USD/COP. Sirve para
   explorar supuestos, no para afirmar cuál será el precio futuro.
 - **Costo con trazabilidad y edición:** el simulador parte del costo medio
-  nacional FEPCafé de abril de 2026, pero permite modificarlo porque no
-  representa la estructura particular de cada finca.
+  nacional de 1.624.000 COP por carga de 125 kg para abril de 2026, publicado
+  en el reporte mensual de mayo de 2026 de FEPCafé. Permite modificarlo porque
+  no representa la estructura particular de cada finca.
 - **Prima fuera del primer simulador:** el diferencial del café colombiano y
   otros componentes de la fórmula oficial se mantienen constantes y no se
   modelan por separado en esta versión.
@@ -230,8 +231,9 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - El simulador simplifica la transmisión de Coffee C y USD/COP y omite prima,
   calidad, factor de rendimiento, pasilla, acopio, impuestos y logística.
 - El código está respaldado en GitHub y la aplicación está publicada y
-  funcional en Streamlit Community Cloud. La actualización automática de datos
-  todavía no está implementada.
+  funcional en Streamlit Community Cloud. La versión con simulador ya fue
+  enviada para redespliegue; debe comprobarse en la aplicación pública. La
+  actualización automática de datos todavía no está implementada.
 
 ---
 
