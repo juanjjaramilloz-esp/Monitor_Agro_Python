@@ -220,18 +220,29 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
 
 def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
     datos = tabla[tabla["variable"].eq("produccion_nacional")]
+    ancho_barra_ms = 14 * 24 * 60 * 60 * 1000
     figura = go.Figure(
         go.Bar(
             x=datos["fecha_dato"],
             y=datos["valor"],
+            width=ancho_barra_ms,
             marker_color=CATALOGO_VARIABLES["produccion_nacional"]["color"],
+            marker_line=dict(color="#5B21B6", width=1),
             name="Producción mensual",
             hovertemplate=(
                 "%{x|%b %Y}<br>%{y:,.1f} miles de sacos de 60 kg<extra></extra>"
             ),
         )
     )
-    figura.update_layout(title="Producción nacional registrada · mensual", bargap=0.18)
+    figura.update_layout(
+        title="Producción nacional registrada · una barra por mes",
+        xaxis=dict(
+            showgrid=False,
+            title=None,
+            dtick="M1",
+            tickformat="%b<br>%Y",
+        ),
+    )
     return _layout(figura, 350)
 
 
