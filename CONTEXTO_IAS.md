@@ -46,9 +46,11 @@ clima suma lluvia y agrega min/max/promedio.
 menor riesgo). Derivados: 45.015 filas, rankings 1-8, sin duplicados. Visual:
 6.341 filas para gráficos, 35 de resumen reciente, catálogo de 8 variables.
 
-**Dashboard (3 pestañas).** `Panorama nacional`, detalle climático del
-departamento y `Simulador` (la pestaña `Comparación` se retiró; recuperable en
-git). El panorama no cambia al elegir departamento (series global/nacional);
+**Dashboard (3 pestañas).** Orden: `Panorama nacional` (entrada por defecto),
+`Simulador` y `Climatología cafetera` (detalle climático del departamento; antes
+se llamaba con el nombre del departamento·municipio). La pestaña `Comparación` se
+retiró (recuperable en git). El panorama no cambia al elegir departamento (series
+global/nacional);
 permite descargar el periodo en CSV (fecha real, unidad, variaciones, fuente,
 alcance) y un brief en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas,
 variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`,
@@ -61,9 +63,13 @@ del autor (Juan José Jaramillo) al pie del sidebar y del pie de página. Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
 
 **Simulador.** Controles: Coffee C, USD/COP, precio FNC base, costo, cargas y
-factor de rendimiento (ref. 94 en `config.py`). El escenario se fija con sliders
-o haciendo clic en una celda del mapa de sensibilidad (`st.plotly_chart` con
-`on_select`); la matriz se alinea al rango exacto de los sliders. Muestra precio
+factor de rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
+(prefijo `sim_`) y un botón "Restablecer valores predeterminados" (callback
+`_restablecer_simulador` que limpia esas claves). El escenario se fija con
+sliders o haciendo clic en el mapa de sensibilidad: el Heatmap no emite eventos
+de clic, así que se superpone un Scatter transparente (capa "celdas") y con
+`hovermode="closest"` + `on_select="rerun"` un clic elige el punto de grilla más
+cercano; la matriz se alinea al rango exacto de los sliders. Muestra precio
 proyectado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
 = margen) y la matriz. Botón para descargar un informe Markdown
 (`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé

@@ -402,11 +402,25 @@ def _grafico_sensibilidad(
                 [1, "#176B4D"],
             ],
             colorbar=dict(title="COP/carga", tickformat=",.0f"),
+            hoverinfo="skip",
+        )
+    )
+    # Capa de puntos transparente: el Heatmap no emite eventos de clic, pero un
+    # Scatter sí. Con hovermode "closest", un clic elige el punto más cercano.
+    figura.add_trace(
+        go.Scatter(
+            x=matriz["tasa_cambio"],
+            y=matriz["precio_ny"],
+            mode="markers",
+            marker=dict(size=18, color="rgba(0,0,0,0)"),
+            customdata=matriz["precio_fnc_proyectado"],
             hovertemplate=(
                 "USD/COP: %{x:,.0f}<br>"
                 "Coffee C: %{y:.1f} US¢/lb<br>"
-                "Precio FNC: $%{z:,.0f}<extra></extra>"
+                "Precio FNC: $%{customdata:,.0f}<extra></extra>"
             ),
+            showlegend=False,
+            name="celdas",
         )
     )
     figura.add_trace(
@@ -416,7 +430,7 @@ def _grafico_sensibilidad(
             mode="markers",
             marker=dict(size=14, color="#FFFFFF", line=dict(color="#17211B", width=3)),
             name="Escenario elegido",
-            hovertemplate="Escenario elegido<extra></extra>",
+            hoverinfo="skip",
         )
     )
     figura.update_layout(
@@ -494,7 +508,10 @@ def _aplicar_clic_sensibilidad(
 ) -> None:
     """Lleva un clic en el mapa de sensibilidad a los sliders del escenario."""
     estado = st.session_state.get("sens_sel")
-    puntos = estado.get("selection", {}).get("points", []) if isinstance(estado, dict) else []
+    puntos = []
+    if estado is not None and hasattr(estado, "get"):
+        seleccion = estado.get("selection") or {}
+        puntos = seleccion.get("points", []) if hasattr(seleccion, "get") else []
     if puntos and puntos[0].get("x") is not None:
         punto = puntos[0]
         firma = (punto["x"], punto["y"])
@@ -515,6 +532,23 @@ def _aplicar_clic_sensibilidad(
     )
 
 
+def _restablecer_simulador() -> None:
+    """Borra el estado del escenario para que vuelva a sus valores iniciales."""
+    for clave in (
+        "sim_base_fnc",
+        "sim_base_tasa",
+        "sim_base_ny",
+        "sim_tasa",
+        "sim_ny",
+        "sim_costo",
+        "sim_cargas",
+        "sim_factor",
+        "sens_sel",
+        "sens_firma",
+    ):
+        st.session_state.pop(clave, None)
+
+
 def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
     """Renderiza controles y resultados del escenario económico."""
     bases = obtener_bases(tabla)
@@ -525,28 +559,32 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         "constantes los factores no modelados."
     )
 
+    st.session_state.setdefault("sim_base_fnc", float(bases.precio_fnc))
+    st.session_state.setdefault("sim_base_tasa", float(bases.tasa_cambio))
+    st.session_state.setdefault("sim_base_ny", float(bases.precio_ny))
+
     with st.expander("Valores base y metodología", expanded=False):
         base_1, base_2, base_3 = st.columns(3)
         precio_fnc_base = base_1.number_input(
             "Precio FNC base · COP/carga",
             min_value=1.0,
-            value=float(bases.precio_fnc),
             step=10_000.0,
             format="%.0f",
+            key="sim_base_fnc",
         )
         tasa_cambio_base = base_2.number_input(
             "USD/COP base",
             min_value=1.0,
-            value=float(bases.tasa_cambio),
             step=10.0,
             format="%.2f",
+            key="sim_base_tasa",
         )
         precio_ny_base = base_3.number_input(
             "Coffee C base · US¢/lb",
             min_value=1.0,
-            value=float(bases.precio_ny),
             step=1.0,
             format="%.2f",
+            key="sim_base_ny",
         )
         st.caption(
             f"Fechas base: FNC {bases.fecha_precio_fnc:%d/%m/%Y} · "
@@ -594,27 +632,30 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         "fijar ese escenario."
     )
 
+    st.session_state.setdefault("sim_costo", float(COSTO_PRODUCCION_REFERENCIA))
+    st.session_state.setdefault("sim_cargas", int(PROYECCION_CARGAS_PREDETERMINADAS))
+    st.session_state.setdefault("sim_factor", float(FACTOR_RENDIMIENTO_REFERENCIA))
+
     control_3, control_4, control_5 = st.columns(3)
     costo_produccion = control_3.number_input(
         "Costo de producción · COP por carga de 125 kg",
         min_value=0.0,
-        value=float(COSTO_PRODUCCION_REFERENCIA),
         step=10_000.0,
         format="%.0f",
         help="Referencia nacional FEPCafé; edítela para representar otro supuesto.",
+        key="sim_costo",
     )
     cargas = control_4.slider(
         "Volumen del escenario · cargas de 125 kg",
         min_value=1,
         max_value=PROYECCION_CARGAS_MAXIMAS,
-        value=PROYECCION_CARGAS_PREDETERMINADAS,
         step=1,
+        key="sim_cargas",
     )
     factor_rendimiento = control_5.number_input(
         "Factor de rendimiento",
         min_value=FACTOR_RENDIMIENTO_RANGO[0],
         max_value=FACTOR_RENDIMIENTO_RANGO[1],
-        value=float(FACTOR_RENDIMIENTO_REFERENCIA),
         step=1.0,
         format="%.0f",
         help=(
@@ -622,6 +663,13 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
             "FNC. Un factor menor (mejor rendimiento) sube el precio recibido; uno "
             "mayor lo baja. Ajuste aproximado, no la fórmula oficial."
         ),
+        key="sim_factor",
+    )
+
+    st.button(
+        "↺ Restablecer valores predeterminados",
+        on_click=_restablecer_simulador,
+        help="Vuelve los controles del escenario y la base a sus valores iniciales.",
     )
 
     resultado = calcular_escenario(
@@ -972,14 +1020,14 @@ st.sidebar.markdown(f"**Referencia climática:** {municipio}")
 st.sidebar.divider()
 st.sidebar.caption("Autor: Juan José Jaramillo")
 
-tab_panorama, tab_departamento, tab_proyeccion = st.tabs(
+tab_panorama, tab_proyeccion, tab_departamento = st.tabs(
     [
         "Panorama nacional",
-        f"{departamento} · {municipio}",
         "Simulador",
+        "Climatología cafetera",
     ],
-    default=f"{departamento} · {municipio}",
-    key=f"vistas_{departamento}",
+    default="Panorama nacional",
+    key="vistas_principales",
 )
 
 with tab_panorama:
