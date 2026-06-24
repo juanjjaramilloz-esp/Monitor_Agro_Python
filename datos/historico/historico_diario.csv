@@ -3,6 +3,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-01-01,Antioquia,temp_max,24.9,°C,open-meteo
 2023-01-01,Antioquia,temp_min,16.4,°C,open-meteo
 2023-01-01,COLOMBIA,precio_interno_referencia,1968000.0,COP/carga_125kg,FNC
+2023-01-01,COLOMBIA,produccion_nacional,868.0,miles_sacos_60kg,FNC
 2023-01-01,Caldas,precipitacion,24.1,mm,open-meteo
 2023-01-01,Caldas,temp_max,16.8,°C,open-meteo
 2023-01-01,Caldas,temp_min,9.3,°C,open-meteo
@@ -821,6 +822,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-02-01,Antioquia,temp_min,15.2,°C,open-meteo
 2023-02-01,COLOMBIA,fx_usd_local,4658.490234375,COP/USD,yfinance
 2023-02-01,COLOMBIA,precio_interno_referencia,1958000.0,COP/carga_125kg,FNC
+2023-02-01,COLOMBIA,produccion_nacional,1025.0,miles_sacos_60kg,FNC
 2023-02-01,Caldas,precipitacion,1.6,mm,open-meteo
 2023-02-01,Caldas,temp_max,19.5,°C,open-meteo
 2023-02-01,Caldas,temp_min,9.2,°C,open-meteo
@@ -1408,7 +1410,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-02-23,Cauca,precipitacion,0.6,mm,open-meteo
 2023-02-23,Cauca,temp_max,21.5,°C,open-meteo
 2023-02-23,Cauca,temp_min,11.2,°C,open-meteo
-2023-02-23,GLOBAL,precio_cafe_arabica,193.64999389648438,USc/lb,yfinance
+2023-02-23,GLOBAL,precio_cafe_arabica,193.6499938964844,USc/lb,yfinance
 2023-02-23,Huila,precipitacion,0.6,mm,open-meteo
 2023-02-23,Huila,temp_max,25.1,°C,open-meteo
 2023-02-23,Huila,temp_min,12.4,°C,open-meteo
@@ -1539,7 +1541,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-02-28,Cauca,precipitacion,0.6,mm,open-meteo
 2023-02-28,Cauca,temp_max,21.6,°C,open-meteo
 2023-02-28,Cauca,temp_min,14.2,°C,open-meteo
-2023-02-28,GLOBAL,precio_cafe_arabica,190.39999389648438,USc/lb,yfinance
+2023-02-28,GLOBAL,precio_cafe_arabica,190.3999938964844,USc/lb,yfinance
 2023-02-28,Huila,precipitacion,3.4,mm,open-meteo
 2023-02-28,Huila,temp_max,23.5,°C,open-meteo
 2023-02-28,Huila,temp_min,14.4,°C,open-meteo
@@ -1560,6 +1562,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-03-01,Antioquia,temp_min,16.9,°C,open-meteo
 2023-03-01,COLOMBIA,fx_usd_local,4808.0,COP/USD,yfinance
 2023-03-01,COLOMBIA,precio_interno_referencia,2085000.0,COP/carga_125kg,FNC
+2023-03-01,COLOMBIA,produccion_nacional,799.0,miles_sacos_60kg,FNC
 2023-03-01,Caldas,precipitacion,11.2,mm,open-meteo
 2023-03-01,Caldas,temp_max,18.9,°C,open-meteo
 2023-03-01,Caldas,temp_min,10.9,°C,open-meteo
@@ -1909,7 +1912,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-03-14,Cauca,precipitacion,8.4,mm,open-meteo
 2023-03-14,Cauca,temp_max,20.6,°C,open-meteo
 2023-03-14,Cauca,temp_min,14.9,°C,open-meteo
-2023-03-14,GLOBAL,precio_cafe_arabica,180.89999389648438,USc/lb,yfinance
+2023-03-14,GLOBAL,precio_cafe_arabica,180.8999938964844,USc/lb,yfinance
 2023-03-14,Huila,precipitacion,5.2,mm,open-meteo
 2023-03-14,Huila,temp_max,24.0,°C,open-meteo
 2023-03-14,Huila,temp_min,15.6,°C,open-meteo
@@ -2067,7 +2070,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-03-20,Cauca,precipitacion,8.8,mm,open-meteo
 2023-03-20,Cauca,temp_max,22.5,°C,open-meteo
 2023-03-20,Cauca,temp_min,11.4,°C,open-meteo
-2023-03-20,GLOBAL,precio_cafe_arabica,184.89999389648438,USc/lb,yfinance
+2023-03-20,GLOBAL,precio_cafe_arabica,184.8999938964844,USc/lb,yfinance
 2023-03-20,Huila,precipitacion,2.0,mm,open-meteo
 2023-03-20,Huila,temp_max,24.8,°C,open-meteo
 2023-03-20,Huila,temp_min,15.2,°C,open-meteo
@@ -2380,6 +2383,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-01,Antioquia,temp_max,25.0,°C,open-meteo
 2023-04-01,Antioquia,temp_min,15.2,°C,open-meteo
 2023-04-01,COLOMBIA,precio_interno_referencia,1882000.0,COP/carga_125kg,FNC
+2023-04-01,COLOMBIA,produccion_nacional,565.867207197894,miles_sacos_60kg,FNC
 2023-04-01,Caldas,precipitacion,29.4,mm,open-meteo
 2023-04-01,Caldas,temp_max,18.5,°C,open-meteo
 2023-04-01,Caldas,temp_min,10.4,°C,open-meteo
@@ -2491,7 +2495,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-05,Cauca,precipitacion,9.2,mm,open-meteo
 2023-04-05,Cauca,temp_max,22.8,°C,open-meteo
 2023-04-05,Cauca,temp_min,12.4,°C,open-meteo
-2023-04-05,GLOBAL,precio_cafe_arabica,180.14999389648438,USc/lb,yfinance
+2023-04-05,GLOBAL,precio_cafe_arabica,180.1499938964844,USc/lb,yfinance
 2023-04-05,Huila,precipitacion,2.5,mm,open-meteo
 2023-04-05,Huila,temp_max,25.7,°C,open-meteo
 2023-04-05,Huila,temp_min,15.3,°C,open-meteo
@@ -2518,7 +2522,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-06,Cauca,precipitacion,37.0,mm,open-meteo
 2023-04-06,Cauca,temp_max,20.8,°C,open-meteo
 2023-04-06,Cauca,temp_min,14.9,°C,open-meteo
-2023-04-06,GLOBAL,precio_cafe_arabica,183.60000610351562,USc/lb,yfinance
+2023-04-06,GLOBAL,precio_cafe_arabica,183.6000061035156,USc/lb,yfinance
 2023-04-06,Huila,precipitacion,9.5,mm,open-meteo
 2023-04-06,Huila,temp_max,24.5,°C,open-meteo
 2023-04-06,Huila,temp_min,15.4,°C,open-meteo
@@ -2621,7 +2625,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-10,Cauca,precipitacion,1.5,mm,open-meteo
 2023-04-10,Cauca,temp_max,19.7,°C,open-meteo
 2023-04-10,Cauca,temp_min,13.2,°C,open-meteo
-2023-04-10,GLOBAL,precio_cafe_arabica,182.60000610351562,USc/lb,yfinance
+2023-04-10,GLOBAL,precio_cafe_arabica,182.6000061035156,USc/lb,yfinance
 2023-04-10,Huila,precipitacion,2.4,mm,open-meteo
 2023-04-10,Huila,temp_max,24.1,°C,open-meteo
 2023-04-10,Huila,temp_min,13.2,°C,open-meteo
@@ -2702,7 +2706,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-13,Cauca,precipitacion,1.2,mm,open-meteo
 2023-04-13,Cauca,temp_max,20.6,°C,open-meteo
 2023-04-13,Cauca,temp_min,13.7,°C,open-meteo
-2023-04-13,GLOBAL,precio_cafe_arabica,196.10000610351562,USc/lb,yfinance
+2023-04-13,GLOBAL,precio_cafe_arabica,196.1000061035156,USc/lb,yfinance
 2023-04-13,Huila,precipitacion,9.2,mm,open-meteo
 2023-04-13,Huila,temp_max,26.3,°C,open-meteo
 2023-04-13,Huila,temp_min,13.4,°C,open-meteo
@@ -2729,7 +2733,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-14,Cauca,precipitacion,1.6,mm,open-meteo
 2023-04-14,Cauca,temp_max,21.1,°C,open-meteo
 2023-04-14,Cauca,temp_min,14.4,°C,open-meteo
-2023-04-14,GLOBAL,precio_cafe_arabica,193.39999389648438,USc/lb,yfinance
+2023-04-14,GLOBAL,precio_cafe_arabica,193.3999938964844,USc/lb,yfinance
 2023-04-14,Huila,precipitacion,3.0,mm,open-meteo
 2023-04-14,Huila,temp_max,25.2,°C,open-meteo
 2023-04-14,Huila,temp_min,13.6,°C,open-meteo
@@ -2887,7 +2891,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-20,Cauca,precipitacion,6.7,mm,open-meteo
 2023-04-20,Cauca,temp_max,19.5,°C,open-meteo
 2023-04-20,Cauca,temp_min,15.0,°C,open-meteo
-2023-04-20,GLOBAL,precio_cafe_arabica,195.89999389648438,USc/lb,yfinance
+2023-04-20,GLOBAL,precio_cafe_arabica,195.8999938964844,USc/lb,yfinance
 2023-04-20,Huila,precipitacion,23.8,mm,open-meteo
 2023-04-20,Huila,temp_max,22.0,°C,open-meteo
 2023-04-20,Huila,temp_min,15.0,°C,open-meteo
@@ -3045,7 +3049,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-26,Cauca,precipitacion,9.3,mm,open-meteo
 2023-04-26,Cauca,temp_max,22.4,°C,open-meteo
 2023-04-26,Cauca,temp_min,14.9,°C,open-meteo
-2023-04-26,GLOBAL,precio_cafe_arabica,195.85000610351562,USc/lb,yfinance
+2023-04-26,GLOBAL,precio_cafe_arabica,195.8500061035156,USc/lb,yfinance
 2023-04-26,Huila,precipitacion,0.2,mm,open-meteo
 2023-04-26,Huila,temp_max,23.4,°C,open-meteo
 2023-04-26,Huila,temp_min,15.6,°C,open-meteo
@@ -3072,7 +3076,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-27,Cauca,precipitacion,3.8,mm,open-meteo
 2023-04-27,Cauca,temp_max,21.3,°C,open-meteo
 2023-04-27,Cauca,temp_min,14.0,°C,open-meteo
-2023-04-27,GLOBAL,precio_cafe_arabica,192.10000610351562,USc/lb,yfinance
+2023-04-27,GLOBAL,precio_cafe_arabica,192.1000061035156,USc/lb,yfinance
 2023-04-27,Huila,precipitacion,4.7,mm,open-meteo
 2023-04-27,Huila,temp_max,23.1,°C,open-meteo
 2023-04-27,Huila,temp_min,14.4,°C,open-meteo
@@ -3099,7 +3103,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-28,Cauca,precipitacion,3.1,mm,open-meteo
 2023-04-28,Cauca,temp_max,21.0,°C,open-meteo
 2023-04-28,Cauca,temp_min,12.3,°C,open-meteo
-2023-04-28,GLOBAL,precio_cafe_arabica,189.85000610351562,USc/lb,yfinance
+2023-04-28,GLOBAL,precio_cafe_arabica,189.8500061035156,USc/lb,yfinance
 2023-04-28,Huila,precipitacion,2.9,mm,open-meteo
 2023-04-28,Huila,temp_max,24.4,°C,open-meteo
 2023-04-28,Huila,temp_min,12.9,°C,open-meteo
@@ -3170,6 +3174,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-01,Antioquia,temp_min,15.5,°C,open-meteo
 2023-05-01,COLOMBIA,fx_usd_local,4694.93994140625,COP/USD,yfinance
 2023-05-01,COLOMBIA,precio_interno_referencia,2002000.0,COP/carga_125kg,FNC
+2023-05-01,COLOMBIA,produccion_nacional,806.195505733111,miles_sacos_60kg,FNC
 2023-05-01,Caldas,precipitacion,21.5,mm,open-meteo
 2023-05-01,Caldas,temp_max,18.1,°C,open-meteo
 2023-05-01,Caldas,temp_min,9.6,°C,open-meteo
@@ -3203,7 +3208,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-02,Cauca,precipitacion,0.3,mm,open-meteo
 2023-05-02,Cauca,temp_max,22.9,°C,open-meteo
 2023-05-02,Cauca,temp_min,14.4,°C,open-meteo
-2023-05-02,GLOBAL,precio_cafe_arabica,190.64999389648438,USc/lb,yfinance
+2023-05-02,GLOBAL,precio_cafe_arabica,190.6499938964844,USc/lb,yfinance
 2023-05-02,Huila,precipitacion,0.9,mm,open-meteo
 2023-05-02,Huila,temp_max,25.5,°C,open-meteo
 2023-05-02,Huila,temp_min,14.1,°C,open-meteo
@@ -3257,7 +3262,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-04,Cauca,precipitacion,1.0,mm,open-meteo
 2023-05-04,Cauca,temp_max,22.4,°C,open-meteo
 2023-05-04,Cauca,temp_min,13.7,°C,open-meteo
-2023-05-04,GLOBAL,precio_cafe_arabica,186.39999389648438,USc/lb,yfinance
+2023-05-04,GLOBAL,precio_cafe_arabica,186.3999938964844,USc/lb,yfinance
 2023-05-04,Huila,precipitacion,1.6,mm,open-meteo
 2023-05-04,Huila,temp_max,24.9,°C,open-meteo
 2023-05-04,Huila,temp_min,13.8,°C,open-meteo
@@ -3361,7 +3366,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-08,Cauca,precipitacion,0.0,mm,open-meteo
 2023-05-08,Cauca,temp_max,23.6,°C,open-meteo
 2023-05-08,Cauca,temp_min,14.4,°C,open-meteo
-2023-05-08,GLOBAL,precio_cafe_arabica,186.89999389648438,USc/lb,yfinance
+2023-05-08,GLOBAL,precio_cafe_arabica,186.8999938964844,USc/lb,yfinance
 2023-05-08,Huila,precipitacion,1.6,mm,open-meteo
 2023-05-08,Huila,temp_max,25.4,°C,open-meteo
 2023-05-08,Huila,temp_min,14.1,°C,open-meteo
@@ -3573,7 +3578,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-16,Cauca,precipitacion,2.3,mm,open-meteo
 2023-05-16,Cauca,temp_max,20.0,°C,open-meteo
 2023-05-16,Cauca,temp_min,13.8,°C,open-meteo
-2023-05-16,GLOBAL,precio_cafe_arabica,190.35000610351562,USc/lb,yfinance
+2023-05-16,GLOBAL,precio_cafe_arabica,190.3500061035156,USc/lb,yfinance
 2023-05-16,Huila,precipitacion,1.6,mm,open-meteo
 2023-05-16,Huila,temp_max,23.6,°C,open-meteo
 2023-05-16,Huila,temp_min,13.8,°C,open-meteo
@@ -3600,7 +3605,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-17,Cauca,precipitacion,0.0,mm,open-meteo
 2023-05-17,Cauca,temp_max,23.2,°C,open-meteo
 2023-05-17,Cauca,temp_min,13.3,°C,open-meteo
-2023-05-17,GLOBAL,precio_cafe_arabica,189.85000610351562,USc/lb,yfinance
+2023-05-17,GLOBAL,precio_cafe_arabica,189.8500061035156,USc/lb,yfinance
 2023-05-17,Huila,precipitacion,0.2,mm,open-meteo
 2023-05-17,Huila,temp_max,25.1,°C,open-meteo
 2023-05-17,Huila,temp_min,13.6,°C,open-meteo
@@ -3839,7 +3844,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-26,Cauca,precipitacion,5.3,mm,open-meteo
 2023-05-26,Cauca,temp_max,18.8,°C,open-meteo
 2023-05-26,Cauca,temp_min,14.6,°C,open-meteo
-2023-05-26,GLOBAL,precio_cafe_arabica,181.60000610351562,USc/lb,yfinance
+2023-05-26,GLOBAL,precio_cafe_arabica,181.6000061035156,USc/lb,yfinance
 2023-05-26,Huila,precipitacion,12.8,mm,open-meteo
 2023-05-26,Huila,temp_max,20.0,°C,open-meteo
 2023-05-26,Huila,temp_min,15.0,°C,open-meteo
@@ -3990,6 +3995,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-01,Antioquia,temp_min,17.1,°C,open-meteo
 2023-06-01,COLOMBIA,fx_usd_local,4443.25,COP/USD,yfinance
 2023-06-01,COLOMBIA,precio_interno_referencia,1770000.0,COP/carga_125kg,FNC
+2023-06-01,COLOMBIA,produccion_nacional,956.0,miles_sacos_60kg,FNC
 2023-06-01,Caldas,precipitacion,34.6,mm,open-meteo
 2023-06-01,Caldas,temp_max,15.4,°C,open-meteo
 2023-06-01,Caldas,temp_min,11.5,°C,open-meteo
@@ -4100,7 +4106,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-05,Cauca,precipitacion,0.6,mm,open-meteo
 2023-06-05,Cauca,temp_max,21.5,°C,open-meteo
 2023-06-05,Cauca,temp_min,13.4,°C,open-meteo
-2023-06-05,GLOBAL,precio_cafe_arabica,183.10000610351562,USc/lb,yfinance
+2023-06-05,GLOBAL,precio_cafe_arabica,183.1000061035156,USc/lb,yfinance
 2023-06-05,Huila,precipitacion,2.0,mm,open-meteo
 2023-06-05,Huila,temp_max,23.8,°C,open-meteo
 2023-06-05,Huila,temp_min,13.2,°C,open-meteo
@@ -4127,7 +4133,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-06,Cauca,precipitacion,26.3,mm,open-meteo
 2023-06-06,Cauca,temp_max,18.6,°C,open-meteo
 2023-06-06,Cauca,temp_min,14.7,°C,open-meteo
-2023-06-06,GLOBAL,precio_cafe_arabica,182.60000610351562,USc/lb,yfinance
+2023-06-06,GLOBAL,precio_cafe_arabica,182.6000061035156,USc/lb,yfinance
 2023-06-06,Huila,precipitacion,42.7,mm,open-meteo
 2023-06-06,Huila,temp_max,18.5,°C,open-meteo
 2023-06-06,Huila,temp_min,15.9,°C,open-meteo
@@ -4154,7 +4160,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-07,Cauca,precipitacion,0.7,mm,open-meteo
 2023-06-07,Cauca,temp_max,20.4,°C,open-meteo
 2023-06-07,Cauca,temp_min,13.8,°C,open-meteo
-2023-06-07,GLOBAL,precio_cafe_arabica,185.39999389648438,USc/lb,yfinance
+2023-06-07,GLOBAL,precio_cafe_arabica,185.3999938964844,USc/lb,yfinance
 2023-06-07,Huila,precipitacion,1.7,mm,open-meteo
 2023-06-07,Huila,temp_max,22.9,°C,open-meteo
 2023-06-07,Huila,temp_min,14.2,°C,open-meteo
@@ -4181,7 +4187,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-08,Cauca,precipitacion,2.7,mm,open-meteo
 2023-06-08,Cauca,temp_max,19.7,°C,open-meteo
 2023-06-08,Cauca,temp_min,14.8,°C,open-meteo
-2023-06-08,GLOBAL,precio_cafe_arabica,194.85000610351562,USc/lb,yfinance
+2023-06-08,GLOBAL,precio_cafe_arabica,194.8500061035156,USc/lb,yfinance
 2023-06-08,Huila,precipitacion,6.3,mm,open-meteo
 2023-06-08,Huila,temp_max,24.0,°C,open-meteo
 2023-06-08,Huila,temp_min,13.4,°C,open-meteo
@@ -4208,7 +4214,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-09,Cauca,precipitacion,3.0,mm,open-meteo
 2023-06-09,Cauca,temp_max,19.6,°C,open-meteo
 2023-06-09,Cauca,temp_min,14.5,°C,open-meteo
-2023-06-09,GLOBAL,precio_cafe_arabica,190.64999389648438,USc/lb,yfinance
+2023-06-09,GLOBAL,precio_cafe_arabica,190.6499938964844,USc/lb,yfinance
 2023-06-09,Huila,precipitacion,10.5,mm,open-meteo
 2023-06-09,Huila,temp_max,23.4,°C,open-meteo
 2023-06-09,Huila,temp_min,14.9,°C,open-meteo
@@ -4339,7 +4345,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-14,Cauca,precipitacion,1.5,mm,open-meteo
 2023-06-14,Cauca,temp_max,21.5,°C,open-meteo
 2023-06-14,Cauca,temp_min,14.5,°C,open-meteo
-2023-06-14,GLOBAL,precio_cafe_arabica,184.39999389648438,USc/lb,yfinance
+2023-06-14,GLOBAL,precio_cafe_arabica,184.3999938964844,USc/lb,yfinance
 2023-06-14,Huila,precipitacion,3.7,mm,open-meteo
 2023-06-14,Huila,temp_max,21.0,°C,open-meteo
 2023-06-14,Huila,temp_min,15.1,°C,open-meteo
@@ -4393,7 +4399,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-16,Cauca,precipitacion,0.0,mm,open-meteo
 2023-06-16,Cauca,temp_max,22.1,°C,open-meteo
 2023-06-16,Cauca,temp_min,15.4,°C,open-meteo
-2023-06-16,GLOBAL,precio_cafe_arabica,184.89999389648438,USc/lb,yfinance
+2023-06-16,GLOBAL,precio_cafe_arabica,184.8999938964844,USc/lb,yfinance
 2023-06-16,Huila,precipitacion,0.0,mm,open-meteo
 2023-06-16,Huila,temp_max,19.5,°C,open-meteo
 2023-06-16,Huila,temp_min,13.5,°C,open-meteo
@@ -4782,6 +4788,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-07-01,Antioquia,temp_max,26.6,°C,open-meteo
 2023-07-01,Antioquia,temp_min,17.6,°C,open-meteo
 2023-07-01,COLOMBIA,precio_interno_referencia,1360000.0,COP/carga_125kg,FNC
+2023-07-01,COLOMBIA,produccion_nacional,947.0,miles_sacos_60kg,FNC
 2023-07-01,Caldas,precipitacion,23.0,mm,open-meteo
 2023-07-01,Caldas,temp_max,18.9,°C,open-meteo
 2023-07-01,Caldas,temp_min,11.7,°C,open-meteo
@@ -5599,6 +5606,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-08-01,Antioquia,temp_min,15.8,°C,open-meteo
 2023-08-01,COLOMBIA,fx_usd_local,3906.02001953125,COP/USD,yfinance
 2023-08-01,COLOMBIA,precio_interno_referencia,1340000.0,COP/carga_125kg,FNC
+2023-08-01,COLOMBIA,produccion_nacional,872.0,miles_sacos_60kg,FNC
 2023-08-01,Caldas,precipitacion,7.3,mm,open-meteo
 2023-08-01,Caldas,temp_max,18.3,°C,open-meteo
 2023-08-01,Caldas,temp_min,11.0,°C,open-meteo
@@ -6420,6 +6428,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-09-01,Antioquia,temp_min,17.2,°C,open-meteo
 2023-09-01,COLOMBIA,fx_usd_local,4086.800048828125,COP/USD,yfinance
 2023-09-01,COLOMBIA,precio_interno_referencia,1295000.0,COP/carga_125kg,FNC
+2023-09-01,COLOMBIA,produccion_nacional,849.0,miles_sacos_60kg,FNC
 2023-09-01,Caldas,precipitacion,3.7,mm,open-meteo
 2023-09-01,Caldas,temp_max,23.1,°C,open-meteo
 2023-09-01,Caldas,temp_min,11.0,°C,open-meteo
@@ -7210,6 +7219,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-10-01,Antioquia,temp_max,29.1,°C,open-meteo
 2023-10-01,Antioquia,temp_min,18.0,°C,open-meteo
 2023-10-01,COLOMBIA,precio_interno_referencia,1256000.0,COP/carga_125kg,FNC
+2023-10-01,COLOMBIA,produccion_nacional,1157.4584732241142,miles_sacos_60kg,FNC
 2023-10-01,Caldas,precipitacion,12.8,mm,open-meteo
 2023-10-01,Caldas,temp_max,20.2,°C,open-meteo
 2023-10-01,Caldas,temp_min,11.2,°C,open-meteo
@@ -8030,6 +8040,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-11-01,Antioquia,temp_min,17.0,°C,open-meteo
 2023-11-01,COLOMBIA,fx_usd_local,4112.75,COP/USD,yfinance
 2023-11-01,COLOMBIA,precio_interno_referencia,1350000.0,COP/carga_125kg,FNC
+2023-11-01,COLOMBIA,produccion_nacional,1282.1066366773907,miles_sacos_60kg,FNC
 2023-11-01,Caldas,precipitacion,3.6,mm,open-meteo
 2023-11-01,Caldas,temp_max,17.4,°C,open-meteo
 2023-11-01,Caldas,temp_min,11.8,°C,open-meteo
@@ -8749,7 +8760,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-11-28,Cauca,precipitacion,2.9,mm,open-meteo
 2023-11-28,Cauca,temp_max,21.6,°C,open-meteo
 2023-11-28,Cauca,temp_min,15.5,°C,open-meteo
-2023-11-28,GLOBAL,precio_cafe_arabica,183.64999389648438,USc/lb,yfinance
+2023-11-28,GLOBAL,precio_cafe_arabica,183.6499938964844,USc/lb,yfinance
 2023-11-28,Huila,precipitacion,0.7,mm,open-meteo
 2023-11-28,Huila,temp_max,24.5,°C,open-meteo
 2023-11-28,Huila,temp_min,14.2,°C,open-meteo
@@ -8776,7 +8787,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-11-29,Cauca,precipitacion,1.9,mm,open-meteo
 2023-11-29,Cauca,temp_max,21.0,°C,open-meteo
 2023-11-29,Cauca,temp_min,14.0,°C,open-meteo
-2023-11-29,GLOBAL,precio_cafe_arabica,182.10000610351562,USc/lb,yfinance
+2023-11-29,GLOBAL,precio_cafe_arabica,182.1000061035156,USc/lb,yfinance
 2023-11-29,Huila,precipitacion,2.3,mm,open-meteo
 2023-11-29,Huila,temp_max,25.5,°C,open-meteo
 2023-11-29,Huila,temp_min,13.6,°C,open-meteo
@@ -8824,13 +8835,14 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-01,Antioquia,temp_min,16.7,°C,open-meteo
 2023-12-01,COLOMBIA,fx_usd_local,4014.580078125,COP/USD,yfinance
 2023-12-01,COLOMBIA,precio_interno_referencia,1480000.0,COP/carga_125kg,FNC
+2023-12-01,COLOMBIA,produccion_nacional,1220.0,miles_sacos_60kg,FNC
 2023-12-01,Caldas,precipitacion,0.1,mm,open-meteo
 2023-12-01,Caldas,temp_max,20.9,°C,open-meteo
 2023-12-01,Caldas,temp_min,9.6,°C,open-meteo
 2023-12-01,Cauca,precipitacion,0.6,mm,open-meteo
 2023-12-01,Cauca,temp_max,23.2,°C,open-meteo
 2023-12-01,Cauca,temp_min,12.9,°C,open-meteo
-2023-12-01,GLOBAL,precio_cafe_arabica,193.89999389648438,USc/lb,yfinance
+2023-12-01,GLOBAL,precio_cafe_arabica,193.8999938964844,USc/lb,yfinance
 2023-12-01,Huila,precipitacion,1.3,mm,open-meteo
 2023-12-01,Huila,temp_max,26.4,°C,open-meteo
 2023-12-01,Huila,temp_min,14.6,°C,open-meteo
@@ -8907,7 +8919,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-04,Cauca,precipitacion,1.3,mm,open-meteo
 2023-12-04,Cauca,temp_max,22.7,°C,open-meteo
 2023-12-04,Cauca,temp_min,12.9,°C,open-meteo
-2023-12-04,GLOBAL,precio_cafe_arabica,188.89999389648438,USc/lb,yfinance
+2023-12-04,GLOBAL,precio_cafe_arabica,188.8999938964844,USc/lb,yfinance
 2023-12-04,Huila,precipitacion,1.2,mm,open-meteo
 2023-12-04,Huila,temp_max,25.8,°C,open-meteo
 2023-12-04,Huila,temp_min,13.6,°C,open-meteo
@@ -8934,7 +8946,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-05,Cauca,precipitacion,1.4,mm,open-meteo
 2023-12-05,Cauca,temp_max,21.5,°C,open-meteo
 2023-12-05,Cauca,temp_min,12.8,°C,open-meteo
-2023-12-05,GLOBAL,precio_cafe_arabica,193.85000610351562,USc/lb,yfinance
+2023-12-05,GLOBAL,precio_cafe_arabica,193.8500061035156,USc/lb,yfinance
 2023-12-05,Huila,precipitacion,1.7,mm,open-meteo
 2023-12-05,Huila,temp_max,27.0,°C,open-meteo
 2023-12-05,Huila,temp_min,13.4,°C,open-meteo
@@ -9015,7 +9027,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-08,Cauca,precipitacion,0.6,mm,open-meteo
 2023-12-08,Cauca,temp_max,23.4,°C,open-meteo
 2023-12-08,Cauca,temp_min,14.4,°C,open-meteo
-2023-12-08,GLOBAL,precio_cafe_arabica,185.14999389648438,USc/lb,yfinance
+2023-12-08,GLOBAL,precio_cafe_arabica,185.1499938964844,USc/lb,yfinance
 2023-12-08,Huila,precipitacion,1.5,mm,open-meteo
 2023-12-08,Huila,temp_max,25.5,°C,open-meteo
 2023-12-08,Huila,temp_min,15.7,°C,open-meteo
@@ -9119,7 +9131,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-12,Cauca,precipitacion,0.5,mm,open-meteo
 2023-12-12,Cauca,temp_max,22.7,°C,open-meteo
 2023-12-12,Cauca,temp_min,15.7,°C,open-meteo
-2023-12-12,GLOBAL,precio_cafe_arabica,191.14999389648438,USc/lb,yfinance
+2023-12-12,GLOBAL,precio_cafe_arabica,191.1499938964844,USc/lb,yfinance
 2023-12-12,Huila,precipitacion,1.6,mm,open-meteo
 2023-12-12,Huila,temp_max,27.1,°C,open-meteo
 2023-12-12,Huila,temp_min,15.4,°C,open-meteo
@@ -9146,7 +9158,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-13,Cauca,precipitacion,0.8,mm,open-meteo
 2023-12-13,Cauca,temp_max,22.6,°C,open-meteo
 2023-12-13,Cauca,temp_min,15.1,°C,open-meteo
-2023-12-13,GLOBAL,precio_cafe_arabica,194.64999389648438,USc/lb,yfinance
+2023-12-13,GLOBAL,precio_cafe_arabica,194.6499938964844,USc/lb,yfinance
 2023-12-13,Huila,precipitacion,1.1,mm,open-meteo
 2023-12-13,Huila,temp_max,26.2,°C,open-meteo
 2023-12-13,Huila,temp_min,14.9,°C,open-meteo
@@ -9173,7 +9185,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-14,Cauca,precipitacion,16.0,mm,open-meteo
 2023-12-14,Cauca,temp_max,23.5,°C,open-meteo
 2023-12-14,Cauca,temp_min,14.8,°C,open-meteo
-2023-12-14,GLOBAL,precio_cafe_arabica,200.10000610351562,USc/lb,yfinance
+2023-12-14,GLOBAL,precio_cafe_arabica,200.1000061035156,USc/lb,yfinance
 2023-12-14,Huila,precipitacion,0.8,mm,open-meteo
 2023-12-14,Huila,temp_max,25.9,°C,open-meteo
 2023-12-14,Huila,temp_min,15.5,°C,open-meteo
@@ -9304,7 +9316,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-19,Cauca,precipitacion,19.8,mm,open-meteo
 2023-12-19,Cauca,temp_max,22.3,°C,open-meteo
 2023-12-19,Cauca,temp_min,15.0,°C,open-meteo
-2023-12-19,GLOBAL,precio_cafe_arabica,202.39999389648438,USc/lb,yfinance
+2023-12-19,GLOBAL,precio_cafe_arabica,202.3999938964844,USc/lb,yfinance
 2023-12-19,Huila,precipitacion,2.0,mm,open-meteo
 2023-12-19,Huila,temp_max,25.2,°C,open-meteo
 2023-12-19,Huila,temp_min,16.4,°C,open-meteo
@@ -9331,7 +9343,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-20,Cauca,precipitacion,21.8,mm,open-meteo
 2023-12-20,Cauca,temp_max,23.5,°C,open-meteo
 2023-12-20,Cauca,temp_min,13.9,°C,open-meteo
-2023-12-20,GLOBAL,precio_cafe_arabica,190.60000610351562,USc/lb,yfinance
+2023-12-20,GLOBAL,precio_cafe_arabica,190.6000061035156,USc/lb,yfinance
 2023-12-20,Huila,precipitacion,9.3,mm,open-meteo
 2023-12-20,Huila,temp_max,26.0,°C,open-meteo
 2023-12-20,Huila,temp_min,17.5,°C,open-meteo
@@ -9358,7 +9370,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-21,Cauca,precipitacion,9.0,mm,open-meteo
 2023-12-21,Cauca,temp_max,23.7,°C,open-meteo
 2023-12-21,Cauca,temp_min,14.8,°C,open-meteo
-2023-12-21,GLOBAL,precio_cafe_arabica,193.60000610351562,USc/lb,yfinance
+2023-12-21,GLOBAL,precio_cafe_arabica,193.6000061035156,USc/lb,yfinance
 2023-12-21,Huila,precipitacion,5.5,mm,open-meteo
 2023-12-21,Huila,temp_max,25.1,°C,open-meteo
 2023-12-21,Huila,temp_min,17.1,°C,open-meteo
@@ -9488,7 +9500,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-26,Cauca,precipitacion,11.6,mm,open-meteo
 2023-12-26,Cauca,temp_max,21.0,°C,open-meteo
 2023-12-26,Cauca,temp_min,16.0,°C,open-meteo
-2023-12-26,GLOBAL,precio_cafe_arabica,194.35000610351562,USc/lb,yfinance
+2023-12-26,GLOBAL,precio_cafe_arabica,194.3500061035156,USc/lb,yfinance
 2023-12-26,Huila,precipitacion,16.8,mm,open-meteo
 2023-12-26,Huila,temp_max,22.0,°C,open-meteo
 2023-12-26,Huila,temp_min,15.6,°C,open-meteo
@@ -9640,6 +9652,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-01,Antioquia,temp_min,17.5,°C,open-meteo
 2024-01-01,COLOMBIA,fx_usd_local,3836.099609375,COP/USD,yfinance
 2024-01-01,COLOMBIA,precio_interno_referencia,1428000.0,COP/carga_125kg,FNC
+2024-01-01,COLOMBIA,produccion_nacional,959.0,miles_sacos_60kg,FNC
 2024-01-01,Caldas,precipitacion,11.4,mm,open-meteo
 2024-01-01,Caldas,temp_max,17.9,°C,open-meteo
 2024-01-01,Caldas,temp_min,9.7,°C,open-meteo
@@ -9672,7 +9685,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-02,Cauca,precipitacion,2.7,mm,open-meteo
 2024-01-02,Cauca,temp_max,23.2,°C,open-meteo
 2024-01-02,Cauca,temp_min,13.4,°C,open-meteo
-2024-01-02,GLOBAL,precio_cafe_arabica,190.14999389648438,USc/lb,yfinance
+2024-01-02,GLOBAL,precio_cafe_arabica,190.1499938964844,USc/lb,yfinance
 2024-01-02,Huila,precipitacion,2.3,mm,open-meteo
 2024-01-02,Huila,temp_max,26.9,°C,open-meteo
 2024-01-02,Huila,temp_min,15.3,°C,open-meteo
@@ -9830,7 +9843,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-08,Cauca,precipitacion,0.2,mm,open-meteo
 2024-01-08,Cauca,temp_max,22.8,°C,open-meteo
 2024-01-08,Cauca,temp_min,14.2,°C,open-meteo
-2024-01-08,GLOBAL,precio_cafe_arabica,181.39999389648438,USc/lb,yfinance
+2024-01-08,GLOBAL,precio_cafe_arabica,181.3999938964844,USc/lb,yfinance
 2024-01-08,Huila,precipitacion,1.7,mm,open-meteo
 2024-01-08,Huila,temp_max,26.6,°C,open-meteo
 2024-01-08,Huila,temp_min,13.3,°C,open-meteo
@@ -9857,7 +9870,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-09,Cauca,precipitacion,2.2,mm,open-meteo
 2024-01-09,Cauca,temp_max,22.4,°C,open-meteo
 2024-01-09,Cauca,temp_min,13.1,°C,open-meteo
-2024-01-09,GLOBAL,precio_cafe_arabica,184.10000610351562,USc/lb,yfinance
+2024-01-09,GLOBAL,precio_cafe_arabica,184.1000061035156,USc/lb,yfinance
 2024-01-09,Huila,precipitacion,2.1,mm,open-meteo
 2024-01-09,Huila,temp_max,26.2,°C,open-meteo
 2024-01-09,Huila,temp_min,14.4,°C,open-meteo
@@ -9884,7 +9897,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-10,Cauca,precipitacion,8.9,mm,open-meteo
 2024-01-10,Cauca,temp_max,21.6,°C,open-meteo
 2024-01-10,Cauca,temp_min,14.4,°C,open-meteo
-2024-01-10,GLOBAL,precio_cafe_arabica,181.14999389648438,USc/lb,yfinance
+2024-01-10,GLOBAL,precio_cafe_arabica,181.1499938964844,USc/lb,yfinance
 2024-01-10,Huila,precipitacion,4.1,mm,open-meteo
 2024-01-10,Huila,temp_max,27.5,°C,open-meteo
 2024-01-10,Huila,temp_min,13.5,°C,open-meteo
@@ -10122,7 +10135,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-19,Cauca,precipitacion,1.1,mm,open-meteo
 2024-01-19,Cauca,temp_max,23.1,°C,open-meteo
 2024-01-19,Cauca,temp_min,13.4,°C,open-meteo
-2024-01-19,GLOBAL,precio_cafe_arabica,185.14999389648438,USc/lb,yfinance
+2024-01-19,GLOBAL,precio_cafe_arabica,185.1499938964844,USc/lb,yfinance
 2024-01-19,Huila,precipitacion,3.3,mm,open-meteo
 2024-01-19,Huila,temp_max,26.3,°C,open-meteo
 2024-01-19,Huila,temp_min,15.2,°C,open-meteo
@@ -10307,7 +10320,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-26,Cauca,precipitacion,0.7,mm,open-meteo
 2024-01-26,Cauca,temp_max,24.5,°C,open-meteo
 2024-01-26,Cauca,temp_min,12.9,°C,open-meteo
-2024-01-26,GLOBAL,precio_cafe_arabica,193.85000610351562,USc/lb,yfinance
+2024-01-26,GLOBAL,precio_cafe_arabica,193.8500061035156,USc/lb,yfinance
 2024-01-26,Huila,precipitacion,0.0,mm,open-meteo
 2024-01-26,Huila,temp_max,28.1,°C,open-meteo
 2024-01-26,Huila,temp_min,13.0,°C,open-meteo
@@ -10459,6 +10472,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-01,Antioquia,temp_min,17.5,°C,open-meteo
 2024-02-01,COLOMBIA,fx_usd_local,3915.280029296875,COP/USD,yfinance
 2024-02-01,COLOMBIA,precio_interno_referencia,1474000.0,COP/carga_125kg,FNC
+2024-02-01,COLOMBIA,produccion_nacional,961.0,miles_sacos_60kg,FNC
 2024-02-01,Caldas,precipitacion,18.7,mm,open-meteo
 2024-02-01,Caldas,temp_max,20.1,°C,open-meteo
 2024-02-01,Caldas,temp_min,12.2,°C,open-meteo
@@ -10754,7 +10768,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-12,Cauca,precipitacion,11.9,mm,open-meteo
 2024-02-12,Cauca,temp_max,22.2,°C,open-meteo
 2024-02-12,Cauca,temp_min,15.1,°C,open-meteo
-2024-02-12,GLOBAL,precio_cafe_arabica,195.60000610351562,USc/lb,yfinance
+2024-02-12,GLOBAL,precio_cafe_arabica,195.6000061035156,USc/lb,yfinance
 2024-02-12,Huila,precipitacion,15.9,mm,open-meteo
 2024-02-12,Huila,temp_max,25.1,°C,open-meteo
 2024-02-12,Huila,temp_min,15.4,°C,open-meteo
@@ -10862,7 +10876,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-16,Cauca,precipitacion,1.1,mm,open-meteo
 2024-02-16,Cauca,temp_max,23.7,°C,open-meteo
 2024-02-16,Cauca,temp_min,16.1,°C,open-meteo
-2024-02-16,GLOBAL,precio_cafe_arabica,190.85000610351562,USc/lb,yfinance
+2024-02-16,GLOBAL,precio_cafe_arabica,190.8500061035156,USc/lb,yfinance
 2024-02-16,Huila,precipitacion,2.6,mm,open-meteo
 2024-02-16,Huila,temp_max,26.7,°C,open-meteo
 2024-02-16,Huila,temp_min,16.2,°C,open-meteo
@@ -10965,7 +10979,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-20,Cauca,precipitacion,13.1,mm,open-meteo
 2024-02-20,Cauca,temp_max,24.4,°C,open-meteo
 2024-02-20,Cauca,temp_min,16.7,°C,open-meteo
-2024-02-20,GLOBAL,precio_cafe_arabica,191.60000610351562,USc/lb,yfinance
+2024-02-20,GLOBAL,precio_cafe_arabica,191.6000061035156,USc/lb,yfinance
 2024-02-20,Huila,precipitacion,1.9,mm,open-meteo
 2024-02-20,Huila,temp_max,27.4,°C,open-meteo
 2024-02-20,Huila,temp_min,17.6,°C,open-meteo
@@ -10992,7 +11006,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-21,Cauca,precipitacion,23.2,mm,open-meteo
 2024-02-21,Cauca,temp_max,17.4,°C,open-meteo
 2024-02-21,Cauca,temp_min,14.4,°C,open-meteo
-2024-02-21,GLOBAL,precio_cafe_arabica,198.35000610351562,USc/lb,yfinance
+2024-02-21,GLOBAL,precio_cafe_arabica,198.3500061035156,USc/lb,yfinance
 2024-02-21,Huila,precipitacion,5.7,mm,open-meteo
 2024-02-21,Huila,temp_max,26.5,°C,open-meteo
 2024-02-21,Huila,temp_min,16.7,°C,open-meteo
@@ -11019,7 +11033,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-22,Cauca,precipitacion,0.9,mm,open-meteo
 2024-02-22,Cauca,temp_max,24.4,°C,open-meteo
 2024-02-22,Cauca,temp_min,12.2,°C,open-meteo
-2024-02-22,GLOBAL,precio_cafe_arabica,193.85000610351562,USc/lb,yfinance
+2024-02-22,GLOBAL,precio_cafe_arabica,193.8500061035156,USc/lb,yfinance
 2024-02-22,Huila,precipitacion,2.4,mm,open-meteo
 2024-02-22,Huila,temp_max,27.5,°C,open-meteo
 2024-02-22,Huila,temp_min,17.8,°C,open-meteo
@@ -11123,7 +11137,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-26,Cauca,precipitacion,3.4,mm,open-meteo
 2024-02-26,Cauca,temp_max,22.6,°C,open-meteo
 2024-02-26,Cauca,temp_min,13.8,°C,open-meteo
-2024-02-26,GLOBAL,precio_cafe_arabica,190.10000610351562,USc/lb,yfinance
+2024-02-26,GLOBAL,precio_cafe_arabica,190.1000061035156,USc/lb,yfinance
 2024-02-26,Huila,precipitacion,2.2,mm,open-meteo
 2024-02-26,Huila,temp_max,26.5,°C,open-meteo
 2024-02-26,Huila,temp_min,15.8,°C,open-meteo
@@ -11177,7 +11191,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-28,Cauca,precipitacion,0.1,mm,open-meteo
 2024-02-28,Cauca,temp_max,22.8,°C,open-meteo
 2024-02-28,Cauca,temp_min,12.5,°C,open-meteo
-2024-02-28,GLOBAL,precio_cafe_arabica,193.35000610351562,USc/lb,yfinance
+2024-02-28,GLOBAL,precio_cafe_arabica,193.3500061035156,USc/lb,yfinance
 2024-02-28,Huila,precipitacion,5.2,mm,open-meteo
 2024-02-28,Huila,temp_max,26.0,°C,open-meteo
 2024-02-28,Huila,temp_min,14.9,°C,open-meteo
@@ -11204,7 +11218,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-29,Cauca,precipitacion,1.9,mm,open-meteo
 2024-02-29,Cauca,temp_max,23.0,°C,open-meteo
 2024-02-29,Cauca,temp_min,13.8,°C,open-meteo
-2024-02-29,GLOBAL,precio_cafe_arabica,195.85000610351562,USc/lb,yfinance
+2024-02-29,GLOBAL,precio_cafe_arabica,195.8500061035156,USc/lb,yfinance
 2024-02-29,Huila,precipitacion,8.0,mm,open-meteo
 2024-02-29,Huila,temp_max,25.6,°C,open-meteo
 2024-02-29,Huila,temp_min,17.1,°C,open-meteo
@@ -11225,6 +11239,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-01,Antioquia,temp_min,17.6,°C,open-meteo
 2024-03-01,COLOMBIA,fx_usd_local,3926.1298828125,COP/USD,yfinance
 2024-03-01,COLOMBIA,precio_interno_referencia,1430000.0,COP/carga_125kg,FNC
+2024-03-01,COLOMBIA,produccion_nacional,865.5325633014444,miles_sacos_60kg,FNC
 2024-03-01,Caldas,precipitacion,6.1,mm,open-meteo
 2024-03-01,Caldas,temp_max,20.8,°C,open-meteo
 2024-03-01,Caldas,temp_min,11.4,°C,open-meteo
@@ -11308,7 +11323,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-04,Cauca,precipitacion,2.6,mm,open-meteo
 2024-03-04,Cauca,temp_max,22.2,°C,open-meteo
 2024-03-04,Cauca,temp_min,15.5,°C,open-meteo
-2024-03-04,GLOBAL,precio_cafe_arabica,197.39999389648438,USc/lb,yfinance
+2024-03-04,GLOBAL,precio_cafe_arabica,197.3999938964844,USc/lb,yfinance
 2024-03-04,Huila,precipitacion,14.1,mm,open-meteo
 2024-03-04,Huila,temp_max,26.5,°C,open-meteo
 2024-03-04,Huila,temp_min,15.8,°C,open-meteo
@@ -11389,7 +11404,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-07,Cauca,precipitacion,1.2,mm,open-meteo
 2024-03-07,Cauca,temp_max,22.0,°C,open-meteo
 2024-03-07,Cauca,temp_min,14.9,°C,open-meteo
-2024-03-07,GLOBAL,precio_cafe_arabica,198.35000610351562,USc/lb,yfinance
+2024-03-07,GLOBAL,precio_cafe_arabica,198.3500061035156,USc/lb,yfinance
 2024-03-07,Huila,precipitacion,13.1,mm,open-meteo
 2024-03-07,Huila,temp_max,25.8,°C,open-meteo
 2024-03-07,Huila,temp_min,16.6,°C,open-meteo
@@ -11416,7 +11431,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-08,Cauca,precipitacion,1.5,mm,open-meteo
 2024-03-08,Cauca,temp_max,22.1,°C,open-meteo
 2024-03-08,Cauca,temp_min,15.5,°C,open-meteo
-2024-03-08,GLOBAL,precio_cafe_arabica,191.39999389648438,USc/lb,yfinance
+2024-03-08,GLOBAL,precio_cafe_arabica,191.3999938964844,USc/lb,yfinance
 2024-03-08,Huila,precipitacion,9.4,mm,open-meteo
 2024-03-08,Huila,temp_max,25.6,°C,open-meteo
 2024-03-08,Huila,temp_min,15.6,°C,open-meteo
@@ -11493,7 +11508,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-11,Cauca,precipitacion,2.8,mm,open-meteo
 2024-03-11,Cauca,temp_max,23.1,°C,open-meteo
 2024-03-11,Cauca,temp_min,15.5,°C,open-meteo
-2024-03-11,GLOBAL,precio_cafe_arabica,194.35000610351562,USc/lb,yfinance
+2024-03-11,GLOBAL,precio_cafe_arabica,194.3500061035156,USc/lb,yfinance
 2024-03-11,Huila,precipitacion,5.2,mm,open-meteo
 2024-03-11,Huila,temp_max,24.9,°C,open-meteo
 2024-03-11,Huila,temp_min,15.2,°C,open-meteo
@@ -11520,7 +11535,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-12,Cauca,precipitacion,1.5,mm,open-meteo
 2024-03-12,Cauca,temp_max,23.3,°C,open-meteo
 2024-03-12,Cauca,temp_min,14.9,°C,open-meteo
-2024-03-12,GLOBAL,precio_cafe_arabica,195.39999389648438,USc/lb,yfinance
+2024-03-12,GLOBAL,precio_cafe_arabica,195.3999938964844,USc/lb,yfinance
 2024-03-12,Huila,precipitacion,1.4,mm,open-meteo
 2024-03-12,Huila,temp_max,25.5,°C,open-meteo
 2024-03-12,Huila,temp_min,14.1,°C,open-meteo
@@ -11547,7 +11562,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-13,Cauca,precipitacion,1.4,mm,open-meteo
 2024-03-13,Cauca,temp_max,23.9,°C,open-meteo
 2024-03-13,Cauca,temp_min,16.4,°C,open-meteo
-2024-03-13,GLOBAL,precio_cafe_arabica,191.64999389648438,USc/lb,yfinance
+2024-03-13,GLOBAL,precio_cafe_arabica,191.6499938964844,USc/lb,yfinance
 2024-03-13,Huila,precipitacion,5.9,mm,open-meteo
 2024-03-13,Huila,temp_max,25.2,°C,open-meteo
 2024-03-13,Huila,temp_min,16.0,°C,open-meteo
@@ -11574,7 +11589,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-14,Cauca,precipitacion,0.7,mm,open-meteo
 2024-03-14,Cauca,temp_max,23.4,°C,open-meteo
 2024-03-14,Cauca,temp_min,16.1,°C,open-meteo
-2024-03-14,GLOBAL,precio_cafe_arabica,191.35000610351562,USc/lb,yfinance
+2024-03-14,GLOBAL,precio_cafe_arabica,191.3500061035156,USc/lb,yfinance
 2024-03-14,Huila,precipitacion,8.3,mm,open-meteo
 2024-03-14,Huila,temp_max,24.8,°C,open-meteo
 2024-03-14,Huila,temp_min,15.2,°C,open-meteo
@@ -11601,7 +11616,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-15,Cauca,precipitacion,2.9,mm,open-meteo
 2024-03-15,Cauca,temp_max,22.8,°C,open-meteo
 2024-03-15,Cauca,temp_min,16.5,°C,open-meteo
-2024-03-15,GLOBAL,precio_cafe_arabica,182.85000610351562,USc/lb,yfinance
+2024-03-15,GLOBAL,precio_cafe_arabica,182.8500061035156,USc/lb,yfinance
 2024-03-15,Huila,precipitacion,4.7,mm,open-meteo
 2024-03-15,Huila,temp_max,26.8,°C,open-meteo
 2024-03-15,Huila,temp_min,15.0,°C,open-meteo
@@ -11678,7 +11693,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-18,Cauca,precipitacion,4.9,mm,open-meteo
 2024-03-18,Cauca,temp_max,24.1,°C,open-meteo
 2024-03-18,Cauca,temp_min,15.5,°C,open-meteo
-2024-03-18,GLOBAL,precio_cafe_arabica,181.85000610351562,USc/lb,yfinance
+2024-03-18,GLOBAL,precio_cafe_arabica,181.8500061035156,USc/lb,yfinance
 2024-03-18,Huila,precipitacion,14.9,mm,open-meteo
 2024-03-18,Huila,temp_max,26.2,°C,open-meteo
 2024-03-18,Huila,temp_min,15.3,°C,open-meteo
@@ -11732,7 +11747,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-20,Cauca,precipitacion,8.8,mm,open-meteo
 2024-03-20,Cauca,temp_max,23.8,°C,open-meteo
 2024-03-20,Cauca,temp_min,15.3,°C,open-meteo
-2024-03-20,GLOBAL,precio_cafe_arabica,182.39999389648438,USc/lb,yfinance
+2024-03-20,GLOBAL,precio_cafe_arabica,182.3999938964844,USc/lb,yfinance
 2024-03-20,Huila,precipitacion,1.4,mm,open-meteo
 2024-03-20,Huila,temp_max,27.9,°C,open-meteo
 2024-03-20,Huila,temp_min,16.8,°C,open-meteo
@@ -11786,7 +11801,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-22,Cauca,precipitacion,0.8,mm,open-meteo
 2024-03-22,Cauca,temp_max,22.7,°C,open-meteo
 2024-03-22,Cauca,temp_min,14.7,°C,open-meteo
-2024-03-22,GLOBAL,precio_cafe_arabica,184.85000610351562,USc/lb,yfinance
+2024-03-22,GLOBAL,precio_cafe_arabica,184.8500061035156,USc/lb,yfinance
 2024-03-22,Huila,precipitacion,0.8,mm,open-meteo
 2024-03-22,Huila,temp_max,26.1,°C,open-meteo
 2024-03-22,Huila,temp_min,16.8,°C,open-meteo
@@ -11863,7 +11878,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-25,Cauca,precipitacion,30.0,mm,open-meteo
 2024-03-25,Cauca,temp_max,23.4,°C,open-meteo
 2024-03-25,Cauca,temp_min,14.4,°C,open-meteo
-2024-03-25,GLOBAL,precio_cafe_arabica,185.64999389648438,USc/lb,yfinance
+2024-03-25,GLOBAL,precio_cafe_arabica,185.6499938964844,USc/lb,yfinance
 2024-03-25,Huila,precipitacion,2.2,mm,open-meteo
 2024-03-25,Huila,temp_max,26.4,°C,open-meteo
 2024-03-25,Huila,temp_min,16.6,°C,open-meteo
@@ -11917,7 +11932,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-27,Cauca,precipitacion,11.5,mm,open-meteo
 2024-03-27,Cauca,temp_max,23.3,°C,open-meteo
 2024-03-27,Cauca,temp_min,14.0,°C,open-meteo
-2024-03-27,GLOBAL,precio_cafe_arabica,190.64999389648438,USc/lb,yfinance
+2024-03-27,GLOBAL,precio_cafe_arabica,190.6499938964844,USc/lb,yfinance
 2024-03-27,Huila,precipitacion,2.9,mm,open-meteo
 2024-03-27,Huila,temp_max,24.6,°C,open-meteo
 2024-03-27,Huila,temp_min,16.6,°C,open-meteo
@@ -11944,7 +11959,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-28,Cauca,precipitacion,18.5,mm,open-meteo
 2024-03-28,Cauca,temp_max,23.8,°C,open-meteo
 2024-03-28,Cauca,temp_min,15.0,°C,open-meteo
-2024-03-28,GLOBAL,precio_cafe_arabica,188.85000610351562,USc/lb,yfinance
+2024-03-28,GLOBAL,precio_cafe_arabica,188.8500061035156,USc/lb,yfinance
 2024-03-28,Huila,precipitacion,3.3,mm,open-meteo
 2024-03-28,Huila,temp_max,25.4,°C,open-meteo
 2024-03-28,Huila,temp_min,17.0,°C,open-meteo
@@ -12041,6 +12056,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-01,Antioquia,temp_min,18.2,°C,open-meteo
 2024-04-01,COLOMBIA,fx_usd_local,3859.449951171875,COP/USD,yfinance
 2024-04-01,COLOMBIA,precio_interno_referencia,1444000.0,COP/carga_125kg,FNC
+2024-04-01,COLOMBIA,produccion_nacional,742.0,miles_sacos_60kg,FNC
 2024-04-01,Caldas,precipitacion,24.2,mm,open-meteo
 2024-04-01,Caldas,temp_max,18.6,°C,open-meteo
 2024-04-01,Caldas,temp_min,12.2,°C,open-meteo
@@ -12101,7 +12117,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-03,Cauca,precipitacion,27.2,mm,open-meteo
 2024-04-03,Cauca,temp_max,20.5,°C,open-meteo
 2024-04-03,Cauca,temp_min,15.4,°C,open-meteo
-2024-04-03,GLOBAL,precio_cafe_arabica,203.60000610351562,USc/lb,yfinance
+2024-04-03,GLOBAL,precio_cafe_arabica,203.6000061035156,USc/lb,yfinance
 2024-04-03,Huila,precipitacion,1.1,mm,open-meteo
 2024-04-03,Huila,temp_max,25.9,°C,open-meteo
 2024-04-03,Huila,temp_min,16.1,°C,open-meteo
@@ -12232,7 +12248,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-08,Cauca,precipitacion,4.6,mm,open-meteo
 2024-04-08,Cauca,temp_max,22.1,°C,open-meteo
 2024-04-08,Cauca,temp_min,15.2,°C,open-meteo
-2024-04-08,GLOBAL,precio_cafe_arabica,211.10000610351562,USc/lb,yfinance
+2024-04-08,GLOBAL,precio_cafe_arabica,211.1000061035156,USc/lb,yfinance
 2024-04-08,Huila,precipitacion,6.2,mm,open-meteo
 2024-04-08,Huila,temp_max,24.6,°C,open-meteo
 2024-04-08,Huila,temp_min,16.2,°C,open-meteo
@@ -12286,7 +12302,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-10,Cauca,precipitacion,0.5,mm,open-meteo
 2024-04-10,Cauca,temp_max,22.9,°C,open-meteo
 2024-04-10,Cauca,temp_min,13.3,°C,open-meteo
-2024-04-10,GLOBAL,precio_cafe_arabica,214.64999389648438,USc/lb,yfinance
+2024-04-10,GLOBAL,precio_cafe_arabica,214.6499938964844,USc/lb,yfinance
 2024-04-10,Huila,precipitacion,1.8,mm,open-meteo
 2024-04-10,Huila,temp_max,26.1,°C,open-meteo
 2024-04-10,Huila,temp_min,13.6,°C,open-meteo
@@ -12313,7 +12329,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-11,Cauca,precipitacion,0.1,mm,open-meteo
 2024-04-11,Cauca,temp_max,24.0,°C,open-meteo
 2024-04-11,Cauca,temp_min,14.3,°C,open-meteo
-2024-04-11,GLOBAL,precio_cafe_arabica,220.35000610351562,USc/lb,yfinance
+2024-04-11,GLOBAL,precio_cafe_arabica,220.3500061035156,USc/lb,yfinance
 2024-04-11,Huila,precipitacion,0.6,mm,open-meteo
 2024-04-11,Huila,temp_max,28.9,°C,open-meteo
 2024-04-11,Huila,temp_min,13.5,°C,open-meteo
@@ -12340,7 +12356,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-12,Cauca,precipitacion,2.0,mm,open-meteo
 2024-04-12,Cauca,temp_max,24.9,°C,open-meteo
 2024-04-12,Cauca,temp_min,12.1,°C,open-meteo
-2024-04-12,GLOBAL,precio_cafe_arabica,224.64999389648438,USc/lb,yfinance
+2024-04-12,GLOBAL,precio_cafe_arabica,224.6499938964844,USc/lb,yfinance
 2024-04-12,Huila,precipitacion,1.1,mm,open-meteo
 2024-04-12,Huila,temp_max,28.1,°C,open-meteo
 2024-04-12,Huila,temp_min,14.4,°C,open-meteo
@@ -12498,7 +12514,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-18,Cauca,precipitacion,16.0,mm,open-meteo
 2024-04-18,Cauca,temp_max,21.9,°C,open-meteo
 2024-04-18,Cauca,temp_min,14.7,°C,open-meteo
-2024-04-18,GLOBAL,precio_cafe_arabica,239.85000610351562,USc/lb,yfinance
+2024-04-18,GLOBAL,precio_cafe_arabica,239.8500061035156,USc/lb,yfinance
 2024-04-18,Huila,precipitacion,7.4,mm,open-meteo
 2024-04-18,Huila,temp_max,25.0,°C,open-meteo
 2024-04-18,Huila,temp_min,15.3,°C,open-meteo
@@ -12525,7 +12541,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-19,Cauca,precipitacion,10.4,mm,open-meteo
 2024-04-19,Cauca,temp_max,21.6,°C,open-meteo
 2024-04-19,Cauca,temp_min,16.1,°C,open-meteo
-2024-04-19,GLOBAL,precio_cafe_arabica,241.39999389648438,USc/lb,yfinance
+2024-04-19,GLOBAL,precio_cafe_arabica,241.3999938964844,USc/lb,yfinance
 2024-04-19,Huila,precipitacion,24.3,mm,open-meteo
 2024-04-19,Huila,temp_max,21.6,°C,open-meteo
 2024-04-19,Huila,temp_min,16.9,°C,open-meteo
@@ -12602,7 +12618,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-22,Cauca,precipitacion,6.5,mm,open-meteo
 2024-04-22,Cauca,temp_max,19.0,°C,open-meteo
 2024-04-22,Cauca,temp_min,15.3,°C,open-meteo
-2024-04-22,GLOBAL,precio_cafe_arabica,231.64999389648438,USc/lb,yfinance
+2024-04-22,GLOBAL,precio_cafe_arabica,231.6499938964844,USc/lb,yfinance
 2024-04-22,Huila,precipitacion,18.4,mm,open-meteo
 2024-04-22,Huila,temp_max,19.5,°C,open-meteo
 2024-04-22,Huila,temp_min,17.5,°C,open-meteo
@@ -12710,7 +12726,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-26,Cauca,precipitacion,3.3,mm,open-meteo
 2024-04-26,Cauca,temp_max,22.4,°C,open-meteo
 2024-04-26,Cauca,temp_min,14.5,°C,open-meteo
-2024-04-26,GLOBAL,precio_cafe_arabica,230.60000610351562,USc/lb,yfinance
+2024-04-26,GLOBAL,precio_cafe_arabica,230.6000061035156,USc/lb,yfinance
 2024-04-26,Huila,precipitacion,0.4,mm,open-meteo
 2024-04-26,Huila,temp_max,25.8,°C,open-meteo
 2024-04-26,Huila,temp_min,14.3,°C,open-meteo
@@ -12814,7 +12830,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-30,Cauca,precipitacion,3.4,mm,open-meteo
 2024-04-30,Cauca,temp_max,21.4,°C,open-meteo
 2024-04-30,Cauca,temp_min,14.9,°C,open-meteo
-2024-04-30,GLOBAL,precio_cafe_arabica,220.64999389648438,USc/lb,yfinance
+2024-04-30,GLOBAL,precio_cafe_arabica,220.6499938964844,USc/lb,yfinance
 2024-04-30,Huila,precipitacion,4.5,mm,open-meteo
 2024-04-30,Huila,temp_max,25.0,°C,open-meteo
 2024-04-30,Huila,temp_min,15.4,°C,open-meteo
@@ -12835,6 +12851,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-01,Antioquia,temp_min,17.1,°C,open-meteo
 2024-05-01,COLOMBIA,fx_usd_local,3907.75,COP/USD,yfinance
 2024-05-01,COLOMBIA,precio_interno_referencia,1656000.0,COP/carga_125kg,FNC
+2024-05-01,COLOMBIA,produccion_nacional,1120.0,miles_sacos_60kg,FNC
 2024-05-01,Caldas,precipitacion,11.2,mm,open-meteo
 2024-05-01,Caldas,temp_max,20.6,°C,open-meteo
 2024-05-01,Caldas,temp_min,14.3,°C,open-meteo
@@ -12868,7 +12885,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-02,Cauca,precipitacion,13.1,mm,open-meteo
 2024-05-02,Cauca,temp_max,21.5,°C,open-meteo
 2024-05-02,Cauca,temp_min,15.0,°C,open-meteo
-2024-05-02,GLOBAL,precio_cafe_arabica,208.64999389648438,USc/lb,yfinance
+2024-05-02,GLOBAL,precio_cafe_arabica,208.6499938964844,USc/lb,yfinance
 2024-05-02,Huila,precipitacion,1.1,mm,open-meteo
 2024-05-02,Huila,temp_max,26.5,°C,open-meteo
 2024-05-02,Huila,temp_min,14.6,°C,open-meteo
@@ -12895,7 +12912,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-03,Cauca,precipitacion,5.9,mm,open-meteo
 2024-05-03,Cauca,temp_max,21.7,°C,open-meteo
 2024-05-03,Cauca,temp_min,16.2,°C,open-meteo
-2024-05-03,GLOBAL,precio_cafe_arabica,205.89999389648438,USc/lb,yfinance
+2024-05-03,GLOBAL,precio_cafe_arabica,205.8999938964844,USc/lb,yfinance
 2024-05-03,Huila,precipitacion,11.1,mm,open-meteo
 2024-05-03,Huila,temp_max,25.7,°C,open-meteo
 2024-05-03,Huila,temp_min,15.9,°C,open-meteo
@@ -13080,7 +13097,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-10,Cauca,precipitacion,1.5,mm,open-meteo
 2024-05-10,Cauca,temp_max,22.6,°C,open-meteo
 2024-05-10,Cauca,temp_min,16.2,°C,open-meteo
-2024-05-10,GLOBAL,precio_cafe_arabica,204.39999389648438,USc/lb,yfinance
+2024-05-10,GLOBAL,precio_cafe_arabica,204.3999938964844,USc/lb,yfinance
 2024-05-10,Huila,precipitacion,22.5,mm,open-meteo
 2024-05-10,Huila,temp_max,24.5,°C,open-meteo
 2024-05-10,Huila,temp_min,15.7,°C,open-meteo
@@ -13157,7 +13174,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-13,Cauca,precipitacion,0.1,mm,open-meteo
 2024-05-13,Cauca,temp_max,23.9,°C,open-meteo
 2024-05-13,Cauca,temp_min,13.5,°C,open-meteo
-2024-05-13,GLOBAL,precio_cafe_arabica,200.39999389648438,USc/lb,yfinance
+2024-05-13,GLOBAL,precio_cafe_arabica,200.3999938964844,USc/lb,yfinance
 2024-05-13,Huila,precipitacion,4.3,mm,open-meteo
 2024-05-13,Huila,temp_max,26.9,°C,open-meteo
 2024-05-13,Huila,temp_min,16.8,°C,open-meteo
@@ -13184,7 +13201,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-14,Cauca,precipitacion,3.7,mm,open-meteo
 2024-05-14,Cauca,temp_max,20.4,°C,open-meteo
 2024-05-14,Cauca,temp_min,16.0,°C,open-meteo
-2024-05-14,GLOBAL,precio_cafe_arabica,202.85000610351562,USc/lb,yfinance
+2024-05-14,GLOBAL,precio_cafe_arabica,202.8500061035156,USc/lb,yfinance
 2024-05-14,Huila,precipitacion,3.8,mm,open-meteo
 2024-05-14,Huila,temp_max,23.5,°C,open-meteo
 2024-05-14,Huila,temp_min,15.9,°C,open-meteo
@@ -13265,7 +13282,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-17,Cauca,precipitacion,4.1,mm,open-meteo
 2024-05-17,Cauca,temp_max,22.4,°C,open-meteo
 2024-05-17,Cauca,temp_min,15.1,°C,open-meteo
-2024-05-17,GLOBAL,precio_cafe_arabica,208.14999389648438,USc/lb,yfinance
+2024-05-17,GLOBAL,precio_cafe_arabica,208.1499938964844,USc/lb,yfinance
 2024-05-17,Huila,precipitacion,2.2,mm,open-meteo
 2024-05-17,Huila,temp_max,26.3,°C,open-meteo
 2024-05-17,Huila,temp_min,14.1,°C,open-meteo
@@ -13423,7 +13440,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-23,Cauca,precipitacion,2.8,mm,open-meteo
 2024-05-23,Cauca,temp_max,20.7,°C,open-meteo
 2024-05-23,Cauca,temp_min,15.0,°C,open-meteo
-2024-05-23,GLOBAL,precio_cafe_arabica,215.64999389648438,USc/lb,yfinance
+2024-05-23,GLOBAL,precio_cafe_arabica,215.6499938964844,USc/lb,yfinance
 2024-05-23,Huila,precipitacion,9.0,mm,open-meteo
 2024-05-23,Huila,temp_max,26.1,°C,open-meteo
 2024-05-23,Huila,temp_min,15.6,°C,open-meteo
@@ -13634,7 +13651,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-31,Cauca,precipitacion,0.8,mm,open-meteo
 2024-05-31,Cauca,temp_max,23.3,°C,open-meteo
 2024-05-31,Cauca,temp_min,15.2,°C,open-meteo
-2024-05-31,GLOBAL,precio_cafe_arabica,222.35000610351562,USc/lb,yfinance
+2024-05-31,GLOBAL,precio_cafe_arabica,222.3500061035156,USc/lb,yfinance
 2024-05-31,Huila,precipitacion,0.9,mm,open-meteo
 2024-05-31,Huila,temp_max,23.4,°C,open-meteo
 2024-05-31,Huila,temp_min,16.3,°C,open-meteo
@@ -13654,6 +13671,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-01,Antioquia,temp_max,29.2,°C,open-meteo
 2024-06-01,Antioquia,temp_min,17.0,°C,open-meteo
 2024-06-01,COLOMBIA,precio_interno_referencia,1700000.0,COP/carga_125kg,FNC
+2024-06-01,COLOMBIA,produccion_nacional,1172.0,miles_sacos_60kg,FNC
 2024-06-01,Caldas,precipitacion,1.8,mm,open-meteo
 2024-06-01,Caldas,temp_max,21.9,°C,open-meteo
 2024-06-01,Caldas,temp_min,13.1,°C,open-meteo
@@ -13738,7 +13756,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-04,Cauca,precipitacion,6.1,mm,open-meteo
 2024-06-04,Cauca,temp_max,20.3,°C,open-meteo
 2024-06-04,Cauca,temp_min,15.3,°C,open-meteo
-2024-06-04,GLOBAL,precio_cafe_arabica,233.89999389648438,USc/lb,yfinance
+2024-06-04,GLOBAL,precio_cafe_arabica,233.8999938964844,USc/lb,yfinance
 2024-06-04,Huila,precipitacion,9.0,mm,open-meteo
 2024-06-04,Huila,temp_max,21.0,°C,open-meteo
 2024-06-04,Huila,temp_min,16.6,°C,open-meteo
@@ -13896,7 +13914,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-10,Cauca,precipitacion,2.9,mm,open-meteo
 2024-06-10,Cauca,temp_max,21.1,°C,open-meteo
 2024-06-10,Cauca,temp_min,14.5,°C,open-meteo
-2024-06-10,GLOBAL,precio_cafe_arabica,221.39999389648438,USc/lb,yfinance
+2024-06-10,GLOBAL,precio_cafe_arabica,221.3999938964844,USc/lb,yfinance
 2024-06-10,Huila,precipitacion,8.0,mm,open-meteo
 2024-06-10,Huila,temp_max,24.1,°C,open-meteo
 2024-06-10,Huila,temp_min,14.9,°C,open-meteo
@@ -13950,7 +13968,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-12,Cauca,precipitacion,3.2,mm,open-meteo
 2024-06-12,Cauca,temp_max,21.5,°C,open-meteo
 2024-06-12,Cauca,temp_min,15.4,°C,open-meteo
-2024-06-12,GLOBAL,precio_cafe_arabica,224.35000610351562,USc/lb,yfinance
+2024-06-12,GLOBAL,precio_cafe_arabica,224.3500061035156,USc/lb,yfinance
 2024-06-12,Huila,precipitacion,10.6,mm,open-meteo
 2024-06-12,Huila,temp_max,25.0,°C,open-meteo
 2024-06-12,Huila,temp_min,13.4,°C,open-meteo
@@ -14004,7 +14022,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-14,Cauca,precipitacion,13.0,mm,open-meteo
 2024-06-14,Cauca,temp_max,20.4,°C,open-meteo
 2024-06-14,Cauca,temp_min,15.9,°C,open-meteo
-2024-06-14,GLOBAL,precio_cafe_arabica,224.14999389648438,USc/lb,yfinance
+2024-06-14,GLOBAL,precio_cafe_arabica,224.1499938964844,USc/lb,yfinance
 2024-06-14,Huila,precipitacion,8.0,mm,open-meteo
 2024-06-14,Huila,temp_max,24.3,°C,open-meteo
 2024-06-14,Huila,temp_min,14.4,°C,open-meteo
@@ -14081,7 +14099,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-17,Cauca,precipitacion,0.1,mm,open-meteo
 2024-06-17,Cauca,temp_max,22.9,°C,open-meteo
 2024-06-17,Cauca,temp_min,13.9,°C,open-meteo
-2024-06-17,GLOBAL,precio_cafe_arabica,227.14999389648438,USc/lb,yfinance
+2024-06-17,GLOBAL,precio_cafe_arabica,227.1499938964844,USc/lb,yfinance
 2024-06-17,Huila,precipitacion,1.0,mm,open-meteo
 2024-06-17,Huila,temp_max,25.5,°C,open-meteo
 2024-06-17,Huila,temp_min,13.7,°C,open-meteo
@@ -14319,7 +14337,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-26,Cauca,precipitacion,2.1,mm,open-meteo
 2024-06-26,Cauca,temp_max,20.4,°C,open-meteo
 2024-06-26,Cauca,temp_min,14.3,°C,open-meteo
-2024-06-26,GLOBAL,precio_cafe_arabica,226.35000610351562,USc/lb,yfinance
+2024-06-26,GLOBAL,precio_cafe_arabica,226.3500061035156,USc/lb,yfinance
 2024-06-26,Huila,precipitacion,9.6,mm,open-meteo
 2024-06-26,Huila,temp_max,22.8,°C,open-meteo
 2024-06-26,Huila,temp_min,13.8,°C,open-meteo
@@ -14444,6 +14462,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-01,Antioquia,temp_min,17.9,°C,open-meteo
 2024-07-01,COLOMBIA,fx_usd_local,4176.7998046875,COP/USD,yfinance
 2024-07-01,COLOMBIA,precio_interno_referencia,1839000.0,COP/carga_125kg,FNC
+2024-07-01,COLOMBIA,produccion_nacional,1158.8837518134924,miles_sacos_60kg,FNC
 2024-07-01,Caldas,precipitacion,1.6,mm,open-meteo
 2024-07-01,Caldas,temp_max,19.2,°C,open-meteo
 2024-07-01,Caldas,temp_min,11.6,°C,open-meteo
@@ -14477,7 +14496,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-02,Cauca,precipitacion,0.5,mm,open-meteo
 2024-07-02,Cauca,temp_max,20.5,°C,open-meteo
 2024-07-02,Cauca,temp_min,14.7,°C,open-meteo
-2024-07-02,GLOBAL,precio_cafe_arabica,229.10000610351562,USc/lb,yfinance
+2024-07-02,GLOBAL,precio_cafe_arabica,229.1000061035156,USc/lb,yfinance
 2024-07-02,Huila,precipitacion,4.4,mm,open-meteo
 2024-07-02,Huila,temp_max,21.9,°C,open-meteo
 2024-07-02,Huila,temp_min,15.8,°C,open-meteo
@@ -14819,7 +14838,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-15,Cauca,precipitacion,0.3,mm,open-meteo
 2024-07-15,Cauca,temp_max,24.4,°C,open-meteo
 2024-07-15,Cauca,temp_min,13.7,°C,open-meteo
-2024-07-15,GLOBAL,precio_cafe_arabica,244.14999389648438,USc/lb,yfinance
+2024-07-15,GLOBAL,precio_cafe_arabica,244.1499938964844,USc/lb,yfinance
 2024-07-15,Huila,precipitacion,0.5,mm,open-meteo
 2024-07-15,Huila,temp_max,22.4,°C,open-meteo
 2024-07-15,Huila,temp_min,14.2,°C,open-meteo
@@ -14846,7 +14865,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-16,Cauca,precipitacion,0.4,mm,open-meteo
 2024-07-16,Cauca,temp_max,25.1,°C,open-meteo
 2024-07-16,Cauca,temp_min,13.4,°C,open-meteo
-2024-07-16,GLOBAL,precio_cafe_arabica,245.39999389648438,USc/lb,yfinance
+2024-07-16,GLOBAL,precio_cafe_arabica,245.3999938964844,USc/lb,yfinance
 2024-07-16,Huila,precipitacion,0.6,mm,open-meteo
 2024-07-16,Huila,temp_max,23.1,°C,open-meteo
 2024-07-16,Huila,temp_min,14.6,°C,open-meteo
@@ -14873,7 +14892,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-17,Cauca,precipitacion,0.4,mm,open-meteo
 2024-07-17,Cauca,temp_max,23.8,°C,open-meteo
 2024-07-17,Cauca,temp_min,15.9,°C,open-meteo
-2024-07-17,GLOBAL,precio_cafe_arabica,247.35000610351562,USc/lb,yfinance
+2024-07-17,GLOBAL,precio_cafe_arabica,247.3500061035156,USc/lb,yfinance
 2024-07-17,Huila,precipitacion,0.7,mm,open-meteo
 2024-07-17,Huila,temp_max,22.2,°C,open-meteo
 2024-07-17,Huila,temp_min,14.2,°C,open-meteo
@@ -14900,7 +14919,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-18,Cauca,precipitacion,0.3,mm,open-meteo
 2024-07-18,Cauca,temp_max,22.8,°C,open-meteo
 2024-07-18,Cauca,temp_min,14.7,°C,open-meteo
-2024-07-18,GLOBAL,precio_cafe_arabica,243.39999389648438,USc/lb,yfinance
+2024-07-18,GLOBAL,precio_cafe_arabica,243.3999938964844,USc/lb,yfinance
 2024-07-18,Huila,precipitacion,1.8,mm,open-meteo
 2024-07-18,Huila,temp_max,21.4,°C,open-meteo
 2024-07-18,Huila,temp_min,14.8,°C,open-meteo
@@ -15031,7 +15050,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-23,Cauca,precipitacion,0.0,mm,open-meteo
 2024-07-23,Cauca,temp_max,21.7,°C,open-meteo
 2024-07-23,Cauca,temp_min,13.2,°C,open-meteo
-2024-07-23,GLOBAL,precio_cafe_arabica,239.10000610351562,USc/lb,yfinance
+2024-07-23,GLOBAL,precio_cafe_arabica,239.1000061035156,USc/lb,yfinance
 2024-07-23,Huila,precipitacion,0.1,mm,open-meteo
 2024-07-23,Huila,temp_max,23.0,°C,open-meteo
 2024-07-23,Huila,temp_min,11.9,°C,open-meteo
@@ -15058,7 +15077,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-24,Cauca,precipitacion,0.0,mm,open-meteo
 2024-07-24,Cauca,temp_max,23.5,°C,open-meteo
 2024-07-24,Cauca,temp_min,16.0,°C,open-meteo
-2024-07-24,GLOBAL,precio_cafe_arabica,231.14999389648438,USc/lb,yfinance
+2024-07-24,GLOBAL,precio_cafe_arabica,231.1499938964844,USc/lb,yfinance
 2024-07-24,Huila,precipitacion,0.8,mm,open-meteo
 2024-07-24,Huila,temp_max,23.0,°C,open-meteo
 2024-07-24,Huila,temp_min,13.4,°C,open-meteo
@@ -15189,7 +15208,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-29,Cauca,precipitacion,0.1,mm,open-meteo
 2024-07-29,Cauca,temp_max,28.3,°C,open-meteo
 2024-07-29,Cauca,temp_min,14.2,°C,open-meteo
-2024-07-29,GLOBAL,precio_cafe_arabica,230.39999389648438,USc/lb,yfinance
+2024-07-29,GLOBAL,precio_cafe_arabica,230.3999938964844,USc/lb,yfinance
 2024-07-29,Huila,precipitacion,0.0,mm,open-meteo
 2024-07-29,Huila,temp_max,25.0,°C,open-meteo
 2024-07-29,Huila,temp_min,13.3,°C,open-meteo
@@ -15264,6 +15283,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-01,Antioquia,temp_min,16.7,°C,open-meteo
 2024-08-01,COLOMBIA,fx_usd_local,4051.75,COP/USD,yfinance
 2024-08-01,COLOMBIA,precio_interno_referencia,1828000.0,COP/carga_125kg,FNC
+2024-08-01,COLOMBIA,produccion_nacional,1049.0,miles_sacos_60kg,FNC
 2024-08-01,Caldas,precipitacion,11.7,mm,open-meteo
 2024-08-01,Caldas,temp_max,18.7,°C,open-meteo
 2024-08-01,Caldas,temp_min,11.0,°C,open-meteo
@@ -15559,7 +15579,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-12,Cauca,precipitacion,0.4,mm,open-meteo
 2024-08-12,Cauca,temp_max,21.6,°C,open-meteo
 2024-08-12,Cauca,temp_min,13.0,°C,open-meteo
-2024-08-12,GLOBAL,precio_cafe_arabica,240.85000610351562,USc/lb,yfinance
+2024-08-12,GLOBAL,precio_cafe_arabica,240.8500061035156,USc/lb,yfinance
 2024-08-12,Huila,precipitacion,0.8,mm,open-meteo
 2024-08-12,Huila,temp_max,23.1,°C,open-meteo
 2024-08-12,Huila,temp_min,13.2,°C,open-meteo
@@ -15640,7 +15660,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-15,Cauca,precipitacion,0.0,mm,open-meteo
 2024-08-15,Cauca,temp_max,25.0,°C,open-meteo
 2024-08-15,Cauca,temp_min,16.7,°C,open-meteo
-2024-08-15,GLOBAL,precio_cafe_arabica,239.89999389648438,USc/lb,yfinance
+2024-08-15,GLOBAL,precio_cafe_arabica,239.8999938964844,USc/lb,yfinance
 2024-08-15,Huila,precipitacion,4.9,mm,open-meteo
 2024-08-15,Huila,temp_max,23.4,°C,open-meteo
 2024-08-15,Huila,temp_min,14.6,°C,open-meteo
@@ -15744,7 +15764,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-19,Cauca,precipitacion,0.2,mm,open-meteo
 2024-08-19,Cauca,temp_max,24.7,°C,open-meteo
 2024-08-19,Cauca,temp_min,13.2,°C,open-meteo
-2024-08-19,GLOBAL,precio_cafe_arabica,245.89999389648438,USc/lb,yfinance
+2024-08-19,GLOBAL,precio_cafe_arabica,245.8999938964844,USc/lb,yfinance
 2024-08-19,Huila,precipitacion,0.1,mm,open-meteo
 2024-08-19,Huila,temp_max,24.6,°C,open-meteo
 2024-08-19,Huila,temp_min,12.6,°C,open-meteo
@@ -15929,7 +15949,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-26,Cauca,precipitacion,0.2,mm,open-meteo
 2024-08-26,Cauca,temp_max,25.2,°C,open-meteo
 2024-08-26,Cauca,temp_min,13.5,°C,open-meteo
-2024-08-26,GLOBAL,precio_cafe_arabica,253.64999389648438,USc/lb,yfinance
+2024-08-26,GLOBAL,precio_cafe_arabica,253.6499938964844,USc/lb,yfinance
 2024-08-26,Huila,precipitacion,4.2,mm,open-meteo
 2024-08-26,Huila,temp_max,24.6,°C,open-meteo
 2024-08-26,Huila,temp_min,14.9,°C,open-meteo
@@ -16082,6 +16102,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-09-01,Antioquia,temp_max,27.0,°C,open-meteo
 2024-09-01,Antioquia,temp_min,16.9,°C,open-meteo
 2024-09-01,COLOMBIA,precio_interno_referencia,2021000.0,COP/carga_125kg,FNC
+2024-09-01,COLOMBIA,produccion_nacional,1071.2334084844454,miles_sacos_60kg,FNC
 2024-09-01,Caldas,precipitacion,3.2,mm,open-meteo
 2024-09-01,Caldas,temp_max,18.5,°C,open-meteo
 2024-09-01,Caldas,temp_min,11.6,°C,open-meteo
@@ -16194,7 +16215,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-09-05,Cauca,precipitacion,0.0,mm,open-meteo
 2024-09-05,Cauca,temp_max,25.9,°C,open-meteo
 2024-09-05,Cauca,temp_min,14.8,°C,open-meteo
-2024-09-05,GLOBAL,precio_cafe_arabica,246.60000610351562,USc/lb,yfinance
+2024-09-05,GLOBAL,precio_cafe_arabica,246.6000061035156,USc/lb,yfinance
 2024-09-05,Huila,precipitacion,8.0,mm,open-meteo
 2024-09-05,Huila,temp_max,22.3,°C,open-meteo
 2024-09-05,Huila,temp_min,14.3,°C,open-meteo
@@ -16874,6 +16895,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-01,Antioquia,temp_min,16.3,°C,open-meteo
 2024-10-01,COLOMBIA,fx_usd_local,4191.509765625,COP/USD,yfinance
 2024-10-01,COLOMBIA,precio_interno_referencia,2230000.0,COP/carga_125kg,FNC
+2024-10-01,COLOMBIA,produccion_nacional,1339.1550080564646,miles_sacos_60kg,FNC
 2024-10-01,Caldas,precipitacion,7.2,mm,open-meteo
 2024-10-01,Caldas,temp_max,18.4,°C,open-meteo
 2024-10-01,Caldas,temp_min,10.2,°C,open-meteo
@@ -17038,7 +17060,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-07,Cauca,precipitacion,5.9,mm,open-meteo
 2024-10-07,Cauca,temp_max,23.8,°C,open-meteo
 2024-10-07,Cauca,temp_min,14.0,°C,open-meteo
-2024-10-07,GLOBAL,precio_cafe_arabica,244.64999389648438,USc/lb,yfinance
+2024-10-07,GLOBAL,precio_cafe_arabica,244.6499938964844,USc/lb,yfinance
 2024-10-07,Huila,precipitacion,0.7,mm,open-meteo
 2024-10-07,Huila,temp_max,26.7,°C,open-meteo
 2024-10-07,Huila,temp_min,13.8,°C,open-meteo
@@ -17304,7 +17326,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-17,Cauca,precipitacion,0.5,mm,open-meteo
 2024-10-17,Cauca,temp_max,25.7,°C,open-meteo
 2024-10-17,Cauca,temp_min,10.8,°C,open-meteo
-2024-10-17,GLOBAL,precio_cafe_arabica,255.14999389648438,USc/lb,yfinance
+2024-10-17,GLOBAL,precio_cafe_arabica,255.1499938964844,USc/lb,yfinance
 2024-10-17,Huila,precipitacion,0.8,mm,open-meteo
 2024-10-17,Huila,temp_max,26.9,°C,open-meteo
 2024-10-17,Huila,temp_min,12.4,°C,open-meteo
@@ -17435,7 +17457,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-22,Cauca,precipitacion,17.3,mm,open-meteo
 2024-10-22,Cauca,temp_max,23.1,°C,open-meteo
 2024-10-22,Cauca,temp_min,13.4,°C,open-meteo
-2024-10-22,GLOBAL,precio_cafe_arabica,249.85000610351562,USc/lb,yfinance
+2024-10-22,GLOBAL,precio_cafe_arabica,249.8500061035156,USc/lb,yfinance
 2024-10-22,Huila,precipitacion,8.4,mm,open-meteo
 2024-10-22,Huila,temp_max,26.5,°C,open-meteo
 2024-10-22,Huila,temp_min,16.9,°C,open-meteo
@@ -17462,7 +17484,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-23,Cauca,precipitacion,8.8,mm,open-meteo
 2024-10-23,Cauca,temp_max,20.7,°C,open-meteo
 2024-10-23,Cauca,temp_min,15.0,°C,open-meteo
-2024-10-23,GLOBAL,precio_cafe_arabica,252.35000610351562,USc/lb,yfinance
+2024-10-23,GLOBAL,precio_cafe_arabica,252.3500061035156,USc/lb,yfinance
 2024-10-23,Huila,precipitacion,7.5,mm,open-meteo
 2024-10-23,Huila,temp_max,25.9,°C,open-meteo
 2024-10-23,Huila,temp_min,16.6,°C,open-meteo
@@ -17516,7 +17538,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-25,Cauca,precipitacion,0.5,mm,open-meteo
 2024-10-25,Cauca,temp_max,22.3,°C,open-meteo
 2024-10-25,Cauca,temp_min,15.0,°C,open-meteo
-2024-10-25,GLOBAL,precio_cafe_arabica,248.39999389648438,USc/lb,yfinance
+2024-10-25,GLOBAL,precio_cafe_arabica,248.3999938964844,USc/lb,yfinance
 2024-10-25,Huila,precipitacion,4.2,mm,open-meteo
 2024-10-25,Huila,temp_max,28.4,°C,open-meteo
 2024-10-25,Huila,temp_min,15.9,°C,open-meteo
@@ -17593,7 +17615,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-28,Cauca,precipitacion,5.1,mm,open-meteo
 2024-10-28,Cauca,temp_max,20.6,°C,open-meteo
 2024-10-28,Cauca,temp_min,15.2,°C,open-meteo
-2024-10-28,GLOBAL,precio_cafe_arabica,252.35000610351562,USc/lb,yfinance
+2024-10-28,GLOBAL,precio_cafe_arabica,252.3500061035156,USc/lb,yfinance
 2024-10-28,Huila,precipitacion,3.0,mm,open-meteo
 2024-10-28,Huila,temp_max,22.7,°C,open-meteo
 2024-10-28,Huila,temp_min,16.4,°C,open-meteo
@@ -17620,7 +17642,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-29,Cauca,precipitacion,1.0,mm,open-meteo
 2024-10-29,Cauca,temp_max,22.1,°C,open-meteo
 2024-10-29,Cauca,temp_min,14.9,°C,open-meteo
-2024-10-29,GLOBAL,precio_cafe_arabica,248.10000610351562,USc/lb,yfinance
+2024-10-29,GLOBAL,precio_cafe_arabica,248.1000061035156,USc/lb,yfinance
 2024-10-29,Huila,precipitacion,0.3,mm,open-meteo
 2024-10-29,Huila,temp_max,24.6,°C,open-meteo
 2024-10-29,Huila,temp_min,15.0,°C,open-meteo
@@ -17647,7 +17669,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-30,Cauca,precipitacion,3.1,mm,open-meteo
 2024-10-30,Cauca,temp_max,21.8,°C,open-meteo
 2024-10-30,Cauca,temp_min,13.3,°C,open-meteo
-2024-10-30,GLOBAL,precio_cafe_arabica,249.60000610351562,USc/lb,yfinance
+2024-10-30,GLOBAL,precio_cafe_arabica,249.6000061035156,USc/lb,yfinance
 2024-10-30,Huila,precipitacion,1.1,mm,open-meteo
 2024-10-30,Huila,temp_max,25.6,°C,open-meteo
 2024-10-30,Huila,temp_min,12.6,°C,open-meteo
@@ -17674,7 +17696,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-31,Cauca,precipitacion,7.9,mm,open-meteo
 2024-10-31,Cauca,temp_max,23.5,°C,open-meteo
 2024-10-31,Cauca,temp_min,13.5,°C,open-meteo
-2024-10-31,GLOBAL,precio_cafe_arabica,245.89999389648438,USc/lb,yfinance
+2024-10-31,GLOBAL,precio_cafe_arabica,245.8999938964844,USc/lb,yfinance
 2024-10-31,Huila,precipitacion,1.2,mm,open-meteo
 2024-10-31,Huila,temp_max,27.1,°C,open-meteo
 2024-10-31,Huila,temp_min,13.6,°C,open-meteo
@@ -17695,6 +17717,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-11-01,Antioquia,temp_min,17.7,°C,open-meteo
 2024-11-01,COLOMBIA,fx_usd_local,4420.0498046875,COP/USD,yfinance
 2024-11-01,COLOMBIA,precio_interno_referencia,2175000.0,COP/carga_125kg,FNC
+2024-11-01,COLOMBIA,produccion_nacional,1761.409522227121,miles_sacos_60kg,FNC
 2024-11-01,Caldas,precipitacion,9.2,mm,open-meteo
 2024-11-01,Caldas,temp_max,16.4,°C,open-meteo
 2024-11-01,Caldas,temp_min,10.4,°C,open-meteo
@@ -17805,7 +17828,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-11-05,Cauca,precipitacion,1.9,mm,open-meteo
 2024-11-05,Cauca,temp_max,23.4,°C,open-meteo
 2024-11-05,Cauca,temp_min,12.1,°C,open-meteo
-2024-11-05,GLOBAL,precio_cafe_arabica,250.14999389648438,USc/lb,yfinance
+2024-11-05,GLOBAL,precio_cafe_arabica,250.1499938964844,USc/lb,yfinance
 2024-11-05,Huila,precipitacion,2.3,mm,open-meteo
 2024-11-05,Huila,temp_max,26.1,°C,open-meteo
 2024-11-05,Huila,temp_min,15.6,°C,open-meteo
@@ -17886,7 +17909,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-11-08,Cauca,precipitacion,35.0,mm,open-meteo
 2024-11-08,Cauca,temp_max,19.8,°C,open-meteo
 2024-11-08,Cauca,temp_min,15.8,°C,open-meteo
-2024-11-08,GLOBAL,precio_cafe_arabica,253.35000610351562,USc/lb,yfinance
+2024-11-08,GLOBAL,precio_cafe_arabica,253.3500061035156,USc/lb,yfinance
 2024-11-08,Huila,precipitacion,5.0,mm,open-meteo
 2024-11-08,Huila,temp_max,24.8,°C,open-meteo
 2024-11-08,Huila,temp_min,16.8,°C,open-meteo
@@ -18485,6 +18508,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-12-01,Antioquia,temp_max,28.9,°C,open-meteo
 2024-12-01,Antioquia,temp_min,17.6,°C,open-meteo
 2024-12-01,COLOMBIA,precio_interno_referencia,2773000.0,COP/carga_125kg,FNC
+2024-12-01,COLOMBIA,produccion_nacional,1798.2305515042488,miles_sacos_60kg,FNC
 2024-12-01,Caldas,precipitacion,10.8,mm,open-meteo
 2024-12-01,Caldas,temp_max,20.6,°C,open-meteo
 2024-12-01,Caldas,temp_min,9.9,°C,open-meteo
@@ -19303,6 +19327,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-01-01,Antioquia,temp_max,24.7,°C,open-meteo
 2025-01-01,Antioquia,temp_min,17.4,°C,open-meteo
 2025-01-01,COLOMBIA,precio_interno_referencia,2752000.0,COP/carga_125kg,FNC
+2025-01-01,COLOMBIA,produccion_nacional,1355.76715345375,miles_sacos_60kg,FNC
 2025-01-01,Caldas,precipitacion,15.3,mm,open-meteo
 2025-01-01,Caldas,temp_max,17.5,°C,open-meteo
 2025-01-01,Caldas,temp_min,10.9,°C,open-meteo
@@ -20047,7 +20072,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-01-29,Cauca,precipitacion,0.5,mm,open-meteo
 2025-01-29,Cauca,temp_max,22.8,°C,open-meteo
 2025-01-29,Cauca,temp_min,14.5,°C,open-meteo
-2025-01-29,GLOBAL,precio_cafe_arabica,366.54998779296875,USc/lb,yfinance
+2025-01-29,GLOBAL,precio_cafe_arabica,366.5499877929688,USc/lb,yfinance
 2025-01-29,Huila,precipitacion,5.5,mm,open-meteo
 2025-01-29,Huila,temp_max,24.8,°C,open-meteo
 2025-01-29,Huila,temp_min,16.0,°C,open-meteo
@@ -20121,6 +20146,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-01,Antioquia,temp_max,28.1,°C,open-meteo
 2025-02-01,Antioquia,temp_min,17.8,°C,open-meteo
 2025-02-01,COLOMBIA,precio_interno_referencia,3000000.0,COP/carga_125kg,FNC
+2025-02-01,COLOMBIA,produccion_nacional,1361.3928100799765,miles_sacos_60kg,FNC
 2025-02-01,Caldas,precipitacion,4.9,mm,open-meteo
 2025-02-01,Caldas,temp_max,19.9,°C,open-meteo
 2025-02-01,Caldas,temp_min,9.6,°C,open-meteo
@@ -20259,7 +20285,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-06,Cauca,precipitacion,0.8,mm,open-meteo
 2025-02-06,Cauca,temp_max,21.9,°C,open-meteo
 2025-02-06,Cauca,temp_min,13.8,°C,open-meteo
-2025-02-06,GLOBAL,precio_cafe_arabica,403.95001220703125,USc/lb,yfinance
+2025-02-06,GLOBAL,precio_cafe_arabica,403.9500122070313,USc/lb,yfinance
 2025-02-06,Huila,precipitacion,14.9,mm,open-meteo
 2025-02-06,Huila,temp_max,26.5,°C,open-meteo
 2025-02-06,Huila,temp_min,16.1,°C,open-meteo
@@ -20363,7 +20389,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-10,Cauca,precipitacion,15.8,mm,open-meteo
 2025-02-10,Cauca,temp_max,22.0,°C,open-meteo
 2025-02-10,Cauca,temp_min,14.1,°C,open-meteo
-2025-02-10,GLOBAL,precio_cafe_arabica,429.04998779296875,USc/lb,yfinance
+2025-02-10,GLOBAL,precio_cafe_arabica,429.0499877929688,USc/lb,yfinance
 2025-02-10,Huila,precipitacion,1.5,mm,open-meteo
 2025-02-10,Huila,temp_max,23.6,°C,open-meteo
 2025-02-10,Huila,temp_min,15.8,°C,open-meteo
@@ -20390,7 +20416,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-11,Cauca,precipitacion,11.5,mm,open-meteo
 2025-02-11,Cauca,temp_max,20.0,°C,open-meteo
 2025-02-11,Cauca,temp_min,13.9,°C,open-meteo
-2025-02-11,GLOBAL,precio_cafe_arabica,413.45001220703125,USc/lb,yfinance
+2025-02-11,GLOBAL,precio_cafe_arabica,413.4500122070313,USc/lb,yfinance
 2025-02-11,Huila,precipitacion,3.0,mm,open-meteo
 2025-02-11,Huila,temp_max,26.1,°C,open-meteo
 2025-02-11,Huila,temp_min,16.7,°C,open-meteo
@@ -20417,7 +20443,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-12,Cauca,precipitacion,13.0,mm,open-meteo
 2025-02-12,Cauca,temp_max,23.9,°C,open-meteo
 2025-02-12,Cauca,temp_min,14.2,°C,open-meteo
-2025-02-12,GLOBAL,precio_cafe_arabica,431.79998779296875,USc/lb,yfinance
+2025-02-12,GLOBAL,precio_cafe_arabica,431.7999877929688,USc/lb,yfinance
 2025-02-12,Huila,precipitacion,12.4,mm,open-meteo
 2025-02-12,Huila,temp_max,26.3,°C,open-meteo
 2025-02-12,Huila,temp_min,16.4,°C,open-meteo
@@ -20732,7 +20758,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-24,Cauca,precipitacion,1.4,mm,open-meteo
 2025-02-24,Cauca,temp_max,21.1,°C,open-meteo
 2025-02-24,Cauca,temp_min,13.8,°C,open-meteo
-2025-02-24,GLOBAL,precio_cafe_arabica,393.79998779296875,USc/lb,yfinance
+2025-02-24,GLOBAL,precio_cafe_arabica,393.7999877929688,USc/lb,yfinance
 2025-02-24,Huila,precipitacion,17.8,mm,open-meteo
 2025-02-24,Huila,temp_max,24.0,°C,open-meteo
 2025-02-24,Huila,temp_min,15.4,°C,open-meteo
@@ -20786,7 +20812,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-26,Cauca,precipitacion,6.2,mm,open-meteo
 2025-02-26,Cauca,temp_max,21.5,°C,open-meteo
 2025-02-26,Cauca,temp_min,14.4,°C,open-meteo
-2025-02-26,GLOBAL,precio_cafe_arabica,379.45001220703125,USc/lb,yfinance
+2025-02-26,GLOBAL,precio_cafe_arabica,379.4500122070313,USc/lb,yfinance
 2025-02-26,Huila,precipitacion,19.6,mm,open-meteo
 2025-02-26,Huila,temp_max,26.1,°C,open-meteo
 2025-02-26,Huila,temp_min,15.8,°C,open-meteo
@@ -20840,7 +20866,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-28,Cauca,precipitacion,20.0,mm,open-meteo
 2025-02-28,Cauca,temp_max,22.0,°C,open-meteo
 2025-02-28,Cauca,temp_min,14.9,°C,open-meteo
-2025-02-28,GLOBAL,precio_cafe_arabica,379.04998779296875,USc/lb,yfinance
+2025-02-28,GLOBAL,precio_cafe_arabica,379.0499877929688,USc/lb,yfinance
 2025-02-28,Huila,precipitacion,10.0,mm,open-meteo
 2025-02-28,Huila,temp_max,26.0,°C,open-meteo
 2025-02-28,Huila,temp_min,15.9,°C,open-meteo
@@ -20860,6 +20886,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-01,Antioquia,temp_max,27.9,°C,open-meteo
 2025-03-01,Antioquia,temp_min,18.0,°C,open-meteo
 2025-03-01,COLOMBIA,precio_interno_referencia,2956000.0,COP/carga_125kg,FNC
+2025-03-01,COLOMBIA,produccion_nacional,1063.9383960067662,miles_sacos_60kg,FNC
 2025-03-01,Caldas,precipitacion,12.2,mm,open-meteo
 2025-03-01,Caldas,temp_max,18.6,°C,open-meteo
 2025-03-01,Caldas,temp_min,10.8,°C,open-meteo
@@ -20917,7 +20944,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-03,Cauca,precipitacion,3.5,mm,open-meteo
 2025-03-03,Cauca,temp_max,21.6,°C,open-meteo
 2025-03-03,Cauca,temp_min,14.5,°C,open-meteo
-2025-03-03,GLOBAL,precio_cafe_arabica,392.70001220703125,USc/lb,yfinance
+2025-03-03,GLOBAL,precio_cafe_arabica,392.7000122070313,USc/lb,yfinance
 2025-03-03,Huila,precipitacion,22.0,mm,open-meteo
 2025-03-03,Huila,temp_max,26.9,°C,open-meteo
 2025-03-03,Huila,temp_min,15.9,°C,open-meteo
@@ -21025,7 +21052,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-07,Cauca,precipitacion,7.4,mm,open-meteo
 2025-03-07,Cauca,temp_max,23.7,°C,open-meteo
 2025-03-07,Cauca,temp_min,14.9,°C,open-meteo
-2025-03-07,GLOBAL,precio_cafe_arabica,390.20001220703125,USc/lb,yfinance
+2025-03-07,GLOBAL,precio_cafe_arabica,390.2000122070313,USc/lb,yfinance
 2025-03-07,Huila,precipitacion,0.7,mm,open-meteo
 2025-03-07,Huila,temp_max,26.0,°C,open-meteo
 2025-03-07,Huila,temp_min,16.2,°C,open-meteo
@@ -21129,7 +21156,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-11,Cauca,precipitacion,18.5,mm,open-meteo
 2025-03-11,Cauca,temp_max,22.6,°C,open-meteo
 2025-03-11,Cauca,temp_min,13.1,°C,open-meteo
-2025-03-11,GLOBAL,precio_cafe_arabica,399.45001220703125,USc/lb,yfinance
+2025-03-11,GLOBAL,precio_cafe_arabica,399.4500122070313,USc/lb,yfinance
 2025-03-11,Huila,precipitacion,1.1,mm,open-meteo
 2025-03-11,Huila,temp_max,25.4,°C,open-meteo
 2025-03-11,Huila,temp_min,15.2,°C,open-meteo
@@ -21156,7 +21183,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-12,Cauca,precipitacion,10.2,mm,open-meteo
 2025-03-12,Cauca,temp_max,22.4,°C,open-meteo
 2025-03-12,Cauca,temp_min,14.7,°C,open-meteo
-2025-03-12,GLOBAL,precio_cafe_arabica,392.20001220703125,USc/lb,yfinance
+2025-03-12,GLOBAL,precio_cafe_arabica,392.2000122070313,USc/lb,yfinance
 2025-03-12,Huila,precipitacion,1.7,mm,open-meteo
 2025-03-12,Huila,temp_max,25.1,°C,open-meteo
 2025-03-12,Huila,temp_min,16.8,°C,open-meteo
@@ -21499,7 +21526,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-25,Cauca,precipitacion,6.1,mm,open-meteo
 2025-03-25,Cauca,temp_max,23.7,°C,open-meteo
 2025-03-25,Cauca,temp_min,12.2,°C,open-meteo
-2025-03-25,GLOBAL,precio_cafe_arabica,398.54998779296875,USc/lb,yfinance
+2025-03-25,GLOBAL,precio_cafe_arabica,398.5499877929688,USc/lb,yfinance
 2025-03-25,Huila,precipitacion,2.2,mm,open-meteo
 2025-03-25,Huila,temp_max,26.7,°C,open-meteo
 2025-03-25,Huila,temp_min,13.6,°C,open-meteo
@@ -21553,7 +21580,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-27,Cauca,precipitacion,15.5,mm,open-meteo
 2025-03-27,Cauca,temp_max,22.1,°C,open-meteo
 2025-03-27,Cauca,temp_min,13.5,°C,open-meteo
-2025-03-27,GLOBAL,precio_cafe_arabica,378.79998779296875,USc/lb,yfinance
+2025-03-27,GLOBAL,precio_cafe_arabica,378.7999877929688,USc/lb,yfinance
 2025-03-27,Huila,precipitacion,17.6,mm,open-meteo
 2025-03-27,Huila,temp_max,26.0,°C,open-meteo
 2025-03-27,Huila,temp_min,16.8,°C,open-meteo
@@ -21580,7 +21607,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-28,Cauca,precipitacion,3.5,mm,open-meteo
 2025-03-28,Cauca,temp_max,21.6,°C,open-meteo
 2025-03-28,Cauca,temp_min,15.3,°C,open-meteo
-2025-03-28,GLOBAL,precio_cafe_arabica,379.95001220703125,USc/lb,yfinance
+2025-03-28,GLOBAL,precio_cafe_arabica,379.9500122070313,USc/lb,yfinance
 2025-03-28,Huila,precipitacion,6.0,mm,open-meteo
 2025-03-28,Huila,temp_max,25.5,°C,open-meteo
 2025-03-28,Huila,temp_min,15.4,°C,open-meteo
@@ -21678,13 +21705,14 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-01,Antioquia,temp_min,15.1,°C,open-meteo
 2025-04-01,COLOMBIA,fx_usd_local,4182.75,COP/USD,yfinance
 2025-04-01,COLOMBIA,precio_interno_referencia,3081000.0,COP/carga_125kg,FNC
+2025-04-01,COLOMBIA,produccion_nacional,702.8167391214691,miles_sacos_60kg,FNC
 2025-04-01,Caldas,precipitacion,33.0,mm,open-meteo
 2025-04-01,Caldas,temp_max,20.5,°C,open-meteo
 2025-04-01,Caldas,temp_min,10.9,°C,open-meteo
 2025-04-01,Cauca,precipitacion,2.8,mm,open-meteo
 2025-04-01,Cauca,temp_max,23.0,°C,open-meteo
 2025-04-01,Cauca,temp_min,15.0,°C,open-meteo
-2025-04-01,GLOBAL,precio_cafe_arabica,389.04998779296875,USc/lb,yfinance
+2025-04-01,GLOBAL,precio_cafe_arabica,389.0499877929688,USc/lb,yfinance
 2025-04-01,Huila,precipitacion,6.9,mm,open-meteo
 2025-04-01,Huila,temp_max,25.4,°C,open-meteo
 2025-04-01,Huila,temp_min,16.8,°C,open-meteo
@@ -21765,7 +21793,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-04,Cauca,precipitacion,3.7,mm,open-meteo
 2025-04-04,Cauca,temp_max,20.8,°C,open-meteo
 2025-04-04,Cauca,temp_min,13.8,°C,open-meteo
-2025-04-04,GLOBAL,precio_cafe_arabica,365.70001220703125,USc/lb,yfinance
+2025-04-04,GLOBAL,precio_cafe_arabica,365.7000122070313,USc/lb,yfinance
 2025-04-04,Huila,precipitacion,10.0,mm,open-meteo
 2025-04-04,Huila,temp_max,24.6,°C,open-meteo
 2025-04-04,Huila,temp_min,16.0,°C,open-meteo
@@ -22081,7 +22109,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-16,Cauca,precipitacion,1.1,mm,open-meteo
 2025-04-16,Cauca,temp_max,23.1,°C,open-meteo
 2025-04-16,Cauca,temp_min,12.6,°C,open-meteo
-2025-04-16,GLOBAL,precio_cafe_arabica,376.04998779296875,USc/lb,yfinance
+2025-04-16,GLOBAL,precio_cafe_arabica,376.0499877929688,USc/lb,yfinance
 2025-04-16,Huila,precipitacion,8.3,mm,open-meteo
 2025-04-16,Huila,temp_max,25.6,°C,open-meteo
 2025-04-16,Huila,temp_min,13.6,°C,open-meteo
@@ -22209,7 +22237,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-21,Cauca,precipitacion,1.6,mm,open-meteo
 2025-04-21,Cauca,temp_max,23.1,°C,open-meteo
 2025-04-21,Cauca,temp_min,12.6,°C,open-meteo
-2025-04-21,GLOBAL,precio_cafe_arabica,366.79998779296875,USc/lb,yfinance
+2025-04-21,GLOBAL,precio_cafe_arabica,366.7999877929688,USc/lb,yfinance
 2025-04-21,Huila,precipitacion,1.7,mm,open-meteo
 2025-04-21,Huila,temp_max,26.2,°C,open-meteo
 2025-04-21,Huila,temp_min,13.4,°C,open-meteo
@@ -22394,7 +22422,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-28,Cauca,precipitacion,7.6,mm,open-meteo
 2025-04-28,Cauca,temp_max,18.5,°C,open-meteo
 2025-04-28,Cauca,temp_min,14.9,°C,open-meteo
-2025-04-28,GLOBAL,precio_cafe_arabica,421.54998779296875,USc/lb,yfinance
+2025-04-28,GLOBAL,precio_cafe_arabica,421.5499877929688,USc/lb,yfinance
 2025-04-28,Huila,precipitacion,11.4,mm,open-meteo
 2025-04-28,Huila,temp_max,24.5,°C,open-meteo
 2025-04-28,Huila,temp_min,14.8,°C,open-meteo
@@ -22469,13 +22497,14 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-01,Antioquia,temp_min,18.2,°C,open-meteo
 2025-05-01,COLOMBIA,fx_usd_local,4241.35009765625,COP/USD,yfinance
 2025-05-01,COLOMBIA,precio_interno_referencia,3100000.0,COP/carga_125kg,FNC
+2025-05-01,COLOMBIA,produccion_nacional,818.6412932234168,miles_sacos_60kg,FNC
 2025-05-01,Caldas,precipitacion,17.6,mm,open-meteo
 2025-05-01,Caldas,temp_max,17.1,°C,open-meteo
 2025-05-01,Caldas,temp_min,12.3,°C,open-meteo
 2025-05-01,Cauca,precipitacion,5.5,mm,open-meteo
 2025-05-01,Cauca,temp_max,20.9,°C,open-meteo
 2025-05-01,Cauca,temp_min,14.1,°C,open-meteo
-2025-05-01,GLOBAL,precio_cafe_arabica,395.70001220703125,USc/lb,yfinance
+2025-05-01,GLOBAL,precio_cafe_arabica,395.7000122070313,USc/lb,yfinance
 2025-05-01,Huila,precipitacion,1.6,mm,open-meteo
 2025-05-01,Huila,temp_max,24.9,°C,open-meteo
 2025-05-01,Huila,temp_min,15.3,°C,open-meteo
@@ -22579,7 +22608,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-05,Cauca,precipitacion,3.3,mm,open-meteo
 2025-05-05,Cauca,temp_max,18.4,°C,open-meteo
 2025-05-05,Cauca,temp_min,13.8,°C,open-meteo
-2025-05-05,GLOBAL,precio_cafe_arabica,398.95001220703125,USc/lb,yfinance
+2025-05-05,GLOBAL,precio_cafe_arabica,398.9500122070313,USc/lb,yfinance
 2025-05-05,Huila,precipitacion,12.8,mm,open-meteo
 2025-05-05,Huila,temp_max,20.4,°C,open-meteo
 2025-05-05,Huila,temp_min,15.2,°C,open-meteo
@@ -22633,7 +22662,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-07,Cauca,precipitacion,1.2,mm,open-meteo
 2025-05-07,Cauca,temp_max,19.3,°C,open-meteo
 2025-05-07,Cauca,temp_min,14.2,°C,open-meteo
-2025-05-07,GLOBAL,precio_cafe_arabica,396.20001220703125,USc/lb,yfinance
+2025-05-07,GLOBAL,precio_cafe_arabica,396.2000122070313,USc/lb,yfinance
 2025-05-07,Huila,precipitacion,1.1,mm,open-meteo
 2025-05-07,Huila,temp_max,24.9,°C,open-meteo
 2025-05-07,Huila,temp_min,14.6,°C,open-meteo
@@ -22660,7 +22689,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-08,Cauca,precipitacion,1.6,mm,open-meteo
 2025-05-08,Cauca,temp_max,21.6,°C,open-meteo
 2025-05-08,Cauca,temp_min,11.3,°C,open-meteo
-2025-05-08,GLOBAL,precio_cafe_arabica,397.79998779296875,USc/lb,yfinance
+2025-05-08,GLOBAL,precio_cafe_arabica,397.7999877929688,USc/lb,yfinance
 2025-05-08,Huila,precipitacion,0.8,mm,open-meteo
 2025-05-08,Huila,temp_max,24.7,°C,open-meteo
 2025-05-08,Huila,temp_min,13.2,°C,open-meteo
@@ -22764,7 +22793,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-12,Cauca,precipitacion,0.0,mm,open-meteo
 2025-05-12,Cauca,temp_max,24.9,°C,open-meteo
 2025-05-12,Cauca,temp_min,16.8,°C,open-meteo
-2025-05-12,GLOBAL,precio_cafe_arabica,382.45001220703125,USc/lb,yfinance
+2025-05-12,GLOBAL,precio_cafe_arabica,382.4500122070313,USc/lb,yfinance
 2025-05-12,Huila,precipitacion,6.2,mm,open-meteo
 2025-05-12,Huila,temp_max,23.5,°C,open-meteo
 2025-05-12,Huila,temp_min,16.2,°C,open-meteo
@@ -22818,7 +22847,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-14,Cauca,precipitacion,4.8,mm,open-meteo
 2025-05-14,Cauca,temp_max,21.5,°C,open-meteo
 2025-05-14,Cauca,temp_min,14.3,°C,open-meteo
-2025-05-14,GLOBAL,precio_cafe_arabica,373.95001220703125,USc/lb,yfinance
+2025-05-14,GLOBAL,precio_cafe_arabica,373.9500122070313,USc/lb,yfinance
 2025-05-14,Huila,precipitacion,5.9,mm,open-meteo
 2025-05-14,Huila,temp_max,25.1,°C,open-meteo
 2025-05-14,Huila,temp_min,13.9,°C,open-meteo
@@ -22845,7 +22874,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-15,Cauca,precipitacion,3.5,mm,open-meteo
 2025-05-15,Cauca,temp_max,20.8,°C,open-meteo
 2025-05-15,Cauca,temp_min,15.0,°C,open-meteo
-2025-05-15,GLOBAL,precio_cafe_arabica,384.95001220703125,USc/lb,yfinance
+2025-05-15,GLOBAL,precio_cafe_arabica,384.9500122070313,USc/lb,yfinance
 2025-05-15,Huila,precipitacion,15.7,mm,open-meteo
 2025-05-15,Huila,temp_max,23.1,°C,open-meteo
 2025-05-15,Huila,temp_min,14.5,°C,open-meteo
@@ -22976,7 +23005,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-20,Cauca,precipitacion,1.4,mm,open-meteo
 2025-05-20,Cauca,temp_max,23.3,°C,open-meteo
 2025-05-20,Cauca,temp_min,12.9,°C,open-meteo
-2025-05-20,GLOBAL,precio_cafe_arabica,369.29998779296875,USc/lb,yfinance
+2025-05-20,GLOBAL,precio_cafe_arabica,369.2999877929688,USc/lb,yfinance
 2025-05-20,Huila,precipitacion,2.4,mm,open-meteo
 2025-05-20,Huila,temp_max,24.3,°C,open-meteo
 2025-05-20,Huila,temp_min,15.6,°C,open-meteo
@@ -23003,7 +23032,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-21,Cauca,precipitacion,0.6,mm,open-meteo
 2025-05-21,Cauca,temp_max,23.6,°C,open-meteo
 2025-05-21,Cauca,temp_min,13.1,°C,open-meteo
-2025-05-21,GLOBAL,precio_cafe_arabica,370.29998779296875,USc/lb,yfinance
+2025-05-21,GLOBAL,precio_cafe_arabica,370.2999877929688,USc/lb,yfinance
 2025-05-21,Huila,precipitacion,1.2,mm,open-meteo
 2025-05-21,Huila,temp_max,23.6,°C,open-meteo
 2025-05-21,Huila,temp_min,14.4,°C,open-meteo
@@ -23160,7 +23189,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-27,Cauca,precipitacion,0.4,mm,open-meteo
 2025-05-27,Cauca,temp_max,23.2,°C,open-meteo
 2025-05-27,Cauca,temp_min,14.5,°C,open-meteo
-2025-05-27,GLOBAL,precio_cafe_arabica,361.70001220703125,USc/lb,yfinance
+2025-05-27,GLOBAL,precio_cafe_arabica,361.7000122070313,USc/lb,yfinance
 2025-05-27,Huila,precipitacion,3.0,mm,open-meteo
 2025-05-27,Huila,temp_max,25.3,°C,open-meteo
 2025-05-27,Huila,temp_min,13.4,°C,open-meteo
@@ -23286,6 +23315,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-06-01,Antioquia,temp_max,27.5,°C,open-meteo
 2025-06-01,Antioquia,temp_min,17.3,°C,open-meteo
 2025-06-01,COLOMBIA,precio_interno_referencia,2763000.0,COP/carga_125kg,FNC
+2025-06-01,COLOMBIA,produccion_nacional,909.1029907731332,miles_sacos_60kg,FNC
 2025-06-01,Caldas,precipitacion,39.6,mm,open-meteo
 2025-06-01,Caldas,temp_max,16.6,°C,open-meteo
 2025-06-01,Caldas,temp_min,11.9,°C,open-meteo
@@ -23503,7 +23533,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-06-09,Cauca,precipitacion,4.9,mm,open-meteo
 2025-06-09,Cauca,temp_max,21.1,°C,open-meteo
 2025-06-09,Cauca,temp_min,15.3,°C,open-meteo
-2025-06-09,GLOBAL,precio_cafe_arabica,361.54998779296875,USc/lb,yfinance
+2025-06-09,GLOBAL,precio_cafe_arabica,361.5499877929688,USc/lb,yfinance
 2025-06-09,Huila,precipitacion,10.7,mm,open-meteo
 2025-06-09,Huila,temp_max,24.0,°C,open-meteo
 2025-06-09,Huila,temp_min,15.9,°C,open-meteo
@@ -24078,6 +24108,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-07-01,Antioquia,temp_min,16.5,°C,open-meteo
 2025-07-01,COLOMBIA,fx_usd_local,4087.75,COP/USD,yfinance
 2025-07-01,COLOMBIA,precio_interno_referencia,2328000.0,COP/carga_125kg,FNC
+2025-07-01,COLOMBIA,produccion_nacional,1373.3559660678761,miles_sacos_60kg,FNC
 2025-07-01,Caldas,precipitacion,11.0,mm,open-meteo
 2025-07-01,Caldas,temp_max,19.2,°C,open-meteo
 2025-07-01,Caldas,temp_min,11.1,°C,open-meteo
@@ -24899,6 +24930,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-08-01,Antioquia,temp_min,16.7,°C,open-meteo
 2025-08-01,COLOMBIA,fx_usd_local,4184.9599609375,COP/USD,yfinance
 2025-08-01,COLOMBIA,precio_interno_referencia,2336000.0,COP/carga_125kg,FNC
+2025-08-01,COLOMBIA,produccion_nacional,1242.74174988266,miles_sacos_60kg,FNC
 2025-08-01,Caldas,precipitacion,14.8,mm,open-meteo
 2025-08-01,Caldas,temp_max,21.4,°C,open-meteo
 2025-08-01,Caldas,temp_min,9.2,°C,open-meteo
@@ -25537,7 +25569,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-08-25,Cauca,precipitacion,2.3,mm,open-meteo
 2025-08-25,Cauca,temp_max,23.7,°C,open-meteo
 2025-08-25,Cauca,temp_min,15.4,°C,open-meteo
-2025-08-25,GLOBAL,precio_cafe_arabica,389.95001220703125,USc/lb,yfinance
+2025-08-25,GLOBAL,precio_cafe_arabica,389.9500122070313,USc/lb,yfinance
 2025-08-25,Huila,precipitacion,3.3,mm,open-meteo
 2025-08-25,Huila,temp_max,24.5,°C,open-meteo
 2025-08-25,Huila,temp_min,15.9,°C,open-meteo
@@ -25564,7 +25596,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-08-26,Cauca,precipitacion,0.0,mm,open-meteo
 2025-08-26,Cauca,temp_max,25.3,°C,open-meteo
 2025-08-26,Cauca,temp_min,14.3,°C,open-meteo
-2025-08-26,GLOBAL,precio_cafe_arabica,384.04998779296875,USc/lb,yfinance
+2025-08-26,GLOBAL,precio_cafe_arabica,384.0499877929688,USc/lb,yfinance
 2025-08-26,Huila,precipitacion,15.3,mm,open-meteo
 2025-08-26,Huila,temp_max,20.9,°C,open-meteo
 2025-08-26,Huila,temp_min,13.3,°C,open-meteo
@@ -25591,7 +25623,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-08-27,Cauca,precipitacion,1.4,mm,open-meteo
 2025-08-27,Cauca,temp_max,27.6,°C,open-meteo
 2025-08-27,Cauca,temp_min,14.6,°C,open-meteo
-2025-08-27,GLOBAL,precio_cafe_arabica,393.79998779296875,USc/lb,yfinance
+2025-08-27,GLOBAL,precio_cafe_arabica,393.7999877929688,USc/lb,yfinance
 2025-08-27,Huila,precipitacion,23.8,mm,open-meteo
 2025-08-27,Huila,temp_max,21.5,°C,open-meteo
 2025-08-27,Huila,temp_min,15.3,°C,open-meteo
@@ -25716,6 +25748,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-01,Antioquia,temp_min,16.4,°C,open-meteo
 2025-09-01,COLOMBIA,fx_usd_local,4013.989990234375,COP/USD,yfinance
 2025-09-01,COLOMBIA,precio_interno_referencia,3125000.0,COP/carga_125kg,FNC
+2025-09-01,COLOMBIA,produccion_nacional,1142.412575389382,miles_sacos_60kg,FNC
 2025-09-01,Caldas,precipitacion,33.5,mm,open-meteo
 2025-09-01,Caldas,temp_max,19.9,°C,open-meteo
 2025-09-01,Caldas,temp_min,11.2,°C,open-meteo
@@ -25748,7 +25781,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-02,Cauca,precipitacion,0.8,mm,open-meteo
 2025-09-02,Cauca,temp_max,24.6,°C,open-meteo
 2025-09-02,Cauca,temp_min,15.1,°C,open-meteo
-2025-09-02,GLOBAL,precio_cafe_arabica,382.20001220703125,USc/lb,yfinance
+2025-09-02,GLOBAL,precio_cafe_arabica,382.2000122070313,USc/lb,yfinance
 2025-09-02,Huila,precipitacion,2.9,mm,open-meteo
 2025-09-02,Huila,temp_max,23.8,°C,open-meteo
 2025-09-02,Huila,temp_min,14.6,°C,open-meteo
@@ -25906,7 +25939,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-08,Cauca,precipitacion,1.0,mm,open-meteo
 2025-09-08,Cauca,temp_max,24.2,°C,open-meteo
 2025-09-08,Cauca,temp_min,11.7,°C,open-meteo
-2025-09-08,GLOBAL,precio_cafe_arabica,397.79998779296875,USc/lb,yfinance
+2025-09-08,GLOBAL,precio_cafe_arabica,397.7999877929688,USc/lb,yfinance
 2025-09-08,Huila,precipitacion,1.1,mm,open-meteo
 2025-09-08,Huila,temp_max,25.1,°C,open-meteo
 2025-09-08,Huila,temp_min,11.8,°C,open-meteo
@@ -25987,7 +26020,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-11,Cauca,precipitacion,0.8,mm,open-meteo
 2025-09-11,Cauca,temp_max,28.3,°C,open-meteo
 2025-09-11,Cauca,temp_min,16.3,°C,open-meteo
-2025-09-11,GLOBAL,precio_cafe_arabica,400.04998779296875,USc/lb,yfinance
+2025-09-11,GLOBAL,precio_cafe_arabica,400.0499877929688,USc/lb,yfinance
 2025-09-11,Huila,precipitacion,2.8,mm,open-meteo
 2025-09-11,Huila,temp_max,24.5,°C,open-meteo
 2025-09-11,Huila,temp_min,14.2,°C,open-meteo
@@ -26145,7 +26178,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-17,Cauca,precipitacion,7.1,mm,open-meteo
 2025-09-17,Cauca,temp_max,24.7,°C,open-meteo
 2025-09-17,Cauca,temp_min,14.7,°C,open-meteo
-2025-09-17,GLOBAL,precio_cafe_arabica,388.54998779296875,USc/lb,yfinance
+2025-09-17,GLOBAL,precio_cafe_arabica,388.5499877929688,USc/lb,yfinance
 2025-09-17,Huila,precipitacion,1.0,mm,open-meteo
 2025-09-17,Huila,temp_max,26.5,°C,open-meteo
 2025-09-17,Huila,temp_min,12.9,°C,open-meteo
@@ -26384,7 +26417,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-26,Cauca,precipitacion,0.7,mm,open-meteo
 2025-09-26,Cauca,temp_max,23.4,°C,open-meteo
 2025-09-26,Cauca,temp_min,14.3,°C,open-meteo
-2025-09-26,GLOBAL,precio_cafe_arabica,378.04998779296875,USc/lb,yfinance
+2025-09-26,GLOBAL,precio_cafe_arabica,378.0499877929688,USc/lb,yfinance
 2025-09-26,Huila,precipitacion,1.9,mm,open-meteo
 2025-09-26,Huila,temp_max,23.5,°C,open-meteo
 2025-09-26,Huila,temp_min,13.8,°C,open-meteo
@@ -26461,7 +26494,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-29,Cauca,precipitacion,23.4,mm,open-meteo
 2025-09-29,Cauca,temp_max,24.5,°C,open-meteo
 2025-09-29,Cauca,temp_min,13.9,°C,open-meteo
-2025-09-29,GLOBAL,precio_cafe_arabica,372.20001220703125,USc/lb,yfinance
+2025-09-29,GLOBAL,precio_cafe_arabica,372.2000122070313,USc/lb,yfinance
 2025-09-29,Huila,precipitacion,0.8,mm,open-meteo
 2025-09-29,Huila,temp_max,26.7,°C,open-meteo
 2025-09-29,Huila,temp_min,12.2,°C,open-meteo
@@ -26509,6 +26542,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-01,Antioquia,temp_min,16.8,°C,open-meteo
 2025-10-01,COLOMBIA,fx_usd_local,3924.75,COP/USD,yfinance
 2025-10-01,COLOMBIA,precio_interno_referencia,2928000.0,COP/carga_125kg,FNC
+2025-10-01,COLOMBIA,produccion_nacional,1208.086500408277,miles_sacos_60kg,FNC
 2025-10-01,Caldas,precipitacion,3.3,mm,open-meteo
 2025-10-01,Caldas,temp_max,19.1,°C,open-meteo
 2025-10-01,Caldas,temp_min,12.3,°C,open-meteo
@@ -26754,7 +26788,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-10,Cauca,precipitacion,31.2,mm,open-meteo
 2025-10-10,Cauca,temp_max,17.4,°C,open-meteo
 2025-10-10,Cauca,temp_min,13.9,°C,open-meteo
-2025-10-10,GLOBAL,precio_cafe_arabica,373.04998779296875,USc/lb,yfinance
+2025-10-10,GLOBAL,precio_cafe_arabica,373.0499877929688,USc/lb,yfinance
 2025-10-10,Huila,precipitacion,13.2,mm,open-meteo
 2025-10-10,Huila,temp_max,22.4,°C,open-meteo
 2025-10-10,Huila,temp_min,15.4,°C,open-meteo
@@ -26831,7 +26865,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-13,Cauca,precipitacion,6.2,mm,open-meteo
 2025-10-13,Cauca,temp_max,22.4,°C,open-meteo
 2025-10-13,Cauca,temp_min,13.2,°C,open-meteo
-2025-10-13,GLOBAL,precio_cafe_arabica,385.20001220703125,USc/lb,yfinance
+2025-10-13,GLOBAL,precio_cafe_arabica,385.2000122070313,USc/lb,yfinance
 2025-10-13,Huila,precipitacion,4.2,mm,open-meteo
 2025-10-13,Huila,temp_max,24.5,°C,open-meteo
 2025-10-13,Huila,temp_min,15.6,°C,open-meteo
@@ -26912,7 +26946,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-16,Cauca,precipitacion,8.2,mm,open-meteo
 2025-10-16,Cauca,temp_max,22.1,°C,open-meteo
 2025-10-16,Cauca,temp_min,14.4,°C,open-meteo
-2025-10-16,GLOBAL,precio_cafe_arabica,393.79998779296875,USc/lb,yfinance
+2025-10-16,GLOBAL,precio_cafe_arabica,393.7999877929688,USc/lb,yfinance
 2025-10-16,Huila,precipitacion,6.1,mm,open-meteo
 2025-10-16,Huila,temp_max,24.4,°C,open-meteo
 2025-10-16,Huila,temp_min,15.4,°C,open-meteo
@@ -26939,7 +26973,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-17,Cauca,precipitacion,4.6,mm,open-meteo
 2025-10-17,Cauca,temp_max,23.2,°C,open-meteo
 2025-10-17,Cauca,temp_min,14.5,°C,open-meteo
-2025-10-17,GLOBAL,precio_cafe_arabica,397.45001220703125,USc/lb,yfinance
+2025-10-17,GLOBAL,precio_cafe_arabica,397.4500122070313,USc/lb,yfinance
 2025-10-17,Huila,precipitacion,1.5,mm,open-meteo
 2025-10-17,Huila,temp_max,24.8,°C,open-meteo
 2025-10-17,Huila,temp_min,14.4,°C,open-meteo
@@ -27016,7 +27050,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-20,Cauca,precipitacion,0.6,mm,open-meteo
 2025-10-20,Cauca,temp_max,22.9,°C,open-meteo
 2025-10-20,Cauca,temp_min,14.2,°C,open-meteo
-2025-10-20,GLOBAL,precio_cafe_arabica,406.04998779296875,USc/lb,yfinance
+2025-10-20,GLOBAL,precio_cafe_arabica,406.0499877929688,USc/lb,yfinance
 2025-10-20,Huila,precipitacion,1.5,mm,open-meteo
 2025-10-20,Huila,temp_max,26.0,°C,open-meteo
 2025-10-20,Huila,temp_min,13.6,°C,open-meteo
@@ -27043,7 +27077,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-21,Cauca,precipitacion,0.3,mm,open-meteo
 2025-10-21,Cauca,temp_max,22.1,°C,open-meteo
 2025-10-21,Cauca,temp_min,15.3,°C,open-meteo
-2025-10-21,GLOBAL,precio_cafe_arabica,413.54998779296875,USc/lb,yfinance
+2025-10-21,GLOBAL,precio_cafe_arabica,413.5499877929688,USc/lb,yfinance
 2025-10-21,Huila,precipitacion,2.7,mm,open-meteo
 2025-10-21,Huila,temp_max,25.5,°C,open-meteo
 2025-10-21,Huila,temp_min,13.4,°C,open-meteo
@@ -27255,7 +27289,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-29,Cauca,precipitacion,6.3,mm,open-meteo
 2025-10-29,Cauca,temp_max,19.9,°C,open-meteo
 2025-10-29,Cauca,temp_min,14.6,°C,open-meteo
-2025-10-29,GLOBAL,precio_cafe_arabica,390.70001220703125,USc/lb,yfinance
+2025-10-29,GLOBAL,precio_cafe_arabica,390.7000122070313,USc/lb,yfinance
 2025-10-29,Huila,precipitacion,33.3,mm,open-meteo
 2025-10-29,Huila,temp_max,22.1,°C,open-meteo
 2025-10-29,Huila,temp_min,16.5,°C,open-meteo
@@ -27309,7 +27343,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-31,Cauca,precipitacion,6.5,mm,open-meteo
 2025-10-31,Cauca,temp_max,22.9,°C,open-meteo
 2025-10-31,Cauca,temp_min,14.4,°C,open-meteo
-2025-10-31,GLOBAL,precio_cafe_arabica,392.04998779296875,USc/lb,yfinance
+2025-10-31,GLOBAL,precio_cafe_arabica,392.0499877929688,USc/lb,yfinance
 2025-10-31,Huila,precipitacion,10.4,mm,open-meteo
 2025-10-31,Huila,temp_max,25.2,°C,open-meteo
 2025-10-31,Huila,temp_min,15.4,°C,open-meteo
@@ -27329,6 +27363,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-01,Antioquia,temp_max,28.4,°C,open-meteo
 2025-11-01,Antioquia,temp_min,17.9,°C,open-meteo
 2025-11-01,COLOMBIA,precio_interno_referencia,2868000.0,COP/carga_125kg,FNC
+2025-11-01,COLOMBIA,produccion_nacional,1266.0696378998325,miles_sacos_60kg,FNC
 2025-11-01,Caldas,precipitacion,1.6,mm,open-meteo
 2025-11-01,Caldas,temp_max,20.0,°C,open-meteo
 2025-11-01,Caldas,temp_min,12.0,°C,open-meteo
@@ -27494,7 +27529,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-07,Cauca,precipitacion,3.5,mm,open-meteo
 2025-11-07,Cauca,temp_max,23.9,°C,open-meteo
 2025-11-07,Cauca,temp_min,12.4,°C,open-meteo
-2025-11-07,GLOBAL,precio_cafe_arabica,407.79998779296875,USc/lb,yfinance
+2025-11-07,GLOBAL,precio_cafe_arabica,407.7999877929688,USc/lb,yfinance
 2025-11-07,Huila,precipitacion,1.6,mm,open-meteo
 2025-11-07,Huila,temp_max,28.5,°C,open-meteo
 2025-11-07,Huila,temp_min,13.6,°C,open-meteo
@@ -27598,7 +27633,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-11,Cauca,precipitacion,4.3,mm,open-meteo
 2025-11-11,Cauca,temp_max,23.1,°C,open-meteo
 2025-11-11,Cauca,temp_min,15.7,°C,open-meteo
-2025-11-11,GLOBAL,precio_cafe_arabica,422.70001220703125,USc/lb,yfinance
+2025-11-11,GLOBAL,precio_cafe_arabica,422.7000122070313,USc/lb,yfinance
 2025-11-11,Huila,precipitacion,2.2,mm,open-meteo
 2025-11-11,Huila,temp_max,27.4,°C,open-meteo
 2025-11-11,Huila,temp_min,14.7,°C,open-meteo
@@ -27652,7 +27687,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-13,Cauca,precipitacion,2.8,mm,open-meteo
 2025-11-13,Cauca,temp_max,21.3,°C,open-meteo
 2025-11-13,Cauca,temp_min,15.2,°C,open-meteo
-2025-11-13,GLOBAL,precio_cafe_arabica,401.70001220703125,USc/lb,yfinance
+2025-11-13,GLOBAL,precio_cafe_arabica,401.7000122070313,USc/lb,yfinance
 2025-11-13,Huila,precipitacion,18.4,mm,open-meteo
 2025-11-13,Huila,temp_max,26.5,°C,open-meteo
 2025-11-13,Huila,temp_min,16.8,°C,open-meteo
@@ -27679,7 +27714,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-14,Cauca,precipitacion,13.5,mm,open-meteo
 2025-11-14,Cauca,temp_max,20.9,°C,open-meteo
 2025-11-14,Cauca,temp_min,14.2,°C,open-meteo
-2025-11-14,GLOBAL,precio_cafe_arabica,399.79998779296875,USc/lb,yfinance
+2025-11-14,GLOBAL,precio_cafe_arabica,399.7999877929688,USc/lb,yfinance
 2025-11-14,Huila,precipitacion,12.7,mm,open-meteo
 2025-11-14,Huila,temp_max,25.7,°C,open-meteo
 2025-11-14,Huila,temp_min,15.6,°C,open-meteo
@@ -27756,7 +27791,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-17,Cauca,precipitacion,9.6,mm,open-meteo
 2025-11-17,Cauca,temp_max,23.1,°C,open-meteo
 2025-11-17,Cauca,temp_min,14.4,°C,open-meteo
-2025-11-17,GLOBAL,precio_cafe_arabica,402.54998779296875,USc/lb,yfinance
+2025-11-17,GLOBAL,precio_cafe_arabica,402.5499877929688,USc/lb,yfinance
 2025-11-17,Huila,precipitacion,3.5,mm,open-meteo
 2025-11-17,Huila,temp_max,23.6,°C,open-meteo
 2025-11-17,Huila,temp_min,16.9,°C,open-meteo
@@ -27941,7 +27976,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-24,Cauca,precipitacion,7.0,mm,open-meteo
 2025-11-24,Cauca,temp_max,19.5,°C,open-meteo
 2025-11-24,Cauca,temp_min,14.7,°C,open-meteo
-2025-11-24,GLOBAL,precio_cafe_arabica,407.45001220703125,USc/lb,yfinance
+2025-11-24,GLOBAL,precio_cafe_arabica,407.4500122070313,USc/lb,yfinance
 2025-11-24,Huila,precipitacion,6.1,mm,open-meteo
 2025-11-24,Huila,temp_max,25.0,°C,open-meteo
 2025-11-24,Huila,temp_min,16.5,°C,open-meteo
@@ -27968,7 +28003,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-25,Cauca,precipitacion,0.9,mm,open-meteo
 2025-11-25,Cauca,temp_max,23.1,°C,open-meteo
 2025-11-25,Cauca,temp_min,14.5,°C,open-meteo
-2025-11-25,GLOBAL,precio_cafe_arabica,414.20001220703125,USc/lb,yfinance
+2025-11-25,GLOBAL,precio_cafe_arabica,414.2000122070313,USc/lb,yfinance
 2025-11-25,Huila,precipitacion,9.3,mm,open-meteo
 2025-11-25,Huila,temp_max,26.0,°C,open-meteo
 2025-11-25,Huila,temp_min,15.7,°C,open-meteo
@@ -28119,6 +28154,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-01,Antioquia,temp_min,17.2,°C,open-meteo
 2025-12-01,COLOMBIA,fx_usd_local,3691.856689453125,COP/USD,yfinance
 2025-12-01,COLOMBIA,precio_interno_referencia,2916000.0,COP/carga_125kg,FNC
+2025-12-01,COLOMBIA,produccion_nacional,1233.4231694949574,miles_sacos_60kg,FNC
 2025-12-01,Caldas,precipitacion,3.9,mm,open-meteo
 2025-12-01,Caldas,temp_max,19.9,°C,open-meteo
 2025-12-01,Caldas,temp_min,10.2,°C,open-meteo
@@ -28152,7 +28188,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-02,Cauca,precipitacion,25.5,mm,open-meteo
 2025-12-02,Cauca,temp_max,22.5,°C,open-meteo
 2025-12-02,Cauca,temp_min,14.1,°C,open-meteo
-2025-12-02,GLOBAL,precio_cafe_arabica,405.54998779296875,USc/lb,yfinance
+2025-12-02,GLOBAL,precio_cafe_arabica,405.5499877929688,USc/lb,yfinance
 2025-12-02,Huila,precipitacion,3.8,mm,open-meteo
 2025-12-02,Huila,temp_max,23.9,°C,open-meteo
 2025-12-02,Huila,temp_min,16.6,°C,open-meteo
@@ -28206,7 +28242,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-04,Cauca,precipitacion,5.9,mm,open-meteo
 2025-12-04,Cauca,temp_max,23.9,°C,open-meteo
 2025-12-04,Cauca,temp_min,15.1,°C,open-meteo
-2025-12-04,GLOBAL,precio_cafe_arabica,411.95001220703125,USc/lb,yfinance
+2025-12-04,GLOBAL,precio_cafe_arabica,411.9500122070313,USc/lb,yfinance
 2025-12-04,Huila,precipitacion,1.4,mm,open-meteo
 2025-12-04,Huila,temp_max,26.9,°C,open-meteo
 2025-12-04,Huila,temp_min,17.2,°C,open-meteo
@@ -28310,7 +28346,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-08,Cauca,precipitacion,2.4,mm,open-meteo
 2025-12-08,Cauca,temp_max,26.1,°C,open-meteo
 2025-12-08,Cauca,temp_min,10.6,°C,open-meteo
-2025-12-08,GLOBAL,precio_cafe_arabica,396.04998779296875,USc/lb,yfinance
+2025-12-08,GLOBAL,precio_cafe_arabica,396.0499877929688,USc/lb,yfinance
 2025-12-08,Huila,precipitacion,1.6,mm,open-meteo
 2025-12-08,Huila,temp_max,24.9,°C,open-meteo
 2025-12-08,Huila,temp_min,16.5,°C,open-meteo
@@ -28337,7 +28373,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-09,Cauca,precipitacion,0.6,mm,open-meteo
 2025-12-09,Cauca,temp_max,25.7,°C,open-meteo
 2025-12-09,Cauca,temp_min,10.8,°C,open-meteo
-2025-12-09,GLOBAL,precio_cafe_arabica,394.20001220703125,USc/lb,yfinance
+2025-12-09,GLOBAL,precio_cafe_arabica,394.2000122070313,USc/lb,yfinance
 2025-12-09,Huila,precipitacion,0.7,mm,open-meteo
 2025-12-09,Huila,temp_max,25.8,°C,open-meteo
 2025-12-09,Huila,temp_min,15.2,°C,open-meteo
@@ -28364,7 +28400,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-10,Cauca,precipitacion,0.6,mm,open-meteo
 2025-12-10,Cauca,temp_max,22.9,°C,open-meteo
 2025-12-10,Cauca,temp_min,12.7,°C,open-meteo
-2025-12-10,GLOBAL,precio_cafe_arabica,400.79998779296875,USc/lb,yfinance
+2025-12-10,GLOBAL,precio_cafe_arabica,400.7999877929688,USc/lb,yfinance
 2025-12-10,Huila,precipitacion,4.8,mm,open-meteo
 2025-12-10,Huila,temp_max,26.2,°C,open-meteo
 2025-12-10,Huila,temp_min,14.9,°C,open-meteo
@@ -28391,7 +28427,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-11,Cauca,precipitacion,1.9,mm,open-meteo
 2025-12-11,Cauca,temp_max,23.3,°C,open-meteo
 2025-12-11,Cauca,temp_min,12.1,°C,open-meteo
-2025-12-11,GLOBAL,precio_cafe_arabica,405.45001220703125,USc/lb,yfinance
+2025-12-11,GLOBAL,precio_cafe_arabica,405.4500122070313,USc/lb,yfinance
 2025-12-11,Huila,precipitacion,9.8,mm,open-meteo
 2025-12-11,Huila,temp_max,27.2,°C,open-meteo
 2025-12-11,Huila,temp_min,14.2,°C,open-meteo
@@ -28418,7 +28454,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-12,Cauca,precipitacion,1.1,mm,open-meteo
 2025-12-12,Cauca,temp_max,21.8,°C,open-meteo
 2025-12-12,Cauca,temp_min,15.0,°C,open-meteo
-2025-12-12,GLOBAL,precio_cafe_arabica,397.20001220703125,USc/lb,yfinance
+2025-12-12,GLOBAL,precio_cafe_arabica,397.2000122070313,USc/lb,yfinance
 2025-12-12,Huila,precipitacion,4.6,mm,open-meteo
 2025-12-12,Huila,temp_max,27.6,°C,open-meteo
 2025-12-12,Huila,temp_min,15.6,°C,open-meteo
@@ -28495,7 +28531,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-15,Cauca,precipitacion,9.7,mm,open-meteo
 2025-12-15,Cauca,temp_max,23.9,°C,open-meteo
 2025-12-15,Cauca,temp_min,15.5,°C,open-meteo
-2025-12-15,GLOBAL,precio_cafe_arabica,387.70001220703125,USc/lb,yfinance
+2025-12-15,GLOBAL,precio_cafe_arabica,387.7000122070313,USc/lb,yfinance
 2025-12-15,Huila,precipitacion,2.9,mm,open-meteo
 2025-12-15,Huila,temp_max,29.0,°C,open-meteo
 2025-12-15,Huila,temp_min,14.0,°C,open-meteo
@@ -28522,7 +28558,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-16,Cauca,precipitacion,2.0,mm,open-meteo
 2025-12-16,Cauca,temp_max,22.0,°C,open-meteo
 2025-12-16,Cauca,temp_min,15.4,°C,open-meteo
-2025-12-16,GLOBAL,precio_cafe_arabica,379.29998779296875,USc/lb,yfinance
+2025-12-16,GLOBAL,precio_cafe_arabica,379.2999877929688,USc/lb,yfinance
 2025-12-16,Huila,precipitacion,3.3,mm,open-meteo
 2025-12-16,Huila,temp_max,26.6,°C,open-meteo
 2025-12-16,Huila,temp_min,16.5,°C,open-meteo
@@ -28937,6 +28973,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-01-01,Antioquia,temp_max,29.9,°C,open-meteo
 2026-01-01,Antioquia,temp_min,17.2,°C,open-meteo
 2026-01-01,COLOMBIA,precio_interno_referencia,2653000.0,COP/carga_125kg,FNC
+2026-01-01,COLOMBIA,produccion_nacional,892.7276680725097,miles_sacos_60kg,FNC
 2026-01-01,Caldas,precipitacion,10.3,mm,open-meteo
 2026-01-01,Caldas,temp_max,20.9,°C,open-meteo
 2026-01-01,Caldas,temp_min,10.1,°C,open-meteo
@@ -29100,7 +29137,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-01-07,Cauca,precipitacion,5.8,mm,open-meteo
 2026-01-07,Cauca,temp_max,21.1,°C,open-meteo
 2026-01-07,Cauca,temp_min,14.5,°C,open-meteo
-2026-01-07,GLOBAL,precio_cafe_arabica,375.45001220703125,USc/lb,yfinance
+2026-01-07,GLOBAL,precio_cafe_arabica,375.4500122070313,USc/lb,yfinance
 2026-01-07,Huila,precipitacion,1.3,mm,open-meteo
 2026-01-07,Huila,temp_max,25.7,°C,open-meteo
 2026-01-07,Huila,temp_min,15.7,°C,open-meteo
@@ -29753,6 +29790,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-02-01,Antioquia,temp_max,22.2,°C,open-meteo
 2026-02-01,Antioquia,temp_min,19.0,°C,open-meteo
 2026-02-01,COLOMBIA,precio_interno_referencia,2430000.0,COP/carga_125kg,FNC
+2026-02-01,COLOMBIA,produccion_nacional,869.1501974755291,miles_sacos_60kg,FNC
 2026-02-01,Caldas,precipitacion,34.3,mm,open-meteo
 2026-02-01,Caldas,temp_max,16.0,°C,open-meteo
 2026-02-01,Caldas,temp_min,12.4,°C,open-meteo
@@ -30492,6 +30530,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-03-01,Antioquia,temp_max,29.7,°C,open-meteo
 2026-03-01,Antioquia,temp_min,18.1,°C,open-meteo
 2026-03-01,COLOMBIA,precio_interno_referencia,2118000.0,COP/carga_125kg,FNC
+2026-03-01,COLOMBIA,produccion_nacional,754.4700368133471,miles_sacos_60kg,FNC
 2026-03-01,Caldas,precipitacion,3.3,mm,open-meteo
 2026-03-01,Caldas,temp_max,22.5,°C,open-meteo
 2026-03-01,Caldas,temp_min,10.8,°C,open-meteo
@@ -31312,6 +31351,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-04-01,Antioquia,temp_min,17.8,°C,open-meteo
 2026-04-01,COLOMBIA,fx_usd_local,3681.830078125,COP/USD,yfinance
 2026-04-01,COLOMBIA,precio_interno_referencia,2240000.0,COP/carga_125kg,FNC
+2026-04-01,COLOMBIA,produccion_nacional,697.0584176166781,miles_sacos_60kg,FNC
 2026-04-01,Caldas,precipitacion,1.5,mm,open-meteo
 2026-04-01,Caldas,temp_max,21.3,°C,open-meteo
 2026-04-01,Caldas,temp_min,12.6,°C,open-meteo
@@ -32105,6 +32145,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-05-01,Antioquia,temp_min,17.8,°C,open-meteo
 2026-05-01,COLOMBIA,fx_usd_local,3655.080078125,COP/USD,yfinance
 2026-05-01,COLOMBIA,precio_interno_referencia,2242000.0,COP/carga_125kg,FNC
+2026-05-01,COLOMBIA,produccion_nacional,1056.71781850386,miles_sacos_60kg,FNC
 2026-05-01,Caldas,precipitacion,8.2,mm,open-meteo
 2026-05-01,Caldas,temp_max,20.1,°C,open-meteo
 2026-05-01,Caldas,temp_min,11.1,°C,open-meteo
@@ -32981,7 +33022,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-03,Cauca,precipitacion,11.1,mm,open-meteo
 2026-06-03,Cauca,temp_max,21.9,°C,open-meteo
 2026-06-03,Cauca,temp_min,16.0,°C,open-meteo
-2026-06-03,GLOBAL,precio_cafe_arabica,253.10000610351562,USc/lb,yfinance
+2026-06-03,GLOBAL,precio_cafe_arabica,253.1000061035156,USc/lb,yfinance
 2026-06-03,Huila,precipitacion,4.6,mm,open-meteo
 2026-06-03,Huila,temp_max,24.5,°C,open-meteo
 2026-06-03,Huila,temp_min,17.5,°C,open-meteo
@@ -33008,7 +33049,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-04,Cauca,precipitacion,13.3,mm,open-meteo
 2026-06-04,Cauca,temp_max,20.3,°C,open-meteo
 2026-06-04,Cauca,temp_min,15.5,°C,open-meteo
-2026-06-04,GLOBAL,precio_cafe_arabica,247.14999389648438,USc/lb,yfinance
+2026-06-04,GLOBAL,precio_cafe_arabica,247.1499938964844,USc/lb,yfinance
 2026-06-04,Huila,precipitacion,7.5,mm,open-meteo
 2026-06-04,Huila,temp_max,24.5,°C,open-meteo
 2026-06-04,Huila,temp_min,16.9,°C,open-meteo
@@ -33112,7 +33153,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-08,Cauca,precipitacion,6.2,mm,open-meteo
 2026-06-08,Cauca,temp_max,21.4,°C,open-meteo
 2026-06-08,Cauca,temp_min,15.4,°C,open-meteo
-2026-06-08,GLOBAL,precio_cafe_arabica,245.89999389648438,USc/lb,yfinance
+2026-06-08,GLOBAL,precio_cafe_arabica,245.8999938964844,USc/lb,yfinance
 2026-06-08,Huila,precipitacion,6.7,mm,open-meteo
 2026-06-08,Huila,temp_max,27.2,°C,open-meteo
 2026-06-08,Huila,temp_min,17.1,°C,open-meteo
@@ -33139,7 +33180,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-09,Cauca,precipitacion,12.7,mm,open-meteo
 2026-06-09,Cauca,temp_max,22.4,°C,open-meteo
 2026-06-09,Cauca,temp_min,14.9,°C,open-meteo
-2026-06-09,GLOBAL,precio_cafe_arabica,244.39999389648438,USc/lb,yfinance
+2026-06-09,GLOBAL,precio_cafe_arabica,244.3999938964844,USc/lb,yfinance
 2026-06-09,Huila,precipitacion,5.1,mm,open-meteo
 2026-06-09,Huila,temp_max,23.0,°C,open-meteo
 2026-06-09,Huila,temp_min,17.1,°C,open-meteo
@@ -33166,7 +33207,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-10,Cauca,precipitacion,5.1,mm,open-meteo
 2026-06-10,Cauca,temp_max,23.2,°C,open-meteo
 2026-06-10,Cauca,temp_min,16.7,°C,open-meteo
-2026-06-10,GLOBAL,precio_cafe_arabica,248.39999389648438,USc/lb,yfinance
+2026-06-10,GLOBAL,precio_cafe_arabica,248.3999938964844,USc/lb,yfinance
 2026-06-10,Huila,precipitacion,1.8,mm,open-meteo
 2026-06-10,Huila,temp_max,24.6,°C,open-meteo
 2026-06-10,Huila,temp_min,17.4,°C,open-meteo

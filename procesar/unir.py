@@ -4,7 +4,8 @@ Fase 2 — Unir fuentes numéricas en una tabla semanal y archivar el snapshot.
 Esquema de salida:
     fecha_snapshot : date  — fecha en que se generó el snapshot (igual para todas las filas)
     fecha_dato     : date  — fecha real del dato según la fuente
-    geografia      : str   — "GLOBAL" (café), "COLOMBIA" (FX, precio interno) o
+    geografia      : str   — "GLOBAL" (café), "COLOMBIA" (FX, precio interno,
+                             producción nacional) o
                              nombre de departamento cafetero (clima)
     variable       : str   — nombre del indicador
     valor          : float
@@ -12,8 +13,8 @@ Esquema de salida:
     fuente         : str
 
 Decisión de fechas (ver CONTEXTO_IAS.md):
-  - FX, café y precio interno: datos puntuales; se usa la fecha del dato como
-    fecha_dato. No se agrega ni redondea.
+  - FX, café, precio interno y producción: datos puntuales; se usa la fecha del
+    dato como fecha_dato. Producción conserva su cadencia mensual.
   - Clima: la fuente devuelve ~8 días diarios por departamento. Se agrega a
     cuatro variables semanales; fecha_dato = la fecha más reciente de la ventana.
   - fecha_snapshot = datetime.now().date() al momento de correr la unión;
@@ -26,7 +27,7 @@ from typing import Optional
 import pandas as pd
 
 from config import DIR_SNAPSHOTS
-from fuentes import cafe, clima, fx, precio_interno
+from fuentes import cafe, clima, fx, precio_interno, produccion
 from procesar.calidad import generar_reporte_calidad, validar_snapshot
 
 COLUMNAS = ["fecha_snapshot", "fecha_dato", "geografia", "variable", "valor", "unidad", "fuente"]
@@ -152,6 +153,9 @@ def unir(
 
     df_precio_interno = precio_interno.obtener()
     partes.append(_puntual_a_semanal(df_precio_interno, fecha_snapshot))
+
+    df_produccion = produccion.obtener()
+    partes.append(_puntual_a_semanal(df_produccion, fecha_snapshot))
 
     df_clima = clima.obtener()
     partes.append(_agregar_clima(df_clima, fecha_snapshot))

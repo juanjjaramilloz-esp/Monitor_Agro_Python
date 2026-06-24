@@ -19,6 +19,7 @@ class CalidadSnapshotTests(unittest.TestCase):
             self._fila("COLOMBIA", "fx_usd_local", "yfinance"),
             self._fila("GLOBAL", "precio_cafe_arabica", "yfinance"),
             self._fila("COLOMBIA", "precio_interno_referencia", "FNC"),
+            self._fila("COLOMBIA", "produccion_nacional", "FNC"),
         ]
         for departamento in DEPARTAMENTOS:
             for variable in VARIABLES_CLIMA:

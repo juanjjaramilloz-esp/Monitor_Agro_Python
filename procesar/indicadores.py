@@ -15,6 +15,7 @@ from config import (
     INDICADORES_VENTANA_CORTA,
     INDICADORES_VENTANA_LARGA,
     VARIABLES_CAMBIO_PORCENTUAL,
+    VARIABLES_MENSUALES,
 )
 from procesar.calidad import (
     COLUMNAS_INDICADORES,
@@ -70,6 +71,29 @@ def _calcular_series_temporales(tabla: pd.DataFrame) -> list[dict]:
         grupo = grupo_original.sort_values("semana_fin").reset_index(drop=True)
         valores = grupo["valor"].astype(float)
         unidad = str(grupo.iloc[0]["unidad"])
+
+        if grupo.iloc[0]["variable"] in VARIABLES_MENSUALES:
+            anterior_1m = valores.shift(1).replace(0, pd.NA)
+            anterior_12m = valores.shift(12).replace(0, pd.NA)
+            _agregar_resultado(
+                filas,
+                grupo,
+                (valores / anterior_1m - 1) * 100,
+                "cambio_1m_pct",
+                "%",
+                4,
+                2,
+            )
+            _agregar_resultado(
+                filas,
+                grupo,
+                (valores / anterior_12m - 1) * 100,
+                "cambio_12m_pct",
+                "%",
+                52,
+                13,
+            )
+            continue
 
         _agregar_resultado(
             filas,

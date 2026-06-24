@@ -61,6 +61,7 @@ class GuardadoSnapshotTests(unittest.TestCase):
             patch("procesar.unir.fx.obtener", return_value=fx),
             patch("procesar.unir.cafe.obtener", return_value=vacio),
             patch("procesar.unir.precio_interno.obtener", return_value=vacio),
+            patch("procesar.unir.produccion.obtener", return_value=vacio),
             patch("procesar.unir.clima.obtener", return_value=vacio),
             patch("procesar.unir._guardar_snapshot") as guardar,
         ):

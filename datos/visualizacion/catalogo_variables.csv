@@ -2,7 +2,8 @@ variable,etiqueta,descripcion,categoria,orden,decimales,color
 fx_usd_local,Tasa de cambio USD/COP,Pesos colombianos por un dólar estadounidense,Mercado,1,0,#2563EB
 precio_cafe_arabica,Precio internacional del café arábica,Futuro ICE Coffee C expresado en centavos de dólar por libra,Mercado,2,1,#0F766E
 precio_interno_referencia,Precio interno de referencia FNC,Precio base por carga de 125 kg de café pergamino seco,Mercado,3,0,#B7791F
-precipitacion_semanal,Precipitación semanal,Lluvia acumulada en la coordenada municipal de referencia,Clima,4,1,#0284C7
-temp_min_semanal,Temperatura mínima semanal,Menor temperatura mínima diaria de la semana,Clima,5,1,#4F46E5
-temp_max_semanal,Temperatura máxima semanal,Mayor temperatura máxima diaria de la semana,Clima,6,1,#DC2626
-temp_promedio_semanal,Temperatura promedio semanal,Promedio de los puntos medios diarios de temperatura,Clima,7,1,#D97706
+produccion_nacional,Producción nacional de café,Producción registrada mensual de café verde equivalente,Producción,4,1,#7C3AED
+precipitacion_semanal,Precipitación semanal,Lluvia acumulada en la coordenada municipal de referencia,Clima,5,1,#0284C7
+temp_min_semanal,Temperatura mínima semanal,Menor temperatura mínima diaria de la semana,Clima,6,1,#4F46E5
+temp_max_semanal,Temperatura máxima semanal,Mayor temperatura máxima diaria de la semana,Clima,7,1,#DC2626
+temp_promedio_semanal,Temperatura promedio semanal,Promedio de los puntos medios diarios de temperatura,Clima,8,1,#D97706

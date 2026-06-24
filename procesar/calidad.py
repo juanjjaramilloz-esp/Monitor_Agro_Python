@@ -60,6 +60,7 @@ COLUMNAS_VISUALIZACION = [
     "municipio_referencia",
     "orden_geografia",
     "categoria",
+    "cadencia",
     "orden_variable",
     "variable",
     "etiqueta_variable",
@@ -74,6 +75,8 @@ COLUMNAS_VISUALIZACION = [
     "cambio_1s_absoluto",
     "cambio_1s_pct",
     "cambio_4s_pct",
+    "cambio_1m_pct",
+    "cambio_12m_pct",
     "promedio_movil_4s",
     "promedio_movil_12s",
     "anomalia_z_52s",
@@ -133,6 +136,7 @@ def generar_reporte_calidad(tabla: pd.DataFrame, fecha_snapshot: date) -> pd.Dat
             tabla["variable"].eq("precio_interno_referencia"),
             1,
         ),
+        ("produccion", tabla["variable"].eq("produccion_nacional"), 1),
         (
             "clima",
             tabla["geografia"].isin(DEPARTAMENTOS)
@@ -220,7 +224,7 @@ def validar_historico_semanal(tabla: pd.DataFrame) -> None:
 
 
 def generar_reporte_historico(tabla: pd.DataFrame) -> pd.DataFrame:
-    """Muestra cobertura de los 35 indicadores esperados en cada semana."""
+    """Muestra cobertura semanal sin exigir producción en semanas sin cierre mensual."""
     filas = []
     for semana, grupo in tabla.groupby("semana_fin", sort=True):
         esperadas = 3 + len(DEPARTAMENTOS) * len(VARIABLES_CLIMA)
@@ -240,6 +244,9 @@ def generar_reporte_historico(tabla: pd.DataFrame) -> pd.DataFrame:
                     grupo["variable"].isin(VARIABLES_CLIMA), "geografia"
                 ].nunique(),
                 "dias_clima_minimos": dias_clima_minimos,
+                "produccion_mensual": int(
+                    grupo["variable"].eq("produccion_nacional").sum()
+                ),
             }
         )
     return pd.DataFrame(filas)
@@ -282,6 +289,7 @@ def validar_visualizacion(tabla: pd.DataFrame) -> None:
         "tipo_geografia",
         "municipio_referencia",
         "categoria",
+        "cadencia",
         "variable",
         "etiqueta_variable",
         "descripcion_variable",

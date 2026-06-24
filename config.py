@@ -36,10 +36,12 @@ VARIABLES_CAMBIO_PORCENTUAL = {
     "precio_interno_referencia",
     "precipitacion_semanal",
 }
+VARIABLES_MENSUALES = {"produccion_nacional"}
 VARIABLES_INDICE_BASE_100 = {
     "fx_usd_local",
     "precio_cafe_arabica",
     "precio_interno_referencia",
+    "produccion_nacional",
 }
 UMBRAL_ANOMALIA_MODERADA = 1.0
 UMBRAL_ANOMALIA_ALTA = 2.0
@@ -51,6 +53,11 @@ PERIODOS_VISUALIZACION = {
     "Todo": None,
 }
 FUENTES_COMERCIALES = {
+    "produccion_nacional": {
+        "nombre": "Federación Nacional de Cafeteros (FNC)",
+        "alcance": "Colombia",
+        "metodo": "Producción registrada mensual; cada fila conserva el mes publicado, sin relleno semanal.",
+    },
     "precio_interno_referencia": {
         "nombre": "Federación Nacional de Cafeteros (FNC)",
         "alcance": "Colombia",
@@ -66,6 +73,16 @@ FUENTES_COMERCIALES = {
         "alcance": "Colombia",
         "metodo": "Cierre diario de USDCOP=X; se conserva el último dato disponible de cada semana.",
     },
+}
+CADENCIAS_VARIABLES = {
+    "fx_usd_local": "Semanal (último cierre disponible)",
+    "precio_cafe_arabica": "Semanal (último cierre disponible)",
+    "precio_interno_referencia": "Semanal (último dato disponible)",
+    "produccion_nacional": "Mensual",
+    "precipitacion_semanal": "Semanal",
+    "temp_min_semanal": "Semanal",
+    "temp_max_semanal": "Semanal",
+    "temp_promedio_semanal": "Semanal",
 }
 COLORES_INTERFAZ = {
     "texto": "#17211B",
@@ -105,11 +122,19 @@ CATALOGO_VARIABLES = {
         "decimales": 0,
         "color": "#B7791F",
     },
+    "produccion_nacional": {
+        "etiqueta": "Producción nacional de café",
+        "descripcion": "Producción registrada mensual de café verde equivalente",
+        "categoria": "Producción",
+        "orden": 4,
+        "decimales": 1,
+        "color": "#7C3AED",
+    },
     "precipitacion_semanal": {
         "etiqueta": "Precipitación semanal",
         "descripcion": "Lluvia acumulada en la coordenada municipal de referencia",
         "categoria": "Clima",
-        "orden": 4,
+        "orden": 5,
         "decimales": 1,
         "color": "#0284C7",
     },
@@ -117,7 +142,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura mínima semanal",
         "descripcion": "Menor temperatura mínima diaria de la semana",
         "categoria": "Clima",
-        "orden": 5,
+        "orden": 6,
         "decimales": 1,
         "color": "#4F46E5",
     },
@@ -125,7 +150,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura máxima semanal",
         "descripcion": "Mayor temperatura máxima diaria de la semana",
         "categoria": "Clima",
-        "orden": 6,
+        "orden": 7,
         "decimales": 1,
         "color": "#DC2626",
     },
@@ -133,7 +158,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura promedio semanal",
         "descripcion": "Promedio de los puntos medios diarios de temperatura",
         "categoria": "Clima",
-        "orden": 7,
+        "orden": 8,
         "decimales": 1,
         "color": "#D97706",
     },

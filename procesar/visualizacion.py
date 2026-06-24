@@ -3,6 +3,7 @@
 import pandas as pd
 
 from config import (
+    CADENCIAS_VARIABLES,
     CATALOGO_VARIABLES,
     DIR_HISTORICO,
     DIR_VISUALIZACION,
@@ -98,6 +99,7 @@ def preparar(
         }
     )
     tabla = tabla.merge(catalogo, on="variable", how="left")
+    tabla["cadencia"] = tabla["variable"].map(CADENCIAS_VARIABLES)
 
     municipios = {r["departamento"]: r["municipio"] for r in REGIONES_CAFE}
     orden_geografias = {nombre: posicion for posicion, nombre in enumerate(ORDEN_GEOGRAFIAS)}
@@ -154,6 +156,8 @@ def preparar_descarga_comercial(tabla: pd.DataFrame) -> pd.DataFrame:
         "unidad",
         "cambio_1s_pct",
         "cambio_4s_pct",
+        "cambio_1m_pct",
+        "cambio_12m_pct",
         "indice_base_100",
         "fuente",
         "geografia",

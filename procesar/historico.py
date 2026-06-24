@@ -10,8 +10,9 @@ from config import (
     DIR_HISTORICO,
     HISTORICO_FECHA_INICIO,
     HISTORICO_RETRASO_CLIMA_DIAS,
+    VARIABLES_MENSUALES,
 )
-from fuentes import cafe, clima, fx, precio_interno
+from fuentes import cafe, clima, fx, precio_interno, produccion
 from procesar.calidad import (
     COLUMNAS_HISTORICO_DIARIO,
     COLUMNAS_HISTORICO_SEMANAL,
@@ -27,6 +28,7 @@ VARIABLES_PUNTUALES = {
     "fx_usd_local",
     "precio_cafe_arabica",
     "precio_interno_referencia",
+    "produccion_nacional",
 }
 
 
@@ -36,7 +38,7 @@ def _fin_semana(fecha: date) -> date:
 
 
 def descargar(desde: date, hasta: date) -> pd.DataFrame:
-    """Consulta las cuatro fuentes en modo histórico y devuelve datos diarios."""
+    """Consulta las fuentes históricas y devuelve sus observaciones reales."""
     if desde > hasta:
         raise ValueError("historico: desde no puede ser posterior a hasta")
 
@@ -44,6 +46,7 @@ def descargar(desde: date, hasta: date) -> pd.DataFrame:
         fx.obtener(desde, hasta),
         cafe.obtener(desde, hasta),
         precio_interno.obtener(desde, hasta),
+        produccion.obtener(desde, hasta),
         clima.obtener(desde, hasta),
     ]
     partes = [parte for parte in partes if not parte.empty]
@@ -152,7 +155,10 @@ def agregar_semanal(tabla_diaria: pd.DataFrame, hasta: date) -> pd.DataFrame:
     inicio_semana = tabla["semana_fin"].map(lambda fin: fin - timedelta(days=6))
     tabla = tabla[
         (tabla["semana_fin"] <= hasta)
-        & (inicio_semana >= primer_dia_disponible)
+        & (
+            (inicio_semana >= primer_dia_disponible)
+            | tabla["variable"].isin(VARIABLES_MENSUALES)
+        )
     ]
     if tabla.empty:
         return pd.DataFrame(columns=COLUMNAS_HISTORICO_SEMANAL)
