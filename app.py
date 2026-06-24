@@ -203,8 +203,8 @@ def _layout(figura: go.Figure, altura: int = 400) -> go.Figure:
         title_font=dict(size=16),
         hovermode="x unified",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-        xaxis=dict(showgrid=False, title=None),
-        yaxis=dict(gridcolor=colores["rejilla"], zeroline=False, title=None),
+        xaxis=dict(showgrid=False, automargin=True),
+        yaxis=dict(gridcolor=colores["rejilla"], zeroline=False, automargin=True),
     )
     return figura
 
@@ -408,6 +408,7 @@ def _grafico_resultado_escenario(
             marker_color=colores,
             text=[f"${valor:,.0f}" for valor in valores],
             textposition="outside",
+            cliponaxis=False,
             hovertemplate="%{y}<br>$%{x:,.0f} COP/carga<extra></extra>",
         )
     )
@@ -415,7 +416,12 @@ def _grafico_resultado_escenario(
         title="Precio y costo por carga de 125 kg",
         showlegend=False,
         hovermode="closest",
-        xaxis=dict(tickprefix="$", tickformat=",.0f", showgrid=True),
+        xaxis=dict(
+            tickprefix="$",
+            tickformat=",.0f",
+            showgrid=True,
+            range=[0, max(valores) * 1.22],
+        ),
         yaxis=dict(categoryorder="array", categoryarray=etiquetas[::-1]),
     )
     return _layout(figura, 330)
