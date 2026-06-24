@@ -31,6 +31,10 @@ Actualizado: **2026-06-24**.
   no se amplía a partir de este feedback.
 - El conocimiento cafetero experto y el score continúan pausados por decisión
   del usuario.
+- Existe un simulador de escenarios separado del score. Desplaza el último
+  precio FNC observado en proporción al producto Coffee C × USD/COP, permite
+  editar el costo por carga y calcula margen bruto para un volumen supuesto.
+  No modela prima, calidad, pasilla, logística, impuestos ni causalidad.
 - La primera ampliación confirmada es producción **nacional mensual** FNC. No
   se incorporó producción departamental o municipal.
 - El repositorio tiene remoto `origin` en GitHub y la aplicación está
@@ -88,12 +92,18 @@ Actualizado: **2026-06-24**.
   genera un brief Markdown descargable con cifras, lectura neutral, fuentes,
   cobertura, cadencias y limitaciones.
 - Los periodos disponibles incluyen 3 y 6 meses, 1 y 3 años y todo el histórico.
+- La pestaña `Simulador` permite mover Coffee C, USD/COP, precio FNC base,
+  costo de producción y número de cargas. Muestra precio interno proyectado,
+  ingreso, costo, margen por carga, margen total y una matriz de sensibilidad.
+- El costo inicial es el costo medio nacional FEPCafé de abril de 2026:
+  1.624.000 COP por carga de 125 kg. La interfaz muestra fecha, fuente y
+  permite sustituirlo por un supuesto de finca.
 - Al cambiar departamento se activa su pestaña y aparece el municipio de
   referencia. No existe selector municipal: por ahora hay una coordenada
   representativa por departamento.
 - El tema claro está fijado en `.streamlit/config.toml`; los colores editables
   se centralizan en `config.py`.
-- Validación tras el último ajuste: 34 pruebas unitarias, ejecución funcional
+- Validación tras el último ajuste: 39 pruebas unitarias, ejecución funcional
   de Streamlit sin excepciones, endpoint de salud `ok` y despliegue funcional
   en Streamlit Community Cloud.
 - URL local mientras el servidor esté corriendo: `http://localhost:8501`.
@@ -119,6 +129,9 @@ Actualizado: **2026-06-24**.
   producto concreta.
 - Las coordenadas climáticas son referencias municipales y no representan toda
   la variación interna de cada departamento.
+- El simulador está calibrado al precio FNC observado. Usa transmisión
+  proporcional de Coffee C y USD/COP; no reproduce la fórmula oficial completa
+  ni debe presentarse como predicción.
 
 ---
 

@@ -1,9 +1,9 @@
 """
-Configuración central del Monitor Agro LatAm.
+Configuración central del Monitor Agro Colombia.
 
 REGLA DE ORO (ver CLAUDE.md, sección 2): todo lo que pueda cambiar vive AQUÍ.
 La lógica de los módulos nunca debe tener valores "quemados". Para agregar un
-país, mover una coordenada o ajustar un peso del score, se edita solo este
+departamento, mover una coordenada o ajustar un parámetro, se edita solo este
 archivo.
 """
 
@@ -96,6 +96,24 @@ COLORES_INTERFAZ = {
     "rejilla": "#E7EBE7",
 }
 
+# Supuestos iniciales del simulador. El costo es una referencia nacional
+# publicada por FEPCafé y permanece editable porque no representa cada finca.
+COSTO_PRODUCCION_REFERENCIA = 1_624_000
+COSTO_PRODUCCION_FECHA = date(2026, 4, 30)
+COSTO_PRODUCCION_FUENTE = (
+    "Secretaría Técnica FEPCafé, Reporte mensual de mayo de 2026 "
+    "(dato promedio de abril de 2026)"
+)
+COSTO_PRODUCCION_URL = (
+    "https://federaciondecafeteros.org/wp-content/uploads/2026/06/"
+    "5.-Reporte-Mensual_Mayo26_FEPCafe%CC%81.pdf"
+)
+PROYECCION_RANGO_FACTOR_FX = (0.70, 1.30)
+PROYECCION_RANGO_FACTOR_CAFE = (0.70, 1.30)
+PROYECCION_PUNTOS_MATRIZ = 9
+PROYECCION_CARGAS_PREDETERMINADAS = 1
+PROYECCION_CARGAS_MAXIMAS = 1_000
+
 # Metadatos de presentación. Las etiquetas no alteran los datos ni el score.
 CATALOGO_VARIABLES = {
     "fx_usd_local": {
@@ -167,10 +185,9 @@ CATALOGO_VARIABLES = {
 # ---------------------------------------------------------------------------
 # Geografía nacional (Colombia)
 #
-# PIVOTE A COLOMBIA: el monitor dejó de comparar países de LatAm y ahora se
-# enfoca en Colombia, comparando sus departamentos cafeteros. Las variables
-# de alcance nacional (FX, precio interno, noticias) usan estos códigos.
-# Los países LatAm retirados quedan recuperables en el historial de git.
+# El monitor se enfoca en Colombia y compara sus departamentos cafeteros.
+# Las variables de alcance nacional (FX, precio interno, noticias) usan estos
+# códigos; el precio internacional del café conserva alcance global.
 # ---------------------------------------------------------------------------
 GEOGRAFIA_PAIS = "COLOMBIA"   # etiqueta de geografía para datos nacionales
 GEOGRAFIA_GLOBAL = "GLOBAL"    # etiqueta para indicadores internacionales

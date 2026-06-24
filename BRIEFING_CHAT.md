@@ -96,10 +96,12 @@ Ya existe un MVP funcional con:
 - cuatro variables climáticas para cada uno de los ocho departamentos;
 - tendencias, cambios, promedios móviles, anomalías estadísticas neutrales y
   comparaciones entre departamentos;
-- un dashboard local con tres vistas: panorama nacional, detalle climático del
-  departamento elegido y comparación entre departamentos;
+- un dashboard local con cuatro vistas: panorama nacional, detalle climático
+  del departamento elegido, comparación entre departamentos y simulador;
 - filtros de periodo y departamento;
 - selector de fechas personalizadas, descarga CSV y brief Markdown por periodo;
+- simulador de supuestos para Coffee C, USD/COP, precio FNC y costo por carga,
+  con margen bruto y mapa de sensibilidad;
 - tema visual claro y selección departamental visible mediante su municipio de
   referencia.
 
@@ -124,6 +126,15 @@ El selector sí cambia las vistas climáticas departamentales.
   no mejor resultado ni menor riesgo.
 - **No construir el score a ciegas:** primero se necesita conocimiento experto
   sobre cosecha, clima, costos y lectura del negocio cafetero.
+- **Simulación antes que pronóstico:** el escenario comercial desplaza el
+  precio FNC observado proporcionalmente a Coffee C y USD/COP. Sirve para
+  explorar supuestos, no para afirmar cuál será el precio futuro.
+- **Costo con trazabilidad y edición:** el simulador parte del costo medio
+  nacional FEPCafé de abril de 2026, pero permite modificarlo porque no
+  representa la estructura particular de cada finca.
+- **Prima fuera del primer simulador:** el diferencial del café colombiano y
+  otros componentes de la fórmula oficial se mantienen constantes y no se
+  modelan por separado en esta versión.
 - **Credibilidad visible:** el producto final debe explicar fuentes,
   metodología, alcance y limitaciones.
 - **Integrar antes que multiplicar:** para CRECE, el valor principal está en
@@ -151,8 +162,8 @@ confiables antes de diseñar el score:
    etapa.
 2. Qué define una buena o mala semana para el productor: precio, costos, margen
    u otra combinación.
-3. Cómo incorporar costos de producción e insumos, incluidos fertilizantes
-   sensibles al dólar.
+3. Cómo adaptar el costo medio nacional a regiones, tamaños y sistemas
+   productivos, incluidos insumos sensibles al dólar.
 4. Si resulta útil mostrar condiciones favorables para roya y broca.
 5. Qué unidades usa su público: carga, arroba, factor de rendimiento u otras.
 6. Qué fuentes y reportes consultan hoy, para complementar en vez de duplicar.
@@ -184,8 +195,9 @@ requieren nuevas fuentes y no deben fingirse con los datos actuales.
 
 No son compromisos automáticos; deben priorizarse con feedback:
 
-- **Margen aproximado del productor:** precio interno menos costo de producción
-  de referencia, con metodología y limitaciones explícitas.
+- **Margen aproximado del productor:** implementado como simulación bruta:
+  precio interno proyectado menos costo por carga editable, con metodología y
+  limitaciones explícitas.
 - **Dos lentes de lectura:** comercial/institucional y productor/pedagógico, en
   lugar de un único número que mezcle objetivos diferentes.
 - **Calendario fenológico regional:** permitiría interpretar clima según la
@@ -215,6 +227,8 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - Una anomalía estadística no equivale por sí sola a riesgo agronómico.
 - Un score sin calendario productivo, costos y validación experta parecería
   preciso, pero sería conceptualmente débil.
+- El simulador simplifica la transmisión de Coffee C y USD/COP y omite prima,
+  calidad, factor de rendimiento, pasilla, acopio, impuestos y logística.
 - El código está respaldado en GitHub y la aplicación está publicada y
   funcional en Streamlit Community Cloud. La actualización automática de datos
   todavía no está implementada.
@@ -229,10 +243,12 @@ investigación y preparación de entregables. El orden de trabajo confirmado es:
 1. Compartir la aplicación publicada y probar el kit y el brief con una tarea
    real de CRECE.
 2. Ajustar contenido, jerarquía y formato según ese uso.
-3. Evaluar después si hace falta producción territorial u otra nueva fuente.
-4. Considerar PDF solo si la usuaria lo necesita; Markdown es la salida inicial.
-5. Retomar costos, margen, exposición y posibles scores solo cuando existan
-   datos y conocimiento experto suficientes.
+3. Validar si el simulador ayuda a responder preguntas reales y si requiere
+   prima, costos regionales o escenarios guardables.
+4. Evaluar después si hace falta producción territorial u otra nueva fuente.
+5. Considerar PDF solo si la usuaria lo necesita; Markdown es la salida inicial.
+6. Retomar posibles scores solo cuando existan datos y conocimiento experto
+   suficientes.
 
 La capa climática existente se conserva, pero este feedback no justifica
 ampliarla ni priorizar nuevas funciones climáticas.

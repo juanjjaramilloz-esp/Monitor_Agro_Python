@@ -1,5 +1,6 @@
-"""Dashboard descriptivo para explorar mercado, Caldas y departamentos."""
+"""Kit de consulta, reporte y simulación del Monitor Agro Colombia."""
 
+from math import ceil, floor
 from pathlib import Path
 
 import pandas as pd
@@ -9,10 +10,24 @@ import streamlit as st
 from config import (
     CATALOGO_VARIABLES,
     COLORES_INTERFAZ,
+    COSTO_PRODUCCION_FECHA,
+    COSTO_PRODUCCION_FUENTE,
+    COSTO_PRODUCCION_REFERENCIA,
+    COSTO_PRODUCCION_URL,
     DEPARTAMENTOS,
     FUENTES_COMERCIALES,
     GEOGRAFIA_PRIORITARIA,
     PERIODOS_VISUALIZACION,
+    PROYECCION_CARGAS_MAXIMAS,
+    PROYECCION_CARGAS_PREDETERMINADAS,
+    PROYECCION_PUNTOS_MATRIZ,
+    PROYECCION_RANGO_FACTOR_CAFE,
+    PROYECCION_RANGO_FACTOR_FX,
+)
+from procesar.proyeccion import (
+    calcular_escenario,
+    crear_matriz_sensibilidad,
+    obtener_bases,
 )
 from procesar.visualizacion import (
     RUTA_SERIES,
@@ -376,6 +391,264 @@ def _grafico_vs_mediana(
     return _layout(figura, 390)
 
 
+def _grafico_resultado_escenario(
+    precio_base: float,
+    precio_proyectado: float,
+    costo_produccion: float,
+) -> go.Figure:
+    """Compara costo, precio observado y precio proyectado por carga."""
+    valores = [costo_produccion, precio_base, precio_proyectado]
+    etiquetas = ["Costo medio", "Precio FNC base", "Precio proyectado"]
+    colores = ["#B45309", COLORES_INTERFAZ["comparacion"], COLORES_INTERFAZ["acento"]]
+    figura = go.Figure(
+        go.Bar(
+            x=valores,
+            y=etiquetas,
+            orientation="h",
+            marker_color=colores,
+            text=[f"${valor:,.0f}" for valor in valores],
+            textposition="outside",
+            hovertemplate="%{y}<br>$%{x:,.0f} COP/carga<extra></extra>",
+        )
+    )
+    figura.update_layout(
+        title="Precio y costo por carga de 125 kg",
+        showlegend=False,
+        hovermode="closest",
+        xaxis=dict(tickprefix="$", tickformat=",.0f", showgrid=True),
+        yaxis=dict(categoryorder="array", categoryarray=etiquetas[::-1]),
+    )
+    return _layout(figura, 330)
+
+
+def _grafico_sensibilidad(
+    matriz: pd.DataFrame,
+    tasa_escenario: float,
+    precio_ny_escenario: float,
+) -> go.Figure:
+    """Muestra cómo cambia el precio proyectado para combinaciones Coffee C–FX."""
+    pivote = matriz.pivot(
+        index="precio_ny",
+        columns="tasa_cambio",
+        values="precio_fnc_proyectado",
+    )
+    figura = go.Figure(
+        go.Heatmap(
+            x=pivote.columns,
+            y=pivote.index,
+            z=pivote.values,
+            colorscale=[
+                [0, "#F2E8D5"],
+                [0.5, "#8FC1A9"],
+                [1, "#176B4D"],
+            ],
+            colorbar=dict(title="COP/carga", tickformat=",.0f"),
+            hovertemplate=(
+                "USD/COP: %{x:,.0f}<br>"
+                "Coffee C: %{y:.1f} US¢/lb<br>"
+                "Precio FNC: $%{z:,.0f}<extra></extra>"
+            ),
+        )
+    )
+    figura.add_trace(
+        go.Scatter(
+            x=[tasa_escenario],
+            y=[precio_ny_escenario],
+            mode="markers",
+            marker=dict(size=14, color="#FFFFFF", line=dict(color="#17211B", width=3)),
+            name="Escenario elegido",
+            hovertemplate="Escenario elegido<extra></extra>",
+        )
+    )
+    figura.update_layout(
+        title="Mapa de sensibilidad del precio FNC proyectado",
+        xaxis_title="Tasa de cambio (COP/USD)",
+        yaxis_title="Coffee C (US¢/lb)",
+        hovermode="closest",
+    )
+    return _layout(figura, 470)
+
+
+def _puntos_escenario(base: float, factores: tuple[float, float]) -> list[float]:
+    """Genera puntos equidistantes para la matriz sin añadir dependencias."""
+    minimo = base * factores[0]
+    maximo = base * factores[1]
+    paso = (maximo - minimo) / (PROYECCION_PUNTOS_MATRIZ - 1)
+    return [minimo + indice * paso for indice in range(PROYECCION_PUNTOS_MATRIZ)]
+
+
+def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
+    """Renderiza controles y resultados del escenario económico."""
+    bases = obtener_bases(tabla)
+    st.subheader("Simulador de precio interno y margen")
+    st.caption(
+        "Explore supuestos de Coffee C y USD/COP. No es un pronóstico: el modelo "
+        "desplaza proporcionalmente el último precio FNC observado y mantiene "
+        "constantes los factores no modelados."
+    )
+
+    with st.expander("Valores base y metodología", expanded=False):
+        base_1, base_2, base_3 = st.columns(3)
+        precio_fnc_base = base_1.number_input(
+            "Precio FNC base · COP/carga",
+            min_value=1.0,
+            value=float(bases.precio_fnc),
+            step=10_000.0,
+            format="%.0f",
+        )
+        tasa_cambio_base = base_2.number_input(
+            "USD/COP base",
+            min_value=1.0,
+            value=float(bases.tasa_cambio),
+            step=10.0,
+            format="%.2f",
+        )
+        precio_ny_base = base_3.number_input(
+            "Coffee C base · US¢/lb",
+            min_value=1.0,
+            value=float(bases.precio_ny),
+            step=1.0,
+            format="%.2f",
+        )
+        st.caption(
+            f"Fechas base: FNC {bases.fecha_precio_fnc:%d/%m/%Y} · "
+            f"USD/COP {bases.fecha_tasa_cambio:%d/%m/%Y} · "
+            f"Coffee C {bases.fecha_precio_ny:%d/%m/%Y}."
+        )
+        st.markdown(
+            "**Fórmula:** precio FNC base × (USD/COP escenario ÷ USD/COP base) "
+            "× (Coffee C escenario ÷ Coffee C base). La prima o diferencial, "
+            "calidad, pasilla, factor de rendimiento y acopio no se modelan por separado."
+        )
+
+    minimo_fx = floor(
+        tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[0] / 50
+    ) * 50
+    maximo_fx = ceil(
+        tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[1] / 50
+    ) * 50
+    minimo_cafe = floor(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[0])
+    maximo_cafe = ceil(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[1])
+
+    control_1, control_2 = st.columns(2)
+    tasa_escenario = control_1.slider(
+        "Tasa de cambio del escenario · COP/USD",
+        min_value=float(minimo_fx),
+        max_value=float(maximo_fx),
+        value=float(round(tasa_cambio_base / 10) * 10),
+        step=10.0,
+    )
+    precio_ny_escenario = control_2.slider(
+        "Coffee C del escenario · US¢/lb",
+        min_value=float(minimo_cafe),
+        max_value=float(maximo_cafe),
+        value=float(round(precio_ny_base)),
+        step=1.0,
+    )
+
+    control_3, control_4 = st.columns(2)
+    costo_produccion = control_3.number_input(
+        "Costo de producción · COP por carga de 125 kg",
+        min_value=0.0,
+        value=float(COSTO_PRODUCCION_REFERENCIA),
+        step=10_000.0,
+        format="%.0f",
+        help="Referencia nacional FEPCafé; edítela para representar otro supuesto.",
+    )
+    cargas = control_4.slider(
+        "Volumen del escenario · cargas de 125 kg",
+        min_value=1,
+        max_value=PROYECCION_CARGAS_MAXIMAS,
+        value=PROYECCION_CARGAS_PREDETERMINADAS,
+        step=1,
+    )
+
+    resultado = calcular_escenario(
+        precio_fnc_base,
+        tasa_cambio_base,
+        precio_ny_base,
+        tasa_escenario,
+        precio_ny_escenario,
+        costo_produccion,
+        cargas,
+    )
+
+    metricas = st.columns(4)
+    metricas[0].metric(
+        "Precio FNC proyectado",
+        f"${_numero_es(resultado.precio_fnc_proyectado, 0)}",
+        f"{resultado.cambio_precio_fnc_pct:+.1f}% frente a la base",
+        delta_color="off",
+    )
+    metricas[1].metric(
+        "Margen bruto por carga",
+        f"${_numero_es(resultado.margen_por_carga, 0)}",
+        f"{resultado.margen_sobre_ingreso_pct:.1f}% del ingreso",
+        delta_color="off",
+    )
+    metricas[2].metric(
+        f"Ingreso por {cargas} carga{'s' if cargas != 1 else ''}",
+        f"${_numero_es(resultado.ingreso_total, 0)}",
+        delta=None,
+    )
+    metricas[3].metric(
+        "Margen bruto total",
+        f"${_numero_es(resultado.margen_total, 0)}",
+        (
+            f"{resultado.retorno_sobre_costo_pct:.1f}% sobre costo"
+            if pd.notna(resultado.retorno_sobre_costo_pct)
+            else None
+        ),
+        delta_color="off",
+    )
+
+    grafico_1, grafico_2 = st.columns([0.85, 1.15])
+    with grafico_1:
+        st.plotly_chart(
+            _grafico_resultado_escenario(
+                precio_fnc_base,
+                resultado.precio_fnc_proyectado,
+                costo_produccion,
+            ),
+            width="stretch",
+            theme=None,
+            config=CONFIG_GRAFICO,
+        )
+        st.markdown(
+            f"**Costo total supuesto:** ${_numero_es(resultado.costo_total, 0)}  \n"
+            f"**Resultado antes de impuestos, logística, financiación y otros "
+            f"costos no incluidos:** ${_numero_es(resultado.margen_total, 0)}"
+        )
+    with grafico_2:
+        tasas = _puntos_escenario(tasa_cambio_base, PROYECCION_RANGO_FACTOR_FX)
+        precios_ny = _puntos_escenario(precio_ny_base, PROYECCION_RANGO_FACTOR_CAFE)
+        matriz = crear_matriz_sensibilidad(
+            precio_fnc_base,
+            tasa_cambio_base,
+            precio_ny_base,
+            tasas,
+            precios_ny,
+        )
+        st.plotly_chart(
+            _grafico_sensibilidad(matriz, tasa_escenario, precio_ny_escenario),
+            width="stretch",
+            theme=None,
+            config=CONFIG_GRAFICO,
+        )
+
+    st.info(
+        f"Costo medio inicial: ${COSTO_PRODUCCION_REFERENCIA:,.0f} COP por carga, "
+        f"referencia nacional con dato de {COSTO_PRODUCCION_FECHA:%m/%Y}. "
+        "No representa necesariamente el costo de una finca particular."
+    )
+    st.markdown(f"**Fuente del costo:** [{COSTO_PRODUCCION_FUENTE}]({COSTO_PRODUCCION_URL})")
+    st.caption(
+        "El margen es una simulación bruta: precio proyectado menos costo de "
+        "producción supuesto. No incluye prima modelada, impuestos, logística, "
+        "financiación, descuentos por calidad ni diferencias regionales."
+    )
+
+
 def _metricas_mercado(tabla: pd.DataFrame) -> None:
     ultima = tabla["semana_fin"].max()
     datos = tabla[(tabla["semana_fin"] == ultima) & (tabla["categoria"] == "Mercado")]
@@ -593,8 +866,13 @@ municipio = datos.loc[
 st.sidebar.markdown(f"**Referencia climática:** {municipio}")
 st.sidebar.caption("Ranking 1 = valor numérico más alto, no mejor resultado.")
 
-tab_panorama, tab_departamento, tab_comparacion = st.tabs(
-    ["Panorama nacional", f"{departamento} · {municipio}", "Comparación"],
+tab_panorama, tab_departamento, tab_comparacion, tab_proyeccion = st.tabs(
+    [
+        "Panorama nacional",
+        f"{departamento} · {municipio}",
+        "Comparación",
+        "Simulador",
+    ],
     default=f"{departamento} · {municipio}",
     key=f"vistas_{departamento}",
 )
@@ -724,6 +1002,9 @@ with tab_comparacion:
             theme=None,
             config=CONFIG_GRAFICO,
         )
+
+with tab_proyeccion:
+    _simulador_proyeccion(datos)
 
 st.divider()
 st.caption(
