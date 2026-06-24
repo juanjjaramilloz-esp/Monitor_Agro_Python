@@ -38,11 +38,17 @@ Actualizado: **2026-06-24**.
 - La primera ampliación confirmada es producción **nacional mensual** FNC. No
   se incorporó producción departamental o municipal.
 - El repositorio tiene remoto `origin` en GitHub y la aplicación está
-  desplegada en Streamlit Community Cloud. La versión del simulador fue enviada
-  a `main`; queda pendiente comprobar que el redespliegue público terminó y que
-  la pestaña carga correctamente.
-- Próximo trabajo: verificar el despliegue público y validar el kit, el brief y
-  el simulador con una tarea real de CRECE antes de ampliar datos o formatos.
+  desplegada en Streamlit Community Cloud. El despliegue público con simulador
+  fue verificado por el usuario y carga correctamente.
+- Se hizo una ronda de pulido de interfaz para acercar el tablero a un producto:
+  se retiró la pestaña `Comparación`, se renombró la sección a "Producción
+  nacional mensual", se quitaron textos de cadencia y del ranking, se reorganizó
+  el panorama (descargas lado a lado) y se afinó el CSS (radios, sombras suaves,
+  botones de descarga con acento). El simulador gana un informe descargable.
+- `ACERCA_DE.md` es la guía de contexto para visitantes de la app pública (no de
+  instalación); `README.md` sigue siendo la guía técnica de ejecución local.
+- Próximo trabajo: validar el kit, el brief y el simulador con una tarea real de
+  CRECE antes de ampliar datos o formatos.
 - Git es la fuente de verdad del historial; no mantener aquí una copia de
   `git log`.
 
@@ -82,6 +88,10 @@ Actualizado: **2026-06-24**.
   duplicados.
 - La preparación visual genera 6.341 filas listas para gráficos, 35 filas de
   resumen reciente y un catálogo de 8 variables.
+- El tablero tiene tres pestañas: `Panorama nacional`, el detalle climático del
+  departamento elegido y `Simulador`. La pestaña `Comparación` (ranking semanal
+  y evolución frente a la mediana departamental) se retiró para acercar la
+  herramienta a un producto enfocado; sigue recuperable en el historial de git.
 - `Panorama nacional` muestra café ICE, USD/COP y precio interno FNC. No cambia
   al elegir departamento porque esas series tienen alcance global/nacional.
 - El panorama comercial permite descargar el periodo filtrado en CSV con fecha
@@ -97,6 +107,10 @@ Actualizado: **2026-06-24**.
 - La pestaña `Simulador` permite mover Coffee C, USD/COP, precio FNC base,
   costo de producción y número de cargas. Muestra precio interno proyectado,
   ingreso, costo, margen por carga, margen total y una matriz de sensibilidad.
+  El resumen económico se presenta como una cuenta (ingreso − costo = margen)
+  y existe un botón para descargar un informe Markdown del escenario con los
+  supuestos, resultados, metodología y limitaciones
+  (`reporte.generar.generar_informe_simulador`).
 - El costo inicial es el costo medio nacional FEPCafé de abril de 2026:
   1.624.000 COP por carga de 125 kg, publicado en el reporte mensual de mayo de
   2026. La interfaz muestra fecha, fuente y permite sustituirlo por un supuesto
@@ -106,9 +120,10 @@ Actualizado: **2026-06-24**.
   representativa por departamento.
 - El tema claro está fijado en `.streamlit/config.toml`; los colores editables
   se centralizan en `config.py`.
-- Validación tras el último ajuste: 39 pruebas unitarias, ejecución local de
-  Streamlit sin excepciones, endpoint de salud `ok` y controles interactivos
-  probados. La verificación de la versión pública con simulador sigue pendiente.
+- Validación tras el último ajuste: 39 pruebas unitarias, arranque local de
+  Streamlit headless con endpoint de salud `ok` y sin excepciones, e informe del
+  simulador generado y revisado. La versión pública con simulador ya fue
+  verificada por el usuario.
 - URL local mientras el servidor esté corriendo: `http://localhost:8501`.
 
 ---

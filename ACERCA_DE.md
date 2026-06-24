@@ -23,17 +23,17 @@ No necesita instalar nada. Todo funciona desde el navegador.
 
 ---
 
-## Las cuatro vistas
+## Las tres vistas
 
 1. **Panorama nacional.** Precio internacional del café, USD/COP y precio
    interno FNC en una escala base 100 para compararlos en un mismo gráfico, más
-   la producción nacional mensual. Aquí están las descargas por periodo.
+   la producción nacional mensual. Aquí están las descargas por periodo: las
+   series comerciales en CSV y un brief en Markdown.
 2. **Departamento.** Lluvia y temperaturas del departamento elegido, usando un
    municipio como referencia climática.
-3. **Comparación.** Cómo se ubica cada departamento frente a la mediana de los
-   ocho en una semana dada.
-4. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
-   Coffee C, USD/COP, costo y volumen (ver más abajo).
+3. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
+   Coffee C, USD/COP, costo y volumen, con la opción de descargar un informe del
+   escenario (ver más abajo).
 
 > El panorama comercial **no cambia** al elegir un departamento: precio
 > internacional, USD/COP y precio FNC son variables globales o nacionales. El
@@ -57,6 +57,10 @@ Con ese precio y un **costo de producción por carga** —que puede editar— es
 el margen bruto por carga y para el volumen que indique. El costo inicial es la
 referencia nacional FEPCafé (1.624.000 COP por carga de 125 kg, dato de abril de
 2026); cámbielo para representar el supuesto de una finca distinta.
+
+Cuando termine de ajustar los supuestos, puede **descargar un informe en
+Markdown** con los valores introducidos, los resultados, la metodología y las
+limitaciones, listo para anexar a un análisis o una presentación.
 
 **Qué es y qué no es:**
 

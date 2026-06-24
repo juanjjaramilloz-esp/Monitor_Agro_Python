@@ -96,12 +96,12 @@ Ya existe un MVP funcional con:
 - cuatro variables climáticas para cada uno de los ocho departamentos;
 - tendencias, cambios, promedios móviles, anomalías estadísticas neutrales y
   comparaciones entre departamentos;
-- un dashboard local con cuatro vistas: panorama nacional, detalle climático
-  del departamento elegido, comparación entre departamentos y simulador;
+- un dashboard publicado con tres vistas: panorama nacional, detalle climático
+  del departamento elegido y simulador;
 - filtros de periodo y departamento;
 - selector de fechas personalizadas, descarga CSV y brief Markdown por periodo;
 - simulador de supuestos para Coffee C, USD/COP, precio FNC y costo por carga,
-  con margen bruto y mapa de sensibilidad;
+  con margen bruto, mapa de sensibilidad e informe del escenario descargable;
 - tema visual claro y selección departamental visible mediante su municipio de
   referencia.
 

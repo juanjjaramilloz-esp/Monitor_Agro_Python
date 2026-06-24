@@ -13,12 +13,13 @@ para analizar tendencias antes de construir un score.
   observaciones mensuales de producción.
 - Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
 - Preparación visual: etiquetas humanas, categorías, colores e índice base 100.
-- Dashboard publicado: panorama comercial, producción mensual, detalle
-  departamental y comparación climática interactiva.
+- Dashboard publicado: panorama comercial, producción mensual y detalle
+  climático departamental.
 - Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
   ejecutivo en Markdown.
 - Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,
-  costo por carga y volumen, con margen bruto y mapa de sensibilidad.
+  costo por carga y volumen, con margen bruto, mapa de sensibilidad e informe
+  del escenario descargable en Markdown.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
 - Pendiente: validar el kit con una tarea real de CRECE, automatizar la
@@ -83,15 +84,14 @@ colores y escalas comparables. No genera score ni interpreta riesgo.
 streamlit run app.py
 ```
 
-Luego abre `http://localhost:8501`. El tablero tiene cuatro vistas:
+Luego abre `http://localhost:8501`. El tablero tiene tres vistas:
 
 - `Panorama nacional`: café, USD/COP y precio interno en una escala base 100,
   producción nacional mensual y descargas por periodo.
 - Departamento: lluvia y temperaturas de la referencia municipal elegida. Al
   cambiar el departamento, el tablero abre esta vista automáticamente.
-- `Comparación`: ranking semanal y evolución frente a la mediana departamental.
 - `Simulador`: escenarios de precio interno y margen al modificar Coffee C,
-  USD/COP, costo medio y número de cargas.
+  USD/COP, costo medio y número de cargas, con informe del escenario descargable.
 
 Esta es una versión para feedback. El simulador no es un pronóstico y el
 tablero no contiene score ni semáforos de riesgo.

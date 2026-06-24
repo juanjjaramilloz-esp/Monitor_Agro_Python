@@ -25,6 +25,7 @@ from config import (
     PROYECCION_RANGO_FACTOR_FX,
 )
 from procesar.proyeccion import (
+    ResultadoEscenario,
     calcular_escenario,
     crear_matriz_sensibilidad,
     obtener_bases,
@@ -34,7 +35,10 @@ from procesar.visualizacion import (
     ejecutar as preparar_visualizacion,
     preparar_descarga_comercial,
 )
-from reporte.generar import generar as generar_brief
+from reporte.generar import (
+    generar as generar_brief,
+    generar_informe_simulador,
+)
 
 
 CONFIG_GRAFICO = {
@@ -85,9 +89,10 @@ def _estilos() -> None:
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
             border-left: 4px solid var(--monitor-acento);
-            border-radius: 6px;
-            padding: 0.8rem 0.9rem;
+            border-radius: 10px;
+            padding: 0.9rem 1rem;
             min-height: 128px;
+            box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
         }}
         [data-testid="stMetricLabel"] {{ color: var(--monitor-secundario) !important; }}
         [data-testid="stMetricValue"] {{
@@ -98,15 +103,38 @@ def _estilos() -> None:
         [data-testid="stPlotlyChart"] {{
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
-            border-radius: 6px;
+            border-radius: 10px;
+            padding: 0.25rem;
+            box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
         }}
-        .stTabs [data-baseweb="tab-list"] {{ gap: 1.25rem; }}
+        [data-testid="stExpander"] details {{
+            border: 1px solid var(--monitor-borde);
+            border-radius: 10px;
+            background: var(--monitor-superficie);
+        }}
+        [data-testid="stDownloadButton"] button {{
+            border: 1px solid var(--monitor-acento);
+            border-radius: 8px;
+            color: var(--monitor-acento);
+            background: var(--monitor-superficie);
+            font-weight: 600;
+            transition: background 120ms ease, color 120ms ease;
+        }}
+        [data-testid="stDownloadButton"] button:hover {{
+            background: var(--monitor-acento);
+            color: #FFFFFF;
+        }}
+        .stTabs [data-baseweb="tab-list"] {{
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--monitor-borde);
+        }}
         .stTabs [data-baseweb="tab"] {{
             color: var(--monitor-secundario) !important;
             padding-left: 0;
             padding-right: 0;
+            font-size: 1.02rem;
         }}
-        .stTabs [data-baseweb="tab"] p {{ color: inherit !important; }}
+        .stTabs [data-baseweb="tab"] p {{ color: inherit !important; font-weight: 500; }}
         .stTabs [aria-selected="true"] {{ color: var(--monitor-acento) !important; }}
         @media (max-width: 768px) {{
             .block-container {{ padding: 1rem 0.8rem 2rem; }}
@@ -315,82 +343,6 @@ def _grafico_temperaturas(tabla: pd.DataFrame, departamento: str) -> go.Figure:
     return _layout(figura, 390)
 
 
-def _grafico_ranking(
-    tabla: pd.DataFrame,
-    variable: str,
-    semana: pd.Timestamp,
-    departamento: str,
-) -> go.Figure:
-    datos = tabla[
-        (tabla["semana_fin"] == semana) & (tabla["variable"] == variable)
-    ].sort_values("valor", ascending=True)
-    metadatos = CATALOGO_VARIABLES[variable]
-    colores = [
-        COLORES_INTERFAZ["acento"]
-        if geografia == departamento
-        else COLORES_INTERFAZ["comparacion"]
-        for geografia in datos["geografia"]
-    ]
-    figura = go.Figure(
-        go.Bar(
-            x=datos["valor"],
-            y=datos["geografia"],
-            orientation="h",
-            marker_color=colores,
-            customdata=datos[["municipio_referencia", "unidad"]],
-            hovertemplate=(
-                "%{y} · %{customdata[0]}<br>%{x:.1f} %{customdata[1]}<extra></extra>"
-            ),
-        )
-    )
-    figura.update_layout(
-        title=f"Comparación departamental · {metadatos['etiqueta']}",
-        hovermode="closest",
-        showlegend=False,
-    )
-    return _layout(figura, 440)
-
-
-def _grafico_vs_mediana(
-    tabla: pd.DataFrame,
-    variable: str,
-    departamento: str,
-) -> go.Figure:
-    datos = tabla[tabla["variable"] == variable]
-    seleccionado = datos[datos["geografia"] == departamento]
-    mediana = datos.groupby("semana_fin", as_index=False)["valor"].median()
-    metadatos = CATALOGO_VARIABLES[variable]
-    figura = go.Figure()
-    figura.add_trace(
-        go.Scatter(
-            x=seleccionado["semana_fin"],
-            y=seleccionado["valor"],
-            mode="lines",
-            name=departamento,
-            line=dict(color=COLORES_INTERFAZ["acento"], width=3),
-        )
-    )
-    figura.add_trace(
-        go.Scatter(
-            x=mediana["semana_fin"],
-            y=mediana["valor"],
-            mode="lines",
-            name="Mediana de 8 departamentos",
-            line=dict(color=COLORES_INTERFAZ["comparacion"], width=2, dash="dash"),
-        )
-    )
-    figura.update_traces(
-        hovertemplate=(
-            f"%{{x|%d %b %Y}}<br>%{{y:.1f}} "
-            f"{seleccionado.iloc[0]['unidad']}<extra></extra>"
-        )
-    )
-    figura.update_layout(
-        title=f"{departamento} frente a la mediana · {metadatos['etiqueta']}"
-    )
-    return _layout(figura, 390)
-
-
 def _grafico_resultado_escenario(
     precio_base: float,
     precio_proyectado: float,
@@ -481,6 +433,52 @@ def _puntos_escenario(base: float, factores: tuple[float, float]) -> list[float]
     maximo = base * factores[1]
     paso = (maximo - minimo) / (PROYECCION_PUNTOS_MATRIZ - 1)
     return [minimo + indice * paso for indice in range(PROYECCION_PUNTOS_MATRIZ)]
+
+
+def _resumen_cuenta(resultado: ResultadoEscenario, cargas: int) -> None:
+    """Muestra la cuenta del escenario: ingreso menos costo es igual a margen."""
+    colores = COLORES_INTERFAZ
+    naranja = "#B45309"
+    color_margen = colores["acento"] if resultado.margen_total >= 0 else "#B91C1C"
+    plural = "s" if cargas != 1 else ""
+
+    def fila(etiqueta: str, valor: float, color: str, signo: str = "") -> str:
+        return (
+            "<div style='display:flex;justify-content:space-between;"
+            "align-items:baseline;gap:1rem;'>"
+            f"<span style='color:{colores['texto_secundario']};'>{etiqueta}</span>"
+            f"<span style='color:{color};font-weight:600;"
+            "font-variant-numeric:tabular-nums;white-space:nowrap;'>"
+            f"{signo}&#36;{_numero_es(valor, 0)}</span></div>"
+        )
+
+    st.markdown(
+        "<div style='border:1px solid {borde};border-radius:12px;"
+        "padding:14px 16px;background:{fondo};line-height:1.9;'>"
+        "{ingreso}{costo}"
+        "<div style='border-top:1px solid {borde};margin:8px 0;'></div>"
+        "{margen}</div>".format(
+            borde=colores["borde"],
+            fondo=colores["fondo"],
+            ingreso=fila(
+                f"Ingreso por {cargas} carga{plural}",
+                resultado.ingreso_total,
+                colores["texto"],
+            ),
+            costo=fila("− Costo total supuesto", resultado.costo_total, naranja),
+            margen=fila(
+                "= Margen bruto del escenario",
+                resultado.margen_total,
+                color_margen,
+            ),
+        ),
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "Resultado **bruto**: ingreso proyectado menos costo de producción "
+        "supuesto. Antes de impuestos, logística, financiación, prima por "
+        "calidad y otros costos no incluidos."
+    )
 
 
 def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
@@ -620,11 +618,7 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
             theme=None,
             config=CONFIG_GRAFICO,
         )
-        st.markdown(
-            f"**Costo total supuesto:** ${_numero_es(resultado.costo_total, 0)}  \n"
-            f"**Resultado antes de impuestos, logística, financiación y otros "
-            f"costos no incluidos:** ${_numero_es(resultado.margen_total, 0)}"
-        )
+        _resumen_cuenta(resultado, cargas)
     with grafico_2:
         tasas = _puntos_escenario(tasa_cambio_base, PROYECCION_RANGO_FACTOR_FX)
         precios_ny = _puntos_escenario(precio_ny_base, PROYECCION_RANGO_FACTOR_CAFE)
@@ -641,6 +635,31 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
             theme=None,
             config=CONFIG_GRAFICO,
         )
+
+    informe = generar_informe_simulador(
+        precio_fnc_base=precio_fnc_base,
+        tasa_cambio_base=tasa_cambio_base,
+        precio_ny_base=precio_ny_base,
+        fecha_precio_fnc=bases.fecha_precio_fnc,
+        fecha_tasa_cambio=bases.fecha_tasa_cambio,
+        fecha_precio_ny=bases.fecha_precio_ny,
+        tasa_cambio_escenario=tasa_escenario,
+        precio_ny_escenario=precio_ny_escenario,
+        costo_produccion=costo_produccion,
+        cargas=cargas,
+        resultado=resultado,
+        costo_referencia=COSTO_PRODUCCION_REFERENCIA,
+        costo_fecha=COSTO_PRODUCCION_FECHA,
+        costo_fuente=COSTO_PRODUCCION_FUENTE,
+    )
+    st.download_button(
+        "Descargar informe del escenario (Markdown)",
+        data=informe.encode("utf-8"),
+        file_name=f"informe_simulador_monitor_agro_{pd.Timestamp.today():%Y%m%d}.md",
+        mime="text/markdown",
+        width="stretch",
+        help="Guarda los supuestos actuales, los resultados, la metodología y las limitaciones.",
+    )
 
     st.info(
         f"Costo medio inicial: ${COSTO_PRODUCCION_REFERENCIA:,.0f} COP por carga, "
@@ -756,8 +775,7 @@ def _bloque_produccion(tabla_filtrada: pd.DataFrame, tabla_completa: pd.DataFram
     columnas[2].markdown(
         f"**Cambio interanual:** "
         f"{_numero_es(float(cambio_anual), 1) + '%' if pd.notna(cambio_anual) else 'Sin dato'}  \n"
-        f"**Fuente:** FNC  \n"
-        f"**Cadencia:** mensual, sin relleno semanal"
+        f"**Fuente:** FNC"
     )
     st.plotly_chart(
         _grafico_produccion(periodo),
@@ -870,13 +888,11 @@ municipio = datos.loc[
     datos["geografia"] == departamento, "municipio_referencia"
 ].iloc[0]
 st.sidebar.markdown(f"**Referencia climática:** {municipio}")
-st.sidebar.caption("Ranking 1 = valor numérico más alto, no mejor resultado.")
 
-tab_panorama, tab_departamento, tab_comparacion, tab_proyeccion = st.tabs(
+tab_panorama, tab_departamento, tab_proyeccion = st.tabs(
     [
         "Panorama nacional",
         f"{departamento} · {municipio}",
-        "Comparación",
         "Simulador",
     ],
     default=f"{departamento} · {municipio}",
@@ -900,6 +916,7 @@ with tab_panorama:
         "Índice base 100 desde enero de 2023: permite comparar dirección y magnitud "
         "relativa entre series con unidades distintas."
     )
+    st.markdown("**Variaciones por indicador**")
     st.dataframe(
         _variaciones_mercado(datos).style.format(
             {
@@ -912,14 +929,20 @@ with tab_panorama:
         hide_index=True,
         width="stretch",
     )
-    st.subheader("Producción nacional")
+    st.subheader("Producción nacional mensual")
     _bloque_produccion(filtrados, datos)
+
+    st.subheader("Exportar para informes y reuniones")
     descarga = preparar_descarga_comercial(filtrados)
     nombre_archivo = (
         f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
         f"{filtrados['semana_fin'].max():%Y%m%d}.csv"
     )
-    st.download_button(
+    inicio_brief = pd.Timestamp(filtrados["semana_fin"].min())
+    fin_brief = pd.Timestamp(filtrados["semana_fin"].max())
+    brief = generar_brief(datos, inicio_brief, fin_brief)
+    col_csv, col_brief = st.columns(2)
+    col_csv.download_button(
         "Descargar series comerciales (CSV)",
         data=descarga.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig"),
         file_name=nombre_archivo,
@@ -927,10 +950,7 @@ with tab_panorama:
         width="stretch",
         help="Incluye valores, variaciones, unidad, fuente, alcance y fecha real del dato.",
     )
-    inicio_brief = pd.Timestamp(filtrados["semana_fin"].min())
-    fin_brief = pd.Timestamp(filtrados["semana_fin"].max())
-    brief = generar_brief(datos, inicio_brief, fin_brief)
-    st.download_button(
+    col_brief.download_button(
         "Descargar brief del periodo (Markdown)",
         data=brief.encode("utf-8"),
         file_name=f"brief_monitor_agro_{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}.md",
@@ -977,37 +997,6 @@ with tab_departamento:
         "El clima representa una coordenada municipal de referencia y no toda la "
         "variación interna del departamento."
     )
-
-with tab_comparacion:
-    opciones_clima = {
-        CATALOGO_VARIABLES[variable]["etiqueta"]: variable
-        for variable in CATALOGO_VARIABLES
-        if CATALOGO_VARIABLES[variable]["categoria"] == "Clima"
-    }
-    etiqueta = st.selectbox("Variable climática", options=list(opciones_clima))
-    variable = opciones_clima[etiqueta]
-    semanas_disponibles = sorted(filtrados["semana_fin"].unique())
-    semana_comparacion = st.select_slider(
-        "Semana de comparación",
-        options=semanas_disponibles,
-        value=semanas_disponibles[-1],
-        format_func=lambda fecha: pd.Timestamp(fecha).strftime("%d/%m/%Y"),
-    )
-    col_ranking, col_historia = st.columns([0.9, 1.1])
-    with col_ranking:
-        st.plotly_chart(
-            _grafico_ranking(filtrados, variable, semana_comparacion, departamento),
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
-    with col_historia:
-        st.plotly_chart(
-            _grafico_vs_mediana(filtrados, variable, departamento),
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
 
 with tab_proyeccion:
     _simulador_proyeccion(datos)

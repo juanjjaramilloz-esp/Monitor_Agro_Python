@@ -5,6 +5,7 @@ from datetime import date
 import pandas as pd
 
 from config import CATALOGO_VARIABLES, FUENTES_COMERCIALES
+from procesar.proyeccion import ResultadoEscenario
 
 
 VARIABLES_BRIEF = [
@@ -18,6 +19,10 @@ VARIABLES_BRIEF = [
 def _numero(valor: float, decimales: int = 1) -> str:
     texto = f"{valor:,.{decimales}f}"
     return texto.replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def _cop(valor: float) -> str:
+    return f"{_numero(valor, 0)} COP"
 
 
 def _porcentaje(valor: float | None) -> str:
@@ -176,4 +181,86 @@ def generar(
             "",
         ]
     )
+    return "\n".join(lineas)
+
+
+def generar_informe_simulador(
+    *,
+    precio_fnc_base: float,
+    tasa_cambio_base: float,
+    precio_ny_base: float,
+    fecha_precio_fnc: date | pd.Timestamp,
+    fecha_tasa_cambio: date | pd.Timestamp,
+    fecha_precio_ny: date | pd.Timestamp,
+    tasa_cambio_escenario: float,
+    precio_ny_escenario: float,
+    costo_produccion: float,
+    cargas: int,
+    resultado: ResultadoEscenario,
+    costo_referencia: float,
+    costo_fecha: date | pd.Timestamp,
+    costo_fuente: str,
+    fecha_generacion: date | None = None,
+) -> str:
+    """Genera un informe Markdown con los supuestos y resultados del escenario."""
+    if fecha_generacion is None:
+        fecha_generacion = date.today()
+    f_fnc = pd.Timestamp(fecha_precio_fnc)
+    f_fx = pd.Timestamp(fecha_tasa_cambio)
+    f_ny = pd.Timestamp(fecha_precio_ny)
+    plural = "s" if cargas != 1 else ""
+    retorno = (
+        f"{_numero(resultado.retorno_sobre_costo_pct, 1)}% sobre costo"
+        if not pd.isna(resultado.retorno_sobre_costo_pct)
+        else "sin dato de retorno sobre costo"
+    )
+    lineas = [
+        "# Informe del simulador — Monitor Agro Colombia",
+        "",
+        f"**Fecha de generación:** {fecha_generacion:%d/%m/%Y}",
+        "",
+        "Escenario de exploración construido por la persona usuaria. No es un pronóstico.",
+        "",
+        "## Supuestos del escenario",
+        "",
+        "| Variable | Valor base | Escenario |",
+        "| --- | --- | --- |",
+        f"| Precio interno FNC (COP/carga 125 kg) | {_numero(precio_fnc_base, 0)} "
+        f"({f_fnc:%d/%m/%Y}) | — |",
+        f"| Tasa de cambio USD/COP | {_numero(tasa_cambio_base, 2)} ({f_fx:%d/%m/%Y}) | "
+        f"{_numero(tasa_cambio_escenario, 2)} |",
+        f"| Café ICE Coffee C (US¢/lb) | {_numero(precio_ny_base, 2)} ({f_ny:%d/%m/%Y}) | "
+        f"{_numero(precio_ny_escenario, 2)} |",
+        f"| Costo de producción (COP/carga 125 kg) | {_numero(costo_produccion, 0)} | — |",
+        f"| Volumen (cargas de 125 kg) | {cargas} | — |",
+        "",
+        "## Resultados",
+        "",
+        f"- Precio interno FNC proyectado: {_cop(resultado.precio_fnc_proyectado)} por carga "
+        f"({_numero(resultado.cambio_precio_fnc_pct, 1)}% frente a la base).",
+        f"- Margen bruto por carga: {_cop(resultado.margen_por_carga)} "
+        f"({_numero(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso).",
+        f"- Ingreso por {cargas} carga{plural}: {_cop(resultado.ingreso_total)}.",
+        f"- Costo total supuesto: {_cop(resultado.costo_total)}.",
+        f"- Margen bruto total: {_cop(resultado.margen_total)} ({retorno}).",
+        "",
+        "## Metodología",
+        "",
+        "Precio FNC proyectado = precio FNC base × (USD/COP escenario ÷ USD/COP base) "
+        "× (Coffee C escenario ÷ Coffee C base).",
+        "",
+        "El margen bruto resta el costo por carga editable y lo multiplica por el número "
+        "de cargas.",
+        "",
+        "## Alcance y limitaciones",
+        "",
+        "- No es un pronóstico: desplaza proporcionalmente el último precio FNC observado.",
+        "- Margen bruto, antes de impuestos, logística, financiación, prima por calidad y "
+        "otros costos no incluidos.",
+        "- No modela prima, calidad, pasilla, factor de rendimiento ni acopio por separado.",
+        f"- Costo de referencia nacional ({costo_fuente}): {_numero(costo_referencia, 0)} "
+        f"COP/carga, dato de {pd.Timestamp(costo_fecha):%m/%Y}; editable porque no "
+        "representa cada finca.",
+        "",
+    ]
     return "\n".join(lineas)
