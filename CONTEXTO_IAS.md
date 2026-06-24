@@ -64,7 +64,9 @@ como pieza testeada. Producción es un bloque mensual aparte (cambio mensual e
 interanual, fecha real, barras de ancho fijo, sin relleno semanal). Periodos: 3
 y 6 meses, 1 y 3 años, todo. Al cambiar departamento se activa su pestaña con su
 municipio; no hay selector municipal (una coordenada por departamento). Nombre
-del autor (Juan José Jaramillo) al pie del sidebar y del pie de página. Tema
+del autor (Juan José Jaramillo) al pie del sidebar y del pie de página, con aviso
+`© 2026 ... Todos los derechos reservados` (ver `LICENSE` propietario y sección
+en `README.md`; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
 
 **Simulador.** Controles: Coffee C, USD/COP, precio FNC base, costo, cargas y

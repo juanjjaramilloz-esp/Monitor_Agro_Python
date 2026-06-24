@@ -1147,6 +1147,8 @@ with tab_proyeccion:
 st.divider()
 st.caption(
     "Fuentes: FNC, Open-Meteo y Yahoo Finance vía yfinance. "
-    "Visualización exploratoria; no contiene score de oportunidad o riesgo. "
-    "Autor: Juan José Jaramillo."
+    "Visualización exploratoria; no contiene score de oportunidad o riesgo."
+)
+st.caption(
+    "© 2026 Juan José Jaramillo · Todos los derechos reservados."
 )

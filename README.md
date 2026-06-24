@@ -122,3 +122,11 @@ mínimo, máximo y promedio.
 Huila, Antioquia, Tolima, Cauca, Nariño, Caldas, Risaralda y Quindío. El clima
 de cada departamento usa por ahora una coordenada municipal representativa,
 definida en `config.py`; no representa toda la variación interna departamental.
+
+## Licencia
+
+© 2026 Juan José Jaramillo. **Todos los derechos reservados.**
+
+Este repositorio es público solo con fines de evaluación y muestra de
+portafolio. No se permite copiar, modificar, reutilizar ni redistribuir el
+código sin autorización previa y por escrito del autor. Ver [LICENSE](LICENSE).
