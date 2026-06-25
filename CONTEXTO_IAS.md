@@ -78,6 +78,21 @@ Jaramillo) al pie del sidebar y del pie de
 página, con aviso `© 2026 ... Todos los derechos reservados` (`LICENSE`
 propietario; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
+**Pulido visual (2026-06-25):** en `_layout` el título de los gráficos va
+arriba-izquierda con margen superior amplio y la leyenda justo encima del área de
+trazado, para que el título no se monte sobre las etiquetas (afecta a todos los
+gráficos). Las unidades técnicas del contrato se traducen a etiquetas legibles
+solo al mostrar (`UNIDADES_LEGIBLES`/`_unidad_legible`: `COP/carga_125kg`→
+`COP/carga`, `USc/lb`→`US¢/lb`) en métricas, tabla de cobertura y hover comercial;
+el contrato y los CSV no cambian. Los `subheader` (h3) pasaron de 1rem a 1,18rem
+en negrita con más margen para marcar bloques. Para previsualizar local con el
+servidor gestionado existe `.claude/launch.json` (config `streamlit`).
+Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
+(`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
+mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =
+contra el último cierre con fecha ≤ hace 28 días (`_variacion_comparacion`,
+aproximación honesta a mes contra mes pese al punto de referencia diario al final
+de la serie). Reemplaza a `_delta_pct`/"vs cierre semanal".
 Panorama y simulador usan como referencia actual el mismo último trío coherente
 FNC/Coffee C/TRM guardado en `calibracion_fnc.csv`; el panorama conserva además
 el histórico semanal cerrado y distingue ambas fechas en el encabezado.

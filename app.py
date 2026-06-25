@@ -52,6 +52,19 @@ CONFIG_GRAFICO = {
 }
 
 
+# Las fuentes usan unidades "de máquina" en el contrato de datos; aquí se
+# traducen a etiquetas legibles solo al mostrarlas, sin tocar el esquema.
+UNIDADES_LEGIBLES = {
+    "COP/carga_125kg": "COP/carga",
+    "USc/lb": "US¢/lb",
+}
+
+
+def _unidad_legible(unidad: str) -> str:
+    """Traduce la unidad técnica del contrato a una etiqueta legible en la UI."""
+    return UNIDADES_LEGIBLES.get(unidad, unidad)
+
+
 st.set_page_config(
     page_title="Herramienta Consultas y Reportes",
     page_icon="☕",
@@ -80,7 +93,12 @@ def _estilos() -> None:
         h1, h2, h3, p, label {{ color: var(--monitor-texto); letter-spacing: 0; }}
         h1 {{ font-size: 2rem; margin-bottom: 0.25rem; }}
         h2 {{ font-size: 1.35rem; margin-top: 1rem; }}
-        h3 {{ font-size: 1rem; }}
+        h3 {{
+            font-size: 1.18rem;
+            font-weight: 600;
+            margin-top: 1.75rem;
+            margin-bottom: 0.4rem;
+        }}
         [data-testid="stSidebar"] {{
             background: var(--monitor-sidebar);
             border-right: 1px solid var(--monitor-borde);
@@ -212,13 +230,37 @@ def _numero_es(valor: float, decimales: int) -> str:
 
 def _valor_metrica(fila: pd.Series) -> str:
     valor = _numero_es(float(fila["valor"]), int(fila["decimales"]))
-    return f"{valor} {fila['unidad']}"
+    return f"{valor} {_unidad_legible(fila['unidad'])}"
 
 
-def _delta_pct(fila: pd.Series) -> str | None:
-    if pd.isna(fila["cambio_1s_pct"]):
+def _variacion_comparacion(serie: pd.DataFrame, modo: str) -> str | None:
+    """Variación del último valor frente a la semana o al mes anterior.
+
+    Semanal: contra el cierre previo (un paso atrás), igual que la lectura
+    operativa de las tarjetas. Mensual: contra el último cierre con fecha igual o
+    anterior a hace ~28 días, lo que aproxima honestamente "mes contra mes" sin
+    depender del punto de referencia diario añadido al final de la serie.
+    """
+    serie = serie.sort_values("semana_fin")
+    valores = serie["valor"].astype(float).tolist()
+    if len(valores) < 2:
         return None
-    return f"{_numero_es(float(fila['cambio_1s_pct']), 1)}% vs cierre semanal"
+    actual = valores[-1]
+    if modo == "Semanal":
+        base = valores[-2]
+        etiqueta = "vs semana anterior"
+    else:
+        fechas = pd.to_datetime(serie["semana_fin"])
+        objetivo = fechas.iloc[-1] - pd.Timedelta(days=28)
+        previos = serie[fechas <= objetivo]
+        if previos.empty:
+            return None
+        base = float(previos["valor"].astype(float).iloc[-1])
+        etiqueta = "vs mes anterior"
+    if base == 0:
+        return None
+    cambio = (actual / base - 1) * 100
+    return f"{_numero_es(cambio, 1)}% {etiqueta}"
 
 
 def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
@@ -243,11 +285,18 @@ def _layout(figura: go.Figure, altura: int = 400) -> go.Figure:
     colores = COLORES_INTERFAZ
     figura.update_layout(
         height=altura,
-        margin=dict(l=24, r=20, t=52, b=28),
+        margin=dict(l=24, r=20, t=84, b=28),
         paper_bgcolor=colores["superficie"],
         plot_bgcolor=colores["superficie"],
         font=dict(color=colores["texto"], size=12),
+        # Título anclado al borde superior izquierdo y leyenda justo encima del
+        # área de trazado: el amplio margen superior los separa para que el
+        # título nunca se monte sobre las etiquetas de la leyenda.
         title_font=dict(size=16),
+        title_x=0,
+        title_xanchor="left",
+        title_y=0.99,
+        title_yanchor="top",
         hovermode="x unified",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
         xaxis=dict(showgrid=False, automargin=True),
@@ -261,6 +310,7 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
     mercado = tabla[tabla["categoria"] == "Mercado"]
     for variable, grupo in mercado.groupby("variable", sort=False):
         metadatos = CATALOGO_VARIABLES[variable]
+        grupo = grupo.assign(unidad_legible=grupo["unidad"].map(_unidad_legible))
         figura.add_trace(
             go.Scatter(
                 x=grupo["semana_fin"],
@@ -268,7 +318,7 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
                 mode="lines",
                 name=metadatos["etiqueta"],
                 line=dict(color=metadatos["color"], width=2.5),
-                customdata=grupo[["valor", "unidad"]],
+                customdata=grupo[["valor", "unidad_legible"]],
                 hovertemplate=(
                     "%{x|%d %b %Y}<br>Índice: %{y:.1f}<br>"
                     "Valor: %{customdata[0]:,.1f} %{customdata[1]}<extra></extra>"
@@ -826,19 +876,32 @@ def _simulador_proyeccion(
 
 
 def _metricas_mercado(tabla: pd.DataFrame) -> None:
+    modo = (
+        st.segmented_control(
+            "Comparar variación",
+            options=["Mensual", "Semanal"],
+            default="Mensual",
+            key="modo_comparacion_mercado",
+            help=(
+                "Mensual compara el último valor con el de hace ~4 semanas; "
+                "Semanal lo compara con el cierre de la semana anterior."
+            ),
+        )
+        or "Mensual"
+    )
     ultima = tabla["semana_fin"].max()
     datos = tabla[(tabla["semana_fin"] == ultima) & (tabla["categoria"] == "Mercado")]
     columnas = st.columns(3)
     variables = ["fx_usd_local", "precio_cafe_arabica", "precio_interno_referencia"]
     for columna, variable in zip(columnas, variables):
+        serie = tabla[tabla["variable"] == variable].sort_values("semana_fin")
         fila = datos[datos["variable"] == variable].iloc[0]
-        historial = tabla[tabla["variable"] == variable].sort_values("semana_fin").tail(12)
         columna.metric(
             label=fila["etiqueta_variable"],
             value=_valor_metrica(fila),
-            delta=_delta_pct(fila),
+            delta=_variacion_comparacion(serie, modo),
             delta_color="off",
-            chart_data=historial["valor"].tolist(),
+            chart_data=serie["valor"].tail(12).tolist(),
             chart_type="line",
             help=fila["descripcion_variable"],
         )
@@ -889,7 +952,7 @@ def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
             {
                 "Indicador": fila["etiqueta_variable"],
                 "Último dato": pd.Timestamp(fila["fecha_dato"]).strftime("%d/%m/%Y"),
-                "Unidad": fila["unidad"],
+                "Unidad": _unidad_legible(fila["unidad"]),
                 "Fuente": fuente,
                 "Alcance": metadatos["alcance"],
                 "Cadencia": fila["cadencia"],
