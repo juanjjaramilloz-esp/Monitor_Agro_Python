@@ -7,14 +7,15 @@ para analizar tendencias antes de construir un score.
 ## Estado actual
 
 - Fuentes activas: USD/COP, café arábica internacional, precio interno FNC,
-  producción nacional mensual y clima de ocho departamentos.
-- Histórico diario: 33.409 observaciones desde 2023.
-- Histórico agregado: 180 semanas completas para mercado y clima, más 41
-  observaciones mensuales de producción.
+  producción y exportaciones nacionales mensuales, y clima de ocho departamentos.
+- Histórico diario: 33.450 observaciones desde 2023.
+- Histórico agregado: 180 semanas completas para mercado y clima, más 82
+  observaciones mensuales de producción y exportaciones.
 - Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
 - Preparación visual: etiquetas humanas, categorías, colores e índice base 100.
-- Dashboard publicado: panorama comercial, producción mensual y detalle
-  climático departamental.
+- Dashboard publicado: panorama comercial y simulador.
+- Comparación mensual: gráficas de producción, exportaciones y diferencia
+  producción menos exportaciones para los meses con ambos datos.
 - Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
   ejecutivo en PDF con las gráficas (matplotlib + reportlab).
 - Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,
@@ -87,19 +88,16 @@ colores y escalas comparables. No genera score ni interpreta riesgo.
 streamlit run app.py
 ```
 
-Luego abre `http://localhost:8501`. El tablero tiene tres vistas (la de entrada
+Luego abre `http://localhost:8501`. El tablero tiene dos vistas (la de entrada
 es `Panorama nacional`):
 
 - `Panorama nacional`: café, USD/COP y precio interno en una escala base 100,
-  producción nacional mensual, descarga de series en CSV y brief del periodo en
-  PDF con las gráficas.
+  producción y exportaciones mensuales, diferencia entre ambos flujos, descarga
+  de series en CSV y brief del periodo en PDF.
 - `Simulador`: escenarios de precio interno y margen al modificar Coffee C,
   USD/COP, costo medio, número de cargas y factor de rendimiento; el escenario se
   fija con los controles o clicando el mapa de sensibilidad, con botón de
   restablecer e informe del escenario descargable.
-- `Climatología cafetera`: lluvia y temperaturas de la referencia municipal del
-  departamento elegido en el panel izquierdo.
-
 Esta es una versión para feedback. El simulador no es un pronóstico y el
 tablero no contiene score ni semáforos de riesgo.
 
@@ -116,16 +114,16 @@ datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 
 - `datos/historico/historico_diario.csv`: observaciones originales normalizadas.
 - `datos/historico/historico_semanal.csv`: semanas comparables, listas para
-  tendencias y gráficos; la producción conserva únicamente sus meses
-  publicados.
+  tendencias y gráficos; producción y exportaciones conservan únicamente sus
+  meses publicados.
 - `datos/indicadores/indicadores_semanales.csv`: capa derivada completa.
 - `datos/indicadores/resumen_ultima_semana.csv`: vista compacta de la última
   semana disponible.
-- `datos/visualizacion/series_visualizacion.csv`: 6.341 filas listas para
+- `datos/visualizacion/series_visualizacion.csv`: 6.382 filas listas para
   gráficos; es derivado y se regenera con el comando anterior.
 - `datos/visualizacion/resumen_visual.csv`: última semana con metadatos.
 - `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
-  colores y formatos de las ocho variables.
+  colores y formatos de las nueve variables.
 - `datos/snapshots/`: fotografías archivadas de las ejecuciones semanales.
 
 La semana se cierra el domingo. Café, USD/COP y precio FNC usan el último dato

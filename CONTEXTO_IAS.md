@@ -22,8 +22,9 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   reciente de cinco días. El FNC observado calibra y permite comparar, pero no es
   un piso. Ajusta por factor de rendimiento (aprox.), edita costo por carga y
   calcula margen bruto.
-- Única ampliación de datos confirmada: producción nacional mensual FNC (no
-  departamental/municipal).
+- Ampliaciones mensuales confirmadas: producción y exportaciones nacionales FNC
+  (no departamentales/municipales). El panorama compara ambos flujos por mes y
+  muestra producción menos exportaciones sin interpretarlo como inventario.
 - Remoto `origin` en GitHub; app desplegada en Streamlit Community Cloud,
   verificada por el usuario. `ACERCA_DE.md` = guía para visitantes de la app
   pública; `README.md` = guía técnica local.
@@ -38,21 +39,21 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 ## Estado verificable
 
 **Cobertura/calidad.** Pivote LatAm → 8 departamentos cafeteros completo.
-Snapshot completo = 36 filas (3 comerciales semanales, 1 producción mensual, 32
+Snapshot completo = 37 filas (3 comerciales semanales, 2 series mensuales, 32
 clima). La unión conserva `fecha_snapshot` y `fecha_dato`. El snapshot inicial
 `snapshot_2026-06-21.csv` tiene un FX fechado un día después; se conserva como
 evidencia y las corridas nuevas bloquean esa inconsistencia.
 
 **Histórico (`procesar/historico.py`).** Acepta rangos, excluye semanas
-parciales, idempotente. Validado `2023-01-08`→`2026-06-14`: 180 semanas, 33.409
-observaciones de fuente, 6.341 filas agregadas, sin nulos ni duplicados (41
-filas extra = meses de producción 2023-01..2026-05, sin repetir en semanas).
-Mercado y FNC usan el último dato semanal; producción conserva el mes publicado;
-clima suma lluvia y agrega min/max/promedio.
+parciales, idempotente. Validado `2023-01-08`→`2026-06-14`: 180 semanas, 33.450
+observaciones de fuente y 6.382 filas agregadas (41 meses de producción y 41 de
+exportaciones, 2023-01..2026-05, sin repetir en semanas). Mercado y FNC usan el
+último dato semanal; las series mensuales conservan el mes publicado; clima suma
+lluvia y agrega min/max/promedio.
 
 **Indicadores/visual.** Ranking 1 = mayor valor numérico (no mejor/oportunidad/
-menor riesgo). Derivados: 45.015 filas, rankings 1-8, sin duplicados. Visual:
-6.341 filas para gráficos, 35 de resumen reciente, catálogo de 8 variables.
+menor riesgo). Derivados: 45.084 filas, rankings 1-8, sin duplicados. Visual:
+6.382 filas para gráficos, 35 de resumen reciente, catálogo de 9 variables.
 
 **App.** Título visible = "Herramienta Consultas y Reportes" (page_title,
 `st.title` y los entregables PDF/brief/informe). Internamente el proyecto/repo
@@ -69,9 +70,11 @@ el periodo en CSV (fecha real, unidad, variaciones, fuente, alcance) y un brief
 en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas comerciales,
 variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`).
 El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
-Producción es un bloque mensual aparte (cambio mensual e interanual, fecha real,
-barras de ancho fijo, sin relleno semanal). Periodos: 3 y 6 meses, 1 y 3 años,
-todo. Nombre del autor (Juan José Jaramillo) al pie del sidebar y del pie de
+Producción y exportaciones forman un bloque mensual aparte (fecha real, barras
+de ancho fijo, sin relleno semanal), con una tercera gráfica de producción menos
+exportaciones para meses comparables. La diferencia no se presenta como
+inventario. Periodos: 3 y 6 meses, 1 y 3 años, todo. Nombre del autor (Juan José
+Jaramillo) al pie del sidebar y del pie de
 página, con aviso `© 2026 ... Todos los derechos reservados` (`LICENSE`
 propietario; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
@@ -98,7 +101,7 @@ COP/carga, MAPE 1,02%, últimas 300 observaciones). Con la referencia oficial de
 a los valores del 24/06/2026 estima 2.163.736 frente a 2.165.000 (error 1.264
 COP, 0,06%). TRM y Coffee C aceptan dos decimales.
 
-**Validación última.** 46 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 49 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
@@ -113,6 +116,8 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
   con banda de plausibilidad (evita leer `2.11`).
 - El Excel FNC (desde la página de estadísticas) trae precio diario desde 2003 y
   producción mensual desde 1956; se filtran a 2023+ (producción hasta 2026-05).
+- El Excel separado de exportaciones FNC trae volumen mensual desde 1958 en
+  miles de sacos de 60 kg; se filtra a 2023+ (hasta 2026-05).
 - GDELT puede dar `RateLimitError`; el fallback vacío funciona (estrategia
   alterna pendiente si se vuelve recurrente).
 - PDF: no usar `plotly`+`kaleido` (kaleido 0.2.1 se cuelga con Plotly 6.8 en

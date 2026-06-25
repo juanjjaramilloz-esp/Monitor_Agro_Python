@@ -12,7 +12,7 @@ from config import (
     HISTORICO_RETRASO_CLIMA_DIAS,
     VARIABLES_MENSUALES,
 )
-from fuentes import cafe, clima, fx, precio_interno, produccion
+from fuentes import cafe, clima, exportaciones, fx, precio_interno, produccion
 from procesar.calidad import (
     COLUMNAS_HISTORICO_DIARIO,
     COLUMNAS_HISTORICO_SEMANAL,
@@ -29,6 +29,7 @@ VARIABLES_PUNTUALES = {
     "precio_cafe_arabica",
     "precio_interno_referencia",
     "produccion_nacional",
+    "exportaciones_cafe",
 }
 
 
@@ -47,6 +48,7 @@ def descargar(desde: date, hasta: date) -> pd.DataFrame:
         cafe.obtener(desde, hasta),
         precio_interno.obtener(desde, hasta),
         produccion.obtener(desde, hasta),
+        exportaciones.obtener(desde, hasta),
         clima.obtener(desde, hasta),
     ]
     partes = [parte for parte in partes if not parte.empty]

@@ -306,6 +306,78 @@ def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
     return _layout(figura, 350)
 
 
+def _grafico_exportaciones(tabla: pd.DataFrame) -> go.Figure:
+    datos = tabla[tabla["variable"].eq("exportaciones_cafe")]
+    ancho_barra_ms = 14 * 24 * 60 * 60 * 1000
+    figura = go.Figure(
+        go.Bar(
+            x=datos["fecha_dato"],
+            y=datos["valor"],
+            width=ancho_barra_ms,
+            marker_color=CATALOGO_VARIABLES["exportaciones_cafe"]["color"],
+            marker_line=dict(color="#155E75", width=1),
+            name="Exportaciones mensuales",
+            hovertemplate=(
+                "%{x|%b %Y}<br>%{y:,.1f} miles de sacos de 60 kg<extra></extra>"
+            ),
+        )
+    )
+    figura.update_layout(
+        title="Exportaciones colombianas de café · una barra por mes",
+        xaxis=dict(showgrid=False, title=None, dtick="M1", tickformat="%b<br>%Y"),
+    )
+    return _layout(figura, 350)
+
+
+def _comparar_produccion_exportaciones(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Empareja producción y exportaciones únicamente cuando comparten mes."""
+    mensuales = tabla[
+        tabla["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
+    ][["fecha_dato", "variable", "valor"]].copy()
+    mensuales["mes"] = pd.to_datetime(mensuales["fecha_dato"]).dt.to_period("M")
+    ancho = mensuales.pivot_table(
+        index="mes",
+        columns="variable",
+        values="valor",
+        aggfunc="last",
+    ).dropna(subset=["produccion_nacional", "exportaciones_cafe"])
+    ancho = ancho.reset_index()
+    ancho["fecha"] = ancho["mes"].dt.to_timestamp()
+    ancho["diferencia"] = (
+        ancho["produccion_nacional"] - ancho["exportaciones_cafe"]
+    )
+    return ancho.sort_values("fecha").reset_index(drop=True)
+
+
+def _grafico_diferencia_mensual(tabla: pd.DataFrame) -> go.Figure:
+    comparacion = _comparar_produccion_exportaciones(tabla)
+    colores = comparacion["diferencia"].map(
+        lambda valor: COLORES_INTERFAZ["acento"] if valor >= 0 else "#B45309"
+    )
+    figura = go.Figure(
+        go.Bar(
+            x=comparacion["fecha"],
+            y=comparacion["diferencia"],
+            marker_color=colores,
+            customdata=comparacion[["produccion_nacional", "exportaciones_cafe"]],
+            hovertemplate=(
+                "%{x|%b %Y}<br>"
+                "Producción: %{customdata[0]:,.1f}<br>"
+                "Exportaciones: %{customdata[1]:,.1f}<br>"
+                "Diferencia: %{y:,.1f} mil sacos<extra></extra>"
+            ),
+        )
+    )
+    figura.add_hline(y=0, line_color=COLORES_INTERFAZ["comparacion"], line_width=1)
+    figura.update_layout(
+        title="Diferencia mensual · producción menos exportaciones",
+        xaxis=dict(showgrid=False, title=None, dtick="M1", tickformat="%b<br>%Y"),
+        yaxis_title="Miles de sacos de 60 kg",
+        showlegend=False,
+    )
+    return _layout(figura, 370)
+
+
 def _grafico_resultado_escenario(
     precio_observado: float,
     precio_estimado: float,
@@ -819,8 +891,11 @@ def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(filas)
 
 
-def _bloque_produccion(tabla_filtrada: pd.DataFrame, tabla_completa: pd.DataFrame) -> None:
-    """Muestra producción sin convertir su publicación mensual en dato semanal."""
+def _bloque_produccion_exportaciones(
+    tabla_filtrada: pd.DataFrame,
+    tabla_completa: pd.DataFrame,
+) -> None:
+    """Compara los dos flujos mensuales sin inferir cambios de inventarios."""
     periodo = tabla_filtrada[tabla_filtrada["variable"].eq("produccion_nacional")]
     if periodo.empty:
         st.info("No hay un dato mensual de producción publicado dentro del periodo elegido.")
@@ -859,6 +934,50 @@ def _bloque_produccion(tabla_filtrada: pd.DataFrame, tabla_completa: pd.DataFram
         width="stretch",
         theme=None,
         config=CONFIG_GRAFICO,
+    )
+    exportaciones_periodo = tabla_filtrada[
+        tabla_filtrada["variable"].eq("exportaciones_cafe")
+    ]
+    if exportaciones_periodo.empty:
+        st.info("No hay exportaciones mensuales publicadas dentro del periodo elegido.")
+        return
+    st.plotly_chart(
+        _grafico_exportaciones(exportaciones_periodo),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
+    )
+
+    comparacion = _comparar_produccion_exportaciones(tabla_filtrada)
+    if comparacion.empty:
+        st.info("No hay meses comunes para comparar producción y exportaciones.")
+        return
+    ultima = comparacion.iloc[-1]
+    diferencia = float(ultima["diferencia"])
+    etiqueta = (
+        "Producción no exportada en el mismo mes"
+        if diferencia >= 0
+        else "Exportaciones por encima de la producción del mes"
+    )
+    st.metric(
+        etiqueta,
+        f"{_numero_es(abs(diferencia), 1)} mil sacos de 60 kg",
+        help=(
+            "Diferencia descriptiva entre dos flujos mensuales. No equivale a "
+            "inventario: puede incluir café producido en otros meses, rezagos "
+            "logísticos y diferencias de registro."
+        ),
+    )
+    st.plotly_chart(
+        _grafico_diferencia_mensual(tabla_filtrada),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
+    )
+    st.caption(
+        "Un valor positivo indica producción superior a las exportaciones del "
+        "mismo mes; uno negativo indica exportaciones superiores. La diferencia "
+        "no mide directamente reservas ni consumo interno."
     )
 
 
@@ -987,8 +1106,8 @@ with tab_panorama:
         hide_index=True,
         width="stretch",
     )
-    st.subheader("Producción nacional mensual")
-    _bloque_produccion(filtrados, datos)
+    st.subheader("Producción y exportaciones mensuales")
+    _bloque_produccion_exportaciones(filtrados, datos)
 
     st.subheader("Exportar para informes y reuniones")
     descarga = preparar_descarga_comercial(filtrados)

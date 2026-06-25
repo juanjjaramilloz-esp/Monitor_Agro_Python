@@ -27,7 +27,7 @@ from typing import Optional
 import pandas as pd
 
 from config import DIR_SNAPSHOTS
-from fuentes import cafe, clima, fx, precio_interno, produccion
+from fuentes import cafe, clima, exportaciones, fx, precio_interno, produccion
 from procesar.calidad import generar_reporte_calidad, validar_snapshot
 
 COLUMNAS = ["fecha_snapshot", "fecha_dato", "geografia", "variable", "valor", "unidad", "fuente"]
@@ -156,6 +156,9 @@ def unir(
 
     df_produccion = produccion.obtener()
     partes.append(_puntual_a_semanal(df_produccion, fecha_snapshot))
+
+    df_exportaciones = exportaciones.obtener()
+    partes.append(_puntual_a_semanal(df_exportaciones, fecha_snapshot))
 
     df_clima = clima.obtener()
     partes.append(_agregar_clima(df_clima, fecha_snapshot))

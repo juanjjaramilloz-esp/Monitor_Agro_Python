@@ -36,12 +36,13 @@ VARIABLES_CAMBIO_PORCENTUAL = {
     "precio_interno_referencia",
     "precipitacion_semanal",
 }
-VARIABLES_MENSUALES = {"produccion_nacional"}
+VARIABLES_MENSUALES = {"produccion_nacional", "exportaciones_cafe"}
 VARIABLES_INDICE_BASE_100 = {
     "fx_usd_local",
     "precio_cafe_arabica",
     "precio_interno_referencia",
     "produccion_nacional",
+    "exportaciones_cafe",
 }
 UMBRAL_ANOMALIA_MODERADA = 1.0
 UMBRAL_ANOMALIA_ALTA = 2.0
@@ -57,6 +58,11 @@ FUENTES_COMERCIALES = {
         "nombre": "Federación Nacional de Cafeteros (FNC)",
         "alcance": "Colombia",
         "metodo": "Producción registrada mensual; cada fila conserva el mes publicado, sin relleno semanal.",
+    },
+    "exportaciones_cafe": {
+        "nombre": "Federación Nacional de Cafeteros (FNC)",
+        "alcance": "Colombia",
+        "metodo": "Volumen exportado mensual; cada fila conserva el mes publicado, sin relleno semanal.",
     },
     "precio_interno_referencia": {
         "nombre": "Federación Nacional de Cafeteros (FNC)",
@@ -79,6 +85,7 @@ CADENCIAS_VARIABLES = {
     "precio_cafe_arabica": "Semanal (último cierre disponible)",
     "precio_interno_referencia": "Semanal (último dato disponible)",
     "produccion_nacional": "Mensual",
+    "exportaciones_cafe": "Mensual",
     "precipitacion_semanal": "Semanal",
     "temp_min_semanal": "Semanal",
     "temp_max_semanal": "Semanal",
@@ -158,11 +165,19 @@ CATALOGO_VARIABLES = {
         "decimales": 1,
         "color": "#7C3AED",
     },
+    "exportaciones_cafe": {
+        "etiqueta": "Exportaciones colombianas de café",
+        "descripcion": "Volumen mensual exportado de café verde equivalente",
+        "categoria": "Producción",
+        "orden": 5,
+        "decimales": 1,
+        "color": "#0E7490",
+    },
     "precipitacion_semanal": {
         "etiqueta": "Precipitación semanal",
         "descripcion": "Lluvia acumulada en la coordenada municipal de referencia",
         "categoria": "Clima",
-        "orden": 5,
+        "orden": 6,
         "decimales": 1,
         "color": "#0284C7",
     },
@@ -170,7 +185,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura mínima semanal",
         "descripcion": "Menor temperatura mínima diaria de la semana",
         "categoria": "Clima",
-        "orden": 6,
+        "orden": 7,
         "decimales": 1,
         "color": "#4F46E5",
     },
@@ -178,7 +193,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura máxima semanal",
         "descripcion": "Mayor temperatura máxima diaria de la semana",
         "categoria": "Clima",
-        "orden": 7,
+        "orden": 8,
         "decimales": 1,
         "color": "#DC2626",
     },
@@ -186,7 +201,7 @@ CATALOGO_VARIABLES = {
         "etiqueta": "Temperatura promedio semanal",
         "descripcion": "Promedio de los puntos medios diarios de temperatura",
         "categoria": "Clima",
-        "orden": 8,
+        "orden": 9,
         "decimales": 1,
         "color": "#D97706",
     },
@@ -256,6 +271,11 @@ FNC_PREFIJO_HOJA_PRODUCCION_MENSUAL = "8. Producción mensual"
 FNC_FILA_ENCABEZADO_PRODUCCION = 5
 FNC_COLUMNA_FECHA_PRODUCCION = "Mes"
 FNC_COLUMNA_VALOR_PRODUCCION = "Producción"
+FNC_PATRON_ARCHIVO_EXPORTACIONES = "Exportaciones"
+FNC_PREFIJO_HOJA_EXPORTACIONES_MENSUALES = "1. Total_Volumen"
+FNC_FILA_ENCABEZADO_EXPORTACIONES = 6
+FNC_COLUMNA_FECHA_EXPORTACIONES = "MES"
+FNC_COLUMNA_VALOR_EXPORTACIONES = "Total Exportaciones"
 
 # ---------------------------------------------------------------------------
 # Clima (Fase 1c) — Open-Meteo

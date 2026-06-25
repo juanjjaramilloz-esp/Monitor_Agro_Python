@@ -11,6 +11,7 @@ from fuentes import (
     cafe,
     clima,
     contexto,
+    exportaciones,
     fx,
     noticias,
     precio_interno,
@@ -63,6 +64,7 @@ def main() -> None:
         _validar("precio_interno", precio_interno.obtener(), COLS_NUMERICAS),
         _validar("referencia_fnc", referencia_mercado_fnc.obtener(), COLS_NUMERICAS),
         _validar("produccion",     produccion.obtener(),     COLS_NUMERICAS),
+        _validar("exportaciones",  exportaciones.obtener(),  COLS_NUMERICAS),
         _validar("clima",          clima.obtener(),          COLS_NUMERICAS),
         _validar("noticias",       noticias.obtener(),       COLS_NOTICIAS),
     ]

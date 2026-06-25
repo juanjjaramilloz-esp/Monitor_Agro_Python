@@ -100,6 +100,34 @@ class AgregacionHistoricaTests(unittest.TestCase):
         self.assertEqual(len(resultado), 2)
         self.assertEqual(resultado["fecha_dato"].nunique(), 2)
 
+    def test_exportaciones_mensuales_no_se_rellenan_semanalmente(self) -> None:
+        tabla = pd.DataFrame(
+            [
+                [
+                    date(2026, 1, 1),
+                    "COLOMBIA",
+                    "exportaciones_cafe",
+                    850.0,
+                    "miles_sacos_60kg",
+                    "FNC",
+                ],
+                [
+                    date(2026, 2, 1),
+                    "COLOMBIA",
+                    "exportaciones_cafe",
+                    920.0,
+                    "miles_sacos_60kg",
+                    "FNC",
+                ],
+            ],
+            columns=COLUMNAS_DIARIAS,
+        )
+
+        resultado = agregar_semanal(tabla, date(2026, 2, 28))
+
+        self.assertEqual(len(resultado), 2)
+        self.assertEqual(set(resultado["variable"]), {"exportaciones_cafe"})
+
 
 class PersistenciaHistoricaTests(unittest.TestCase):
     def test_combinar_es_idempotente_y_prefiere_dato_nuevo(self) -> None:

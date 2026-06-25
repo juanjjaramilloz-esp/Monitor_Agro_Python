@@ -15,9 +15,8 @@ No necesita instalar nada. Todo funciona desde el navegador.
 - **Ver la evolución comercial** del café en una sola escala comparable: precio
   internacional (ICE Coffee C), tasa de cambio USD/COP y precio interno de
   referencia de la Federación Nacional de Cafeteros (FNC).
-- **Consultar la producción nacional mensual** registrada por la FNC.
-- **Consultar el clima** (lluvia y temperaturas) de cada uno de ocho
-  departamentos cafeteros.
+- **Comparar producción y exportaciones mensuales** registradas por la FNC,
+  incluida su diferencia para los meses con ambos datos.
 - **Descargar las series** del periodo que elija, en CSV, con fecha real del
   dato, unidad y fuente; y generar un **brief en PDF** con las gráficas, las
   variaciones y las fuentes, listo para un informe o una reunión.
@@ -25,22 +24,16 @@ No necesita instalar nada. Todo funciona desde el navegador.
 
 ---
 
-## Las tres vistas
+## Las dos vistas
 
 1. **Panorama nacional** (la vista de entrada). Precio internacional del café,
    USD/COP y precio interno FNC en una escala base 100 para compararlos en un
-   mismo gráfico, más la producción nacional mensual. Aquí están las descargas
-   por periodo: las series comerciales en CSV y un brief en PDF con las gráficas.
+   mismo gráfico, más producción, exportaciones y su diferencia mensual. Aquí
+   están las descargas por periodo: las series comerciales en CSV y un brief en
+   PDF con las gráficas.
 2. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
    Coffee C, USD/COP, costo, volumen y factor de rendimiento, con la opción de
    descargar un informe del escenario (ver más abajo).
-3. **Climatología cafetera.** Lluvia y temperaturas del departamento elegido en
-   el panel izquierdo, usando un municipio como referencia climática.
-
-> El panorama comercial **no cambia** al elegir un departamento: precio
-> internacional, USD/COP y precio FNC son variables globales o nacionales. El
-> selector de departamento solo afecta la vista de clima.
-
 ---
 
 ## El simulador, en palabras simples
@@ -86,13 +79,14 @@ listo para anexar a un análisis o una presentación.
 | Tasa de cambio USD/COP | Mercado | Semanal |
 | Precio interno de referencia | Federación Nacional de Cafeteros (FNC) | Semanal |
 | Producción nacional | Federación Nacional de Cafeteros (FNC) | Mensual |
+| Exportaciones nacionales de café | Federación Nacional de Cafeteros (FNC) | Mensual |
 | Clima (lluvia y temperatura) | Open-Meteo | Semanal |
 | Costo de producción de referencia | FEPCafé | Mensual |
 
 El histórico arranca en enero de 2023. Cada serie conserva su **cadencia
-honesta**: precio, dólar y clima se muestran por semana; la producción solo
-aparece en los meses efectivamente publicados, sin rellenar las semanas
-intermedias.
+honesta**: precio, dólar y clima se muestran por semana; producción y
+exportaciones solo aparecen en los meses efectivamente publicados, sin rellenar
+las semanas intermedias.
 
 **Departamentos cubiertos:** Huila, Antioquia, Tolima, Cauca, Nariño, Caldas,
 Risaralda y Quindío.
@@ -107,6 +101,8 @@ Risaralda y Quindío.
 - Una coordenada municipal **no describe** todo un departamento.
 - Una anomalía estadística en el clima **no equivale** por sí sola a un riesgo
   agronómico.
+- La diferencia producción menos exportaciones compara dos flujos del mismo
+  mes; **no mide directamente inventarios, reservas ni consumo interno**.
 - Las noticias y señales cualitativas son secundarias: ninguna nota aislada
   debe tomarse como hecho confirmado.
 

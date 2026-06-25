@@ -137,6 +137,7 @@ def generar_reporte_calidad(tabla: pd.DataFrame, fecha_snapshot: date) -> pd.Dat
             1,
         ),
         ("produccion", tabla["variable"].eq("produccion_nacional"), 1),
+        ("exportaciones", tabla["variable"].eq("exportaciones_cafe"), 1),
         (
             "clima",
             tabla["geografia"].isin(DEPARTAMENTOS)
@@ -246,6 +247,9 @@ def generar_reporte_historico(tabla: pd.DataFrame) -> pd.DataFrame:
                 "dias_clima_minimos": dias_clima_minimos,
                 "produccion_mensual": int(
                     grupo["variable"].eq("produccion_nacional").sum()
+                ),
+                "exportaciones_mensuales": int(
+                    grupo["variable"].eq("exportaciones_cafe").sum()
                 ),
             }
         )

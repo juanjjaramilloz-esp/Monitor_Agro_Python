@@ -2,6 +2,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-01-01,Antioquia,precipitacion,2.2,mm,open-meteo
 2023-01-01,Antioquia,temp_max,24.9,°C,open-meteo
 2023-01-01,Antioquia,temp_min,16.4,°C,open-meteo
+2023-01-01,COLOMBIA,exportaciones_cafe,832.373,miles_sacos_60kg,FNC
 2023-01-01,COLOMBIA,precio_interno_referencia,1968000.0,COP/carga_125kg,FNC
 2023-01-01,COLOMBIA,produccion_nacional,868.0,miles_sacos_60kg,FNC
 2023-01-01,Caldas,precipitacion,24.1,mm,open-meteo
@@ -820,6 +821,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-02-01,Antioquia,precipitacion,0.0,mm,open-meteo
 2023-02-01,Antioquia,temp_max,27.3,°C,open-meteo
 2023-02-01,Antioquia,temp_min,15.2,°C,open-meteo
+2023-02-01,COLOMBIA,exportaciones_cafe,929.255,miles_sacos_60kg,FNC
 2023-02-01,COLOMBIA,fx_usd_local,4658.490234375,COP/USD,yfinance
 2023-02-01,COLOMBIA,precio_interno_referencia,1958000.0,COP/carga_125kg,FNC
 2023-02-01,COLOMBIA,produccion_nacional,1025.0,miles_sacos_60kg,FNC
@@ -1560,6 +1562,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-03-01,Antioquia,precipitacion,8.2,mm,open-meteo
 2023-03-01,Antioquia,temp_max,28.3,°C,open-meteo
 2023-03-01,Antioquia,temp_min,16.9,°C,open-meteo
+2023-03-01,COLOMBIA,exportaciones_cafe,906.561,miles_sacos_60kg,FNC
 2023-03-01,COLOMBIA,fx_usd_local,4808.0,COP/USD,yfinance
 2023-03-01,COLOMBIA,precio_interno_referencia,2085000.0,COP/carga_125kg,FNC
 2023-03-01,COLOMBIA,produccion_nacional,799.0,miles_sacos_60kg,FNC
@@ -2382,6 +2385,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-04-01,Antioquia,precipitacion,26.9,mm,open-meteo
 2023-04-01,Antioquia,temp_max,25.0,°C,open-meteo
 2023-04-01,Antioquia,temp_min,15.2,°C,open-meteo
+2023-04-01,COLOMBIA,exportaciones_cafe,723.151,miles_sacos_60kg,FNC
 2023-04-01,COLOMBIA,precio_interno_referencia,1882000.0,COP/carga_125kg,FNC
 2023-04-01,COLOMBIA,produccion_nacional,565.867207197894,miles_sacos_60kg,FNC
 2023-04-01,Caldas,precipitacion,29.4,mm,open-meteo
@@ -3172,6 +3176,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-05-01,Antioquia,precipitacion,10.3,mm,open-meteo
 2023-05-01,Antioquia,temp_max,27.3,°C,open-meteo
 2023-05-01,Antioquia,temp_min,15.5,°C,open-meteo
+2023-05-01,COLOMBIA,exportaciones_cafe,845.853,miles_sacos_60kg,FNC
 2023-05-01,COLOMBIA,fx_usd_local,4694.93994140625,COP/USD,yfinance
 2023-05-01,COLOMBIA,precio_interno_referencia,2002000.0,COP/carga_125kg,FNC
 2023-05-01,COLOMBIA,produccion_nacional,806.195505733111,miles_sacos_60kg,FNC
@@ -3993,6 +3998,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-06-01,Antioquia,precipitacion,11.8,mm,open-meteo
 2023-06-01,Antioquia,temp_max,22.2,°C,open-meteo
 2023-06-01,Antioquia,temp_min,17.1,°C,open-meteo
+2023-06-01,COLOMBIA,exportaciones_cafe,753.422,miles_sacos_60kg,FNC
 2023-06-01,COLOMBIA,fx_usd_local,4443.25,COP/USD,yfinance
 2023-06-01,COLOMBIA,precio_interno_referencia,1770000.0,COP/carga_125kg,FNC
 2023-06-01,COLOMBIA,produccion_nacional,956.0,miles_sacos_60kg,FNC
@@ -4787,6 +4793,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-07-01,Antioquia,precipitacion,11.2,mm,open-meteo
 2023-07-01,Antioquia,temp_max,26.6,°C,open-meteo
 2023-07-01,Antioquia,temp_min,17.6,°C,open-meteo
+2023-07-01,COLOMBIA,exportaciones_cafe,851.998,miles_sacos_60kg,FNC
 2023-07-01,COLOMBIA,precio_interno_referencia,1360000.0,COP/carga_125kg,FNC
 2023-07-01,COLOMBIA,produccion_nacional,947.0,miles_sacos_60kg,FNC
 2023-07-01,Caldas,precipitacion,23.0,mm,open-meteo
@@ -5604,6 +5611,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-08-01,Antioquia,precipitacion,2.3,mm,open-meteo
 2023-08-01,Antioquia,temp_max,26.4,°C,open-meteo
 2023-08-01,Antioquia,temp_min,15.8,°C,open-meteo
+2023-08-01,COLOMBIA,exportaciones_cafe,816.755,miles_sacos_60kg,FNC
 2023-08-01,COLOMBIA,fx_usd_local,3906.02001953125,COP/USD,yfinance
 2023-08-01,COLOMBIA,precio_interno_referencia,1340000.0,COP/carga_125kg,FNC
 2023-08-01,COLOMBIA,produccion_nacional,872.0,miles_sacos_60kg,FNC
@@ -6426,6 +6434,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-09-01,Antioquia,precipitacion,0.0,mm,open-meteo
 2023-09-01,Antioquia,temp_max,30.5,°C,open-meteo
 2023-09-01,Antioquia,temp_min,17.2,°C,open-meteo
+2023-09-01,COLOMBIA,exportaciones_cafe,840.002,miles_sacos_60kg,FNC
 2023-09-01,COLOMBIA,fx_usd_local,4086.800048828125,COP/USD,yfinance
 2023-09-01,COLOMBIA,precio_interno_referencia,1295000.0,COP/carga_125kg,FNC
 2023-09-01,COLOMBIA,produccion_nacional,849.0,miles_sacos_60kg,FNC
@@ -7218,6 +7227,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-10-01,Antioquia,precipitacion,4.0,mm,open-meteo
 2023-10-01,Antioquia,temp_max,29.1,°C,open-meteo
 2023-10-01,Antioquia,temp_min,18.0,°C,open-meteo
+2023-10-01,COLOMBIA,exportaciones_cafe,908.637,miles_sacos_60kg,FNC
 2023-10-01,COLOMBIA,precio_interno_referencia,1256000.0,COP/carga_125kg,FNC
 2023-10-01,COLOMBIA,produccion_nacional,1157.4584732241142,miles_sacos_60kg,FNC
 2023-10-01,Caldas,precipitacion,12.8,mm,open-meteo
@@ -8038,6 +8048,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-11-01,Antioquia,precipitacion,34.3,mm,open-meteo
 2023-11-01,Antioquia,temp_max,23.9,°C,open-meteo
 2023-11-01,Antioquia,temp_min,17.0,°C,open-meteo
+2023-11-01,COLOMBIA,exportaciones_cafe,1104.61,miles_sacos_60kg,FNC
 2023-11-01,COLOMBIA,fx_usd_local,4112.75,COP/USD,yfinance
 2023-11-01,COLOMBIA,precio_interno_referencia,1350000.0,COP/carga_125kg,FNC
 2023-11-01,COLOMBIA,produccion_nacional,1282.1066366773907,miles_sacos_60kg,FNC
@@ -8833,6 +8844,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2023-12-01,Antioquia,precipitacion,0.0,mm,open-meteo
 2023-12-01,Antioquia,temp_max,29.2,°C,open-meteo
 2023-12-01,Antioquia,temp_min,16.7,°C,open-meteo
+2023-12-01,COLOMBIA,exportaciones_cafe,1066.685,miles_sacos_60kg,FNC
 2023-12-01,COLOMBIA,fx_usd_local,4014.580078125,COP/USD,yfinance
 2023-12-01,COLOMBIA,precio_interno_referencia,1480000.0,COP/carga_125kg,FNC
 2023-12-01,COLOMBIA,produccion_nacional,1220.0,miles_sacos_60kg,FNC
@@ -9650,6 +9662,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-01-01,Antioquia,precipitacion,4.1,mm,open-meteo
 2024-01-01,Antioquia,temp_max,27.2,°C,open-meteo
 2024-01-01,Antioquia,temp_min,17.5,°C,open-meteo
+2024-01-01,COLOMBIA,exportaciones_cafe,937.134,miles_sacos_60kg,FNC
 2024-01-01,COLOMBIA,fx_usd_local,3836.099609375,COP/USD,yfinance
 2024-01-01,COLOMBIA,precio_interno_referencia,1428000.0,COP/carga_125kg,FNC
 2024-01-01,COLOMBIA,produccion_nacional,959.0,miles_sacos_60kg,FNC
@@ -10470,6 +10483,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-02-01,Antioquia,precipitacion,12.4,mm,open-meteo
 2024-02-01,Antioquia,temp_max,29.8,°C,open-meteo
 2024-02-01,Antioquia,temp_min,17.5,°C,open-meteo
+2024-02-01,COLOMBIA,exportaciones_cafe,1045.063,miles_sacos_60kg,FNC
 2024-02-01,COLOMBIA,fx_usd_local,3915.280029296875,COP/USD,yfinance
 2024-02-01,COLOMBIA,precio_interno_referencia,1474000.0,COP/carga_125kg,FNC
 2024-02-01,COLOMBIA,produccion_nacional,961.0,miles_sacos_60kg,FNC
@@ -11237,6 +11251,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-03-01,Antioquia,precipitacion,9.3,mm,open-meteo
 2024-03-01,Antioquia,temp_max,30.7,°C,open-meteo
 2024-03-01,Antioquia,temp_min,17.6,°C,open-meteo
+2024-03-01,COLOMBIA,exportaciones_cafe,1005.461,miles_sacos_60kg,FNC
 2024-03-01,COLOMBIA,fx_usd_local,3926.1298828125,COP/USD,yfinance
 2024-03-01,COLOMBIA,precio_interno_referencia,1430000.0,COP/carga_125kg,FNC
 2024-03-01,COLOMBIA,produccion_nacional,865.5325633014444,miles_sacos_60kg,FNC
@@ -12054,6 +12069,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-04-01,Antioquia,precipitacion,10.7,mm,open-meteo
 2024-04-01,Antioquia,temp_max,29.8,°C,open-meteo
 2024-04-01,Antioquia,temp_min,18.2,°C,open-meteo
+2024-04-01,COLOMBIA,exportaciones_cafe,791.794,miles_sacos_60kg,FNC
 2024-04-01,COLOMBIA,fx_usd_local,3859.449951171875,COP/USD,yfinance
 2024-04-01,COLOMBIA,precio_interno_referencia,1444000.0,COP/carga_125kg,FNC
 2024-04-01,COLOMBIA,produccion_nacional,742.0,miles_sacos_60kg,FNC
@@ -12849,6 +12865,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-05-01,Antioquia,precipitacion,12.9,mm,open-meteo
 2024-05-01,Antioquia,temp_max,27.8,°C,open-meteo
 2024-05-01,Antioquia,temp_min,17.1,°C,open-meteo
+2024-05-01,COLOMBIA,exportaciones_cafe,935.22,miles_sacos_60kg,FNC
 2024-05-01,COLOMBIA,fx_usd_local,3907.75,COP/USD,yfinance
 2024-05-01,COLOMBIA,precio_interno_referencia,1656000.0,COP/carga_125kg,FNC
 2024-05-01,COLOMBIA,produccion_nacional,1120.0,miles_sacos_60kg,FNC
@@ -13670,6 +13687,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-06-01,Antioquia,precipitacion,4.7,mm,open-meteo
 2024-06-01,Antioquia,temp_max,29.2,°C,open-meteo
 2024-06-01,Antioquia,temp_min,17.0,°C,open-meteo
+2024-06-01,COLOMBIA,exportaciones_cafe,1023.959,miles_sacos_60kg,FNC
 2024-06-01,COLOMBIA,precio_interno_referencia,1700000.0,COP/carga_125kg,FNC
 2024-06-01,COLOMBIA,produccion_nacional,1172.0,miles_sacos_60kg,FNC
 2024-06-01,Caldas,precipitacion,1.8,mm,open-meteo
@@ -14460,6 +14478,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-07-01,Antioquia,precipitacion,4.2,mm,open-meteo
 2024-07-01,Antioquia,temp_max,26.9,°C,open-meteo
 2024-07-01,Antioquia,temp_min,17.9,°C,open-meteo
+2024-07-01,COLOMBIA,exportaciones_cafe,1019.355,miles_sacos_60kg,FNC
 2024-07-01,COLOMBIA,fx_usd_local,4176.7998046875,COP/USD,yfinance
 2024-07-01,COLOMBIA,precio_interno_referencia,1839000.0,COP/carga_125kg,FNC
 2024-07-01,COLOMBIA,produccion_nacional,1158.8837518134924,miles_sacos_60kg,FNC
@@ -15281,6 +15300,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-08-01,Antioquia,precipitacion,3.2,mm,open-meteo
 2024-08-01,Antioquia,temp_max,26.9,°C,open-meteo
 2024-08-01,Antioquia,temp_min,16.7,°C,open-meteo
+2024-08-01,COLOMBIA,exportaciones_cafe,1029.58,miles_sacos_60kg,FNC
 2024-08-01,COLOMBIA,fx_usd_local,4051.75,COP/USD,yfinance
 2024-08-01,COLOMBIA,precio_interno_referencia,1828000.0,COP/carga_125kg,FNC
 2024-08-01,COLOMBIA,produccion_nacional,1049.0,miles_sacos_60kg,FNC
@@ -16101,6 +16121,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-09-01,Antioquia,precipitacion,6.8,mm,open-meteo
 2024-09-01,Antioquia,temp_max,27.0,°C,open-meteo
 2024-09-01,Antioquia,temp_min,16.9,°C,open-meteo
+2024-09-01,COLOMBIA,exportaciones_cafe,998.341,miles_sacos_60kg,FNC
 2024-09-01,COLOMBIA,precio_interno_referencia,2021000.0,COP/carga_125kg,FNC
 2024-09-01,COLOMBIA,produccion_nacional,1071.2334084844454,miles_sacos_60kg,FNC
 2024-09-01,Caldas,precipitacion,3.2,mm,open-meteo
@@ -16893,6 +16914,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-10-01,Antioquia,precipitacion,14.0,mm,open-meteo
 2024-10-01,Antioquia,temp_max,26.9,°C,open-meteo
 2024-10-01,Antioquia,temp_min,16.3,°C,open-meteo
+2024-10-01,COLOMBIA,exportaciones_cafe,1039.068,miles_sacos_60kg,FNC
 2024-10-01,COLOMBIA,fx_usd_local,4191.509765625,COP/USD,yfinance
 2024-10-01,COLOMBIA,precio_interno_referencia,2230000.0,COP/carga_125kg,FNC
 2024-10-01,COLOMBIA,produccion_nacional,1339.1550080564646,miles_sacos_60kg,FNC
@@ -17715,6 +17737,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-11-01,Antioquia,precipitacion,38.0,mm,open-meteo
 2024-11-01,Antioquia,temp_max,22.0,°C,open-meteo
 2024-11-01,Antioquia,temp_min,17.7,°C,open-meteo
+2024-11-01,COLOMBIA,exportaciones_cafe,1193.949,miles_sacos_60kg,FNC
 2024-11-01,COLOMBIA,fx_usd_local,4420.0498046875,COP/USD,yfinance
 2024-11-01,COLOMBIA,precio_interno_referencia,2175000.0,COP/carga_125kg,FNC
 2024-11-01,COLOMBIA,produccion_nacional,1761.409522227121,miles_sacos_60kg,FNC
@@ -18507,6 +18530,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2024-12-01,Antioquia,precipitacion,1.8,mm,open-meteo
 2024-12-01,Antioquia,temp_max,28.9,°C,open-meteo
 2024-12-01,Antioquia,temp_min,17.6,°C,open-meteo
+2024-12-01,COLOMBIA,exportaciones_cafe,1303.939,miles_sacos_60kg,FNC
 2024-12-01,COLOMBIA,precio_interno_referencia,2773000.0,COP/carga_125kg,FNC
 2024-12-01,COLOMBIA,produccion_nacional,1798.2305515042488,miles_sacos_60kg,FNC
 2024-12-01,Caldas,precipitacion,10.8,mm,open-meteo
@@ -19326,6 +19350,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-01-01,Antioquia,precipitacion,4.2,mm,open-meteo
 2025-01-01,Antioquia,temp_max,24.7,°C,open-meteo
 2025-01-01,Antioquia,temp_min,17.4,°C,open-meteo
+2025-01-01,COLOMBIA,exportaciones_cafe,1153.15,miles_sacos_60kg,FNC
 2025-01-01,COLOMBIA,precio_interno_referencia,2752000.0,COP/carga_125kg,FNC
 2025-01-01,COLOMBIA,produccion_nacional,1355.76715345375,miles_sacos_60kg,FNC
 2025-01-01,Caldas,precipitacion,15.3,mm,open-meteo
@@ -20145,6 +20170,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-02-01,Antioquia,precipitacion,1.8,mm,open-meteo
 2025-02-01,Antioquia,temp_max,28.1,°C,open-meteo
 2025-02-01,Antioquia,temp_min,17.8,°C,open-meteo
+2025-02-01,COLOMBIA,exportaciones_cafe,1184.165,miles_sacos_60kg,FNC
 2025-02-01,COLOMBIA,precio_interno_referencia,3000000.0,COP/carga_125kg,FNC
 2025-02-01,COLOMBIA,produccion_nacional,1361.3928100799765,miles_sacos_60kg,FNC
 2025-02-01,Caldas,precipitacion,4.9,mm,open-meteo
@@ -20885,6 +20911,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-03-01,Antioquia,precipitacion,7.8,mm,open-meteo
 2025-03-01,Antioquia,temp_max,27.9,°C,open-meteo
 2025-03-01,Antioquia,temp_min,18.0,°C,open-meteo
+2025-03-01,COLOMBIA,exportaciones_cafe,1252.049,miles_sacos_60kg,FNC
 2025-03-01,COLOMBIA,precio_interno_referencia,2956000.0,COP/carga_125kg,FNC
 2025-03-01,COLOMBIA,produccion_nacional,1063.9383960067662,miles_sacos_60kg,FNC
 2025-03-01,Caldas,precipitacion,12.2,mm,open-meteo
@@ -21703,6 +21730,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-04-01,Antioquia,precipitacion,10.2,mm,open-meteo
 2025-04-01,Antioquia,temp_max,28.9,°C,open-meteo
 2025-04-01,Antioquia,temp_min,15.1,°C,open-meteo
+2025-04-01,COLOMBIA,exportaciones_cafe,802.135,miles_sacos_60kg,FNC
 2025-04-01,COLOMBIA,fx_usd_local,4182.75,COP/USD,yfinance
 2025-04-01,COLOMBIA,precio_interno_referencia,3081000.0,COP/carga_125kg,FNC
 2025-04-01,COLOMBIA,produccion_nacional,702.8167391214691,miles_sacos_60kg,FNC
@@ -22495,6 +22523,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-05-01,Antioquia,precipitacion,5.1,mm,open-meteo
 2025-05-01,Antioquia,temp_max,25.9,°C,open-meteo
 2025-05-01,Antioquia,temp_min,18.2,°C,open-meteo
+2025-05-01,COLOMBIA,exportaciones_cafe,911.634,miles_sacos_60kg,FNC
 2025-05-01,COLOMBIA,fx_usd_local,4241.35009765625,COP/USD,yfinance
 2025-05-01,COLOMBIA,precio_interno_referencia,3100000.0,COP/carga_125kg,FNC
 2025-05-01,COLOMBIA,produccion_nacional,818.6412932234168,miles_sacos_60kg,FNC
@@ -23314,6 +23343,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-06-01,Antioquia,precipitacion,20.2,mm,open-meteo
 2025-06-01,Antioquia,temp_max,27.5,°C,open-meteo
 2025-06-01,Antioquia,temp_min,17.3,°C,open-meteo
+2025-06-01,COLOMBIA,exportaciones_cafe,1084.751,miles_sacos_60kg,FNC
 2025-06-01,COLOMBIA,precio_interno_referencia,2763000.0,COP/carga_125kg,FNC
 2025-06-01,COLOMBIA,produccion_nacional,909.1029907731332,miles_sacos_60kg,FNC
 2025-06-01,Caldas,precipitacion,39.6,mm,open-meteo
@@ -24106,9 +24136,10 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-07-01,Antioquia,precipitacion,7.6,mm,open-meteo
 2025-07-01,Antioquia,temp_max,28.2,°C,open-meteo
 2025-07-01,Antioquia,temp_min,16.5,°C,open-meteo
+2025-07-01,COLOMBIA,exportaciones_cafe,1173.816,miles_sacos_60kg,FNC
 2025-07-01,COLOMBIA,fx_usd_local,4087.75,COP/USD,yfinance
 2025-07-01,COLOMBIA,precio_interno_referencia,2328000.0,COP/carga_125kg,FNC
-2025-07-01,COLOMBIA,produccion_nacional,1373.3559660678761,miles_sacos_60kg,FNC
+2025-07-01,COLOMBIA,produccion_nacional,1373.355966067876,miles_sacos_60kg,FNC
 2025-07-01,Caldas,precipitacion,11.0,mm,open-meteo
 2025-07-01,Caldas,temp_max,19.2,°C,open-meteo
 2025-07-01,Caldas,temp_min,11.1,°C,open-meteo
@@ -24928,6 +24959,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-08-01,Antioquia,precipitacion,0.4,mm,open-meteo
 2025-08-01,Antioquia,temp_max,30.8,°C,open-meteo
 2025-08-01,Antioquia,temp_min,16.7,°C,open-meteo
+2025-08-01,COLOMBIA,exportaciones_cafe,1166.665,miles_sacos_60kg,FNC
 2025-08-01,COLOMBIA,fx_usd_local,4184.9599609375,COP/USD,yfinance
 2025-08-01,COLOMBIA,precio_interno_referencia,2336000.0,COP/carga_125kg,FNC
 2025-08-01,COLOMBIA,produccion_nacional,1242.74174988266,miles_sacos_60kg,FNC
@@ -25746,6 +25778,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-09-01,Antioquia,precipitacion,14.6,mm,open-meteo
 2025-09-01,Antioquia,temp_max,31.2,°C,open-meteo
 2025-09-01,Antioquia,temp_min,16.4,°C,open-meteo
+2025-09-01,COLOMBIA,exportaciones_cafe,1078.407,miles_sacos_60kg,FNC
 2025-09-01,COLOMBIA,fx_usd_local,4013.989990234375,COP/USD,yfinance
 2025-09-01,COLOMBIA,precio_interno_referencia,3125000.0,COP/carga_125kg,FNC
 2025-09-01,COLOMBIA,produccion_nacional,1142.412575389382,miles_sacos_60kg,FNC
@@ -26540,6 +26573,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-10-01,Antioquia,precipitacion,7.7,mm,open-meteo
 2025-10-01,Antioquia,temp_max,25.7,°C,open-meteo
 2025-10-01,Antioquia,temp_min,16.8,°C,open-meteo
+2025-10-01,COLOMBIA,exportaciones_cafe,1056.716,miles_sacos_60kg,FNC
 2025-10-01,COLOMBIA,fx_usd_local,3924.75,COP/USD,yfinance
 2025-10-01,COLOMBIA,precio_interno_referencia,2928000.0,COP/carga_125kg,FNC
 2025-10-01,COLOMBIA,produccion_nacional,1208.086500408277,miles_sacos_60kg,FNC
@@ -27362,8 +27396,9 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-11-01,Antioquia,precipitacion,2.9,mm,open-meteo
 2025-11-01,Antioquia,temp_max,28.4,°C,open-meteo
 2025-11-01,Antioquia,temp_min,17.9,°C,open-meteo
+2025-11-01,COLOMBIA,exportaciones_cafe,1219.555,miles_sacos_60kg,FNC
 2025-11-01,COLOMBIA,precio_interno_referencia,2868000.0,COP/carga_125kg,FNC
-2025-11-01,COLOMBIA,produccion_nacional,1266.0696378998325,miles_sacos_60kg,FNC
+2025-11-01,COLOMBIA,produccion_nacional,1266.0696378998323,miles_sacos_60kg,FNC
 2025-11-01,Caldas,precipitacion,1.6,mm,open-meteo
 2025-11-01,Caldas,temp_max,20.0,°C,open-meteo
 2025-11-01,Caldas,temp_min,12.0,°C,open-meteo
@@ -28152,6 +28187,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2025-12-01,Antioquia,precipitacion,19.7,mm,open-meteo
 2025-12-01,Antioquia,temp_max,27.2,°C,open-meteo
 2025-12-01,Antioquia,temp_min,17.2,°C,open-meteo
+2025-12-01,COLOMBIA,exportaciones_cafe,1055.841,miles_sacos_60kg,FNC
 2025-12-01,COLOMBIA,fx_usd_local,3691.856689453125,COP/USD,yfinance
 2025-12-01,COLOMBIA,precio_interno_referencia,2916000.0,COP/carga_125kg,FNC
 2025-12-01,COLOMBIA,produccion_nacional,1233.4231694949574,miles_sacos_60kg,FNC
@@ -28972,6 +29008,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-01-01,Antioquia,precipitacion,10.5,mm,open-meteo
 2026-01-01,Antioquia,temp_max,29.9,°C,open-meteo
 2026-01-01,Antioquia,temp_min,17.2,°C,open-meteo
+2026-01-01,COLOMBIA,exportaciones_cafe,925.031,miles_sacos_60kg,FNC
 2026-01-01,COLOMBIA,precio_interno_referencia,2653000.0,COP/carga_125kg,FNC
 2026-01-01,COLOMBIA,produccion_nacional,892.7276680725097,miles_sacos_60kg,FNC
 2026-01-01,Caldas,precipitacion,10.3,mm,open-meteo
@@ -29789,6 +29826,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-02-01,Antioquia,precipitacion,31.2,mm,open-meteo
 2026-02-01,Antioquia,temp_max,22.2,°C,open-meteo
 2026-02-01,Antioquia,temp_min,19.0,°C,open-meteo
+2026-02-01,COLOMBIA,exportaciones_cafe,846.588,miles_sacos_60kg,FNC
 2026-02-01,COLOMBIA,precio_interno_referencia,2430000.0,COP/carga_125kg,FNC
 2026-02-01,COLOMBIA,produccion_nacional,869.1501974755291,miles_sacos_60kg,FNC
 2026-02-01,Caldas,precipitacion,34.3,mm,open-meteo
@@ -30529,6 +30567,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-03-01,Antioquia,precipitacion,3.3,mm,open-meteo
 2026-03-01,Antioquia,temp_max,29.7,°C,open-meteo
 2026-03-01,Antioquia,temp_min,18.1,°C,open-meteo
+2026-03-01,COLOMBIA,exportaciones_cafe,795.843,miles_sacos_60kg,FNC
 2026-03-01,COLOMBIA,precio_interno_referencia,2118000.0,COP/carga_125kg,FNC
 2026-03-01,COLOMBIA,produccion_nacional,754.4700368133471,miles_sacos_60kg,FNC
 2026-03-01,Caldas,precipitacion,3.3,mm,open-meteo
@@ -31349,6 +31388,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-04-01,Antioquia,precipitacion,7.0,mm,open-meteo
 2026-04-01,Antioquia,temp_max,29.0,°C,open-meteo
 2026-04-01,Antioquia,temp_min,17.8,°C,open-meteo
+2026-04-01,COLOMBIA,exportaciones_cafe,692.808,miles_sacos_60kg,FNC
 2026-04-01,COLOMBIA,fx_usd_local,3681.830078125,COP/USD,yfinance
 2026-04-01,COLOMBIA,precio_interno_referencia,2240000.0,COP/carga_125kg,FNC
 2026-04-01,COLOMBIA,produccion_nacional,697.0584176166781,miles_sacos_60kg,FNC
@@ -32143,6 +32183,7 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-05-01,Antioquia,precipitacion,12.2,mm,open-meteo
 2026-05-01,Antioquia,temp_max,29.0,°C,open-meteo
 2026-05-01,Antioquia,temp_min,17.8,°C,open-meteo
+2026-05-01,COLOMBIA,exportaciones_cafe,921.432,miles_sacos_60kg,FNC
 2026-05-01,COLOMBIA,fx_usd_local,3655.080078125,COP/USD,yfinance
 2026-05-01,COLOMBIA,precio_interno_referencia,2242000.0,COP/carga_125kg,FNC
 2026-05-01,COLOMBIA,produccion_nacional,1056.71781850386,miles_sacos_60kg,FNC
