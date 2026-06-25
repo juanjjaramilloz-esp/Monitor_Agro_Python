@@ -120,8 +120,8 @@ lo que sabe antes que aparentar una precisión que aún no tiene.
 Esta es una versión para recibir retroalimentación de sus usuarias reales
 (equipos de investigación y formación del sector cafetero). El objetivo cercano
 es validar que el kit de consulta y el brief sean útiles en una tarea real antes
-de ampliar fuentes o incorporar un índice. La **actualización semanal de datos
-ya está automatizada** (la página se refresca sola). Un eventual score de
+de ampliar fuentes o incorporar un índice. La **actualización de datos cada 2
+días ya está automatizada** (la página se refresca sola). Un eventual score de
 oportunidad/riesgo queda para más adelante, solo cuando exista conocimiento
 experto que lo respalde.
 

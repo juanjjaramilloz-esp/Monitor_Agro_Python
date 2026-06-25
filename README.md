@@ -21,7 +21,7 @@ para analizar tendencias antes de construir un score.
   costo por carga, volumen y factor de rendimiento, con margen bruto, mapa de
   sensibilidad clicable, botón para restablecer e informe del escenario
   descargable en Markdown.
-- Automatización: GitHub Actions semanal (`.github/workflows/actualizar-datos.yml`)
+- Automatización: GitHub Actions cada 2 días (`.github/workflows/actualizar-datos.yml`)
   que refresca el histórico y hace commit/push; el push redespliega la app.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
@@ -105,7 +105,7 @@ tablero no contiene score ni semáforos de riesgo.
 
 ## Actualización automática
 
-`.github/workflows/actualizar-datos.yml` corre en GitHub Actions cada sábado
+`.github/workflows/actualizar-datos.yml` corre en GitHub Actions cada 2 días
 (10:00 UTC) y también a mano (`workflow_dispatch`). Refresca una ventana reciente
 del histórico de forma idempotente, recalcula indicadores y visualización, y hace
 commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit

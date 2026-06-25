@@ -8,7 +8,7 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 `git log --oneline -8`; verificar con código/pruebas cualquier dato operativo.
 `BRIEFING_CHAT.md` solo si la tarea depende de audiencia o producto.
 
-## Punto de control (2026-06-24)
+## Punto de control (2026-06-25)
 
 - MVP descriptivo completo: fuentes, calidad, histórico desde 2023, indicadores
   neutrales, preparación visual, dashboard y brief del periodo en PDF con gráficas.
@@ -28,7 +28,7 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   verificada por el usuario. `ACERCA_DE.md` = guía para visitantes de la app
   pública; `README.md` = guía técnica local.
 - Fase 6 (automatización) implementada: `.github/workflows/actualizar-datos.yml`
-  refresca el histórico y hace commit/push semanal (cron sábados 10:00 UTC +
+  refresca el histórico y hace commit/push cada 2 días (10:00 UTC +
   `workflow_dispatch`). Pendiente: validar la primera corrida real en el runner
   (las fuentes por scraping/yfinance pueden fallar allí; los pasos toleran error
   y solo commitea si hay cambios). Aún falta producir un snapshot semanal en CI.

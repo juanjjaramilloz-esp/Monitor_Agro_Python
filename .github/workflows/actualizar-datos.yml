@@ -1,4 +1,4 @@
-name: Actualización semanal de datos
+name: Actualización de datos cada 2 días
 
 # Recolecta las fuentes y refresca el histórico versionado. Streamlit Community
 # Cloud redespliega solo al recibir el push. Las fuentes por scraping (FNC) o
@@ -7,9 +7,8 @@ name: Actualización semanal de datos
 
 on:
   schedule:
-    # Sábados 10:00 UTC (~05:00 Colombia). El retraso climático es de 5 días,
-    # así que el sábado ya cierra la semana del domingo anterior.
-    - cron: "0 10 * * 6"
+    # Días alternos del mes a las 10:00 UTC (~05:00 Colombia).
+    - cron: "0 10 */2 * *"
   workflow_dispatch: {}
 
 permissions:
@@ -61,6 +60,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios en datos; no se hace commit."
           else
-            git commit -m "Datos: actualización automática semanal ($(date -u +%Y-%m-%d))"
+            git commit -m "Datos: actualización automática cada 2 días ($(date -u +%Y-%m-%d))"
             git push
           fi
