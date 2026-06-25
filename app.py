@@ -38,6 +38,7 @@ from procesar.visualizacion import (
     RUTA_SERIES,
     ejecutar as preparar_visualizacion,
     preparar_descarga_comercial,
+    series_necesitan_regenerarse,
 )
 from reporte.generar import generar_informe_simulador
 from reporte.pdf import generar_pdf_brief
@@ -176,7 +177,7 @@ def _leer_series(ruta: str, marca_tiempo: float) -> pd.DataFrame:
 
 def _cargar_datos() -> pd.DataFrame:
     ruta = Path(RUTA_SERIES)
-    if not ruta.exists():
+    if series_necesitan_regenerarse():
         preparar_visualizacion()
     return _leer_series(str(ruta), ruta.stat().st_mtime)
 

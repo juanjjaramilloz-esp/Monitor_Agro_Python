@@ -101,7 +101,7 @@ COP/carga, MAPE 1,02%, últimas 300 observaciones). Con la referencia oficial de
 a los valores del 24/06/2026 estima 2.163.736 frente a 2.165.000 (error 1.264
 COP, 0,06%). TRM y Coffee C aceptan dos decimales.
 
-**Validación última.** 49 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 50 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
@@ -127,8 +127,10 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
   merge, por eso el workflow refresca solo una ventana de 120 días (no desde
   2023). `procesar.visualizacion` recalcula indicadores en memoria desde
   `historico_semanal.csv`, así que basta versionar el histórico para que el app
-  refresque; el push dispara el redespliegue de Streamlit. GitHub deshabilita
-  los cron tras 60 días de inactividad del repo.
+  refresque; el push dispara el redespliegue de Streamlit. La app regenera el
+  dataset visual ignorado por Git si el histórico es más reciente o contiene
+  variables ausentes, evitando reutilizar derivados viejos entre despliegues.
+  GitHub deshabilita los cron tras 60 días de inactividad del repo.
 - Coordenadas climáticas = referencias municipales, no toda la variación interna.
 - Simulador: fórmula = USD/COP escenario × Coffee C escenario × coeficiente
   implícito × (94 ÷ factor). El coeficiente principal se deriva del último trío

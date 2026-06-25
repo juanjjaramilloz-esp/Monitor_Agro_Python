@@ -1,5 +1,7 @@
 """Prepara metadatos y series compactas para visualizaciones básicas."""
 
+from pathlib import Path
+
 import pandas as pd
 
 from config import (
@@ -23,6 +25,35 @@ RUTA_HISTORICO = DIR_HISTORICO / "historico_semanal.csv"
 RUTA_SERIES = DIR_VISUALIZACION / "series_visualizacion.csv"
 RUTA_RESUMEN = DIR_VISUALIZACION / "resumen_visual.csv"
 RUTA_CATALOGO = DIR_VISUALIZACION / "catalogo_variables.csv"
+
+
+def faltan_variables_historicas(
+    variables_historico: set[str],
+    variables_series: set[str],
+) -> bool:
+    """Indica si el derivado visual omite alguna serie del histórico."""
+    return not variables_historico.issubset(variables_series)
+
+
+def series_necesitan_regenerarse(
+    ruta_series: Path = RUTA_SERIES,
+    ruta_historico: Path = RUTA_HISTORICO,
+) -> bool:
+    """Detecta un derivado ausente, desactualizado o incompleto."""
+    if not ruta_series.exists():
+        return True
+    if ruta_historico.exists() and ruta_historico.stat().st_mtime > ruta_series.stat().st_mtime:
+        return True
+    try:
+        variables_historico = set(
+            pd.read_csv(ruta_historico, usecols=["variable"])["variable"]
+        )
+        variables_series = set(
+            pd.read_csv(ruta_series, usecols=["variable"])["variable"]
+        )
+    except (OSError, ValueError, KeyError):
+        return True
+    return faltan_variables_historicas(variables_historico, variables_series)
 
 
 def _tipo_geografia(geografia: str) -> str:

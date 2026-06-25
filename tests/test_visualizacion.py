@@ -7,6 +7,7 @@ from procesar.calidad import COLUMNAS_HISTORICO_SEMANAL
 from procesar.visualizacion import (
     _estado_anomalia,
     crear_resumen_visual,
+    faltan_variables_historicas,
     preparar,
     preparar_descarga_comercial,
 )
@@ -88,6 +89,14 @@ class PreparacionVisualTests(unittest.TestCase):
         self.assertIn("fuente", descarga.columns)
         self.assertIn("unidad", descarga.columns)
         self.assertEqual(descarga.iloc[0]["indicador"], "Tasa de cambio USD/COP")
+
+    def test_detecta_variable_historica_ausente_en_series(self) -> None:
+        historico = {"produccion_nacional", "exportaciones_cafe"}
+
+        self.assertTrue(
+            faltan_variables_historicas(historico, {"produccion_nacional"})
+        )
+        self.assertFalse(faltan_variables_historicas(historico, historico))
 
 
 if __name__ == "__main__":
