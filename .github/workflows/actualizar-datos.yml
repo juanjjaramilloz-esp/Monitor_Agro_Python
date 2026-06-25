@@ -45,6 +45,10 @@ jobs:
         continue-on-error: true
         run: python -m procesar.indicadores
 
+      - name: Actualizar calibracion oficial del simulador
+        continue-on-error: true
+        run: python -m procesar.calibracion_fnc
+
       - name: Preparar series de visualización
         continue-on-error: true
         run: python -m procesar.visualizacion

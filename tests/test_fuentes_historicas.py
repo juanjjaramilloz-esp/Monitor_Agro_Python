@@ -4,7 +4,8 @@ from unittest.mock import Mock, patch
 
 import pandas as pd
 
-from fuentes import cafe, clima, fx, precio_interno
+from fuentes import cafe, clima, fx, precio_interno, referencia_mercado_fnc
+from procesar.calibracion_fnc import preparar
 
 
 class FuentesYahooHistoricasTests(unittest.TestCase):
@@ -109,6 +110,32 @@ class PrecioInternoHistoricoTests(unittest.TestCase):
             "https://federaciondecafeteros.org/wp-content/uploads/"
             "Precios-area-y-produccion-de-cafe.xlsx",
         )
+
+
+class ReferenciaMercadoFncTests(unittest.TestCase):
+    def test_parsea_trio_oficial_con_formato_colombiano(self) -> None:
+        texto = """
+        Precio interno de referencia: $2.160.000 Fecha: 2026-06-25
+        Bolsa de NY: $276,40 Fecha: 2026-06-25
+        Tasa de cambio: 3.435,99 Fecha: 2026-06-25
+        """
+        resultado = referencia_mercado_fnc._parsear(texto)
+
+        self.assertEqual(len(resultado), 3)
+        valores = resultado.set_index("variable")["valor"]
+        self.assertEqual(valores["precio_interno_referencia"], 2_160_000)
+        self.assertEqual(valores["precio_cafe_fnc_calculo"], 276.40)
+        self.assertEqual(valores["fx_fnc_calculo"], 3_435.99)
+
+    def test_prepara_coeficiente_implicito(self) -> None:
+        tabla = referencia_mercado_fnc._parsear(
+            "Precio interno de referencia: $2.160.000 Fecha: 2026-06-25 "
+            "Bolsa de NY: $276,40 Tasa de cambio: 3.435,99"
+        )
+        calibracion = preparar(tabla)
+
+        esperado = 2_160_000 / (3_435.99 * 276.40)
+        self.assertAlmostEqual(calibracion.iloc[0]["coeficiente_implicito"], esperado)
 
 
 if __name__ == "__main__":

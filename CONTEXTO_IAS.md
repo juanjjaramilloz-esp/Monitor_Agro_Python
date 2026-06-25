@@ -15,10 +15,13 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 - Prioridad (feedback CRECE): convertir el panorama comercial en herramienta
   reutilizable para investigación/informes/reuniones. La capa climática se
   conserva pero no se amplía. Score y conocimiento experto siguen pausados.
-- Simulador separado del score: desplaza el último precio FNC proporcional a
-  Coffee C × USD/COP, ajusta por factor de rendimiento (aprox.), edita costo por
-  carga y calcula margen bruto. No modela prima, calidad, pasilla, logística,
-  impuestos ni causalidad.
+- Simulador separado del score: estima el precio FNC desde Coffee C × USD/COP
+  mediante el coeficiente implícito del último trío coherente que publica la FNC
+  (FNC, Coffee C y TRM de la misma fecha). Evita mezclar el FNC oficial con
+  cierres Yahoo de otra hora. Si falla esa fuente usa como respaldo la calibración
+  reciente de cinco días. El FNC observado calibra y permite comparar, pero no es
+  un piso. Ajusta por factor de rendimiento (aprox.), edita costo por carga y
+  calcula margen bruto.
 - Única ampliación de datos confirmada: producción nacional mensual FNC (no
   departamental/municipal).
 - Remoto `origin` en GitHub; app desplegada en Streamlit Community Cloud,
@@ -73,27 +76,29 @@ página, con aviso `© 2026 ... Todos los derechos reservados` (`LICENSE`
 propietario; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
 
-**Simulador.** Controles: Coffee C, USD/COP, precio FNC base, costo, cargas y
-factor de rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
+**Simulador.** Controles: Coffee C, USD/COP, costo, cargas y factor de
+rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
 (prefijo `sim_`) y un botón "Restablecer valores predeterminados" (callback
 `_restablecer_simulador` que limpia esas claves). El escenario se fija con
-sliders o haciendo clic en el mapa de sensibilidad: el Heatmap no emite eventos
+entradas numéricas o haciendo clic en el mapa de sensibilidad: el Heatmap no emite eventos
 de clic, así que se superpone una rejilla fina e invisible (Scatter 45×45, capa
 "celdas") y con `hovermode="closest"` + `on_select="rerun"` un clic elige el punto
 más cercano (al ser densa, queda casi donde se hizo clic). El parser descarta la
 curva del marcador del escenario. La matriz coloreada se alinea al rango exacto
-de los sliders y el heatmap conserva el hover de precios. Muestra precio
-proyectado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
+de los controles y el heatmap conserva el hover de precios. Muestra precio
+estimado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
 = margen) y la matriz. Botón para descargar un informe Markdown
 (`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé
-abril 2026 (editable). **Piso:** la transmisión de mercado se acota con
-`max(..., precio_fnc_base)` (garantía de compra FNC), así nunca proyecta por
-debajo del precio FNC base; solo un factor de rendimiento peor que la referencia
-puede bajar de ese piso. La base es el último dato recolectado (puede estar
-desfasada hasta que corra la actualización semanal); para el precio de hoy hay
-que editar el FNC base.
+abril 2026 (editable). El estimador usa `TRM × Coffee C × coeficiente implícito`.
+La calibración principal se guarda en `datos/historico/calibracion_fnc.csv` y el
+workflow la actualiza desde la publicación diaria de la FNC; la calibración
+estadística de respaldo se valida caminando sin datos futuros (MAE 26.376
+COP/carga, MAPE 1,02%, últimas 300 observaciones). Con la referencia oficial del
+25/06/2026 reproduce 2.160.000 COP para TRM 3.435,99 y Coffee C 276,40; aplicada
+a los valores del 24/06/2026 estima 2.163.736 frente a 2.165.000 (error 1.264
+COP, 0,06%). TRM y Coffee C aceptan dos decimales.
 
-**Validación última.** 39 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 46 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
@@ -120,10 +125,11 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
   refresque; el push dispara el redespliegue de Streamlit. GitHub deshabilita
   los cron tras 60 días de inactividad del repo.
 - Coordenadas climáticas = referencias municipales, no toda la variación interna.
-- Simulador: transmisión proporcional anclada al FNC observado; fórmula =
-  max(FNC base × (USD/COP esc ÷ base) × (Coffee C esc ÷ base), FNC base) ×
-  (94 ÷ factor). El `max` es el piso (garantía de compra FNC). No es la fórmula
-  oficial ni una predicción.
+- Simulador: fórmula = USD/COP escenario × Coffee C escenario × coeficiente
+  implícito × (94 ÷ factor). El coeficiente principal se deriva del último trío
+  publicado conjuntamente por la FNC y resume diferencial, conversiones y otros
+  componentes no modelados. El FNC observado calibra el coeficiente, pero no
+  funciona como piso; no es la fórmula oficial completa ni una predicción.
 
 ## Límites vigentes
 

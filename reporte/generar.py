@@ -5,7 +5,7 @@ from datetime import date
 import pandas as pd
 
 from config import CATALOGO_VARIABLES, FUENTES_COMERCIALES
-from procesar.proyeccion import ResultadoEscenario
+from procesar.proyeccion import ModeloPrecioFNC, ResultadoEscenario
 
 
 VARIABLES_BRIEF = [
@@ -186,12 +186,9 @@ def generar(
 
 def generar_informe_simulador(
     *,
-    precio_fnc_base: float,
-    tasa_cambio_base: float,
-    precio_ny_base: float,
+    modelo: ModeloPrecioFNC,
+    precio_fnc_observado: float,
     fecha_precio_fnc: date | pd.Timestamp,
-    fecha_tasa_cambio: date | pd.Timestamp,
-    fecha_precio_ny: date | pd.Timestamp,
     tasa_cambio_escenario: float,
     precio_ny_escenario: float,
     costo_produccion: float,
@@ -208,8 +205,6 @@ def generar_informe_simulador(
     if fecha_generacion is None:
         fecha_generacion = date.today()
     f_fnc = pd.Timestamp(fecha_precio_fnc)
-    f_fx = pd.Timestamp(fecha_tasa_cambio)
-    f_ny = pd.Timestamp(fecha_precio_ny)
     plural = "s" if cargas != 1 else ""
     retorno = (
         f"{_numero(resultado.retorno_sobre_costo_pct, 1)}% sobre costo"
@@ -225,20 +220,18 @@ def generar_informe_simulador(
         "",
         "## Supuestos del escenario",
         "",
-        "| Variable | Valor base | Escenario |",
-        "| --- | --- | --- |",
-        f"| Precio interno FNC (COP/carga 125 kg) | {_numero(precio_fnc_base, 0)} "
-        f"({f_fnc:%d/%m/%Y}) | — |",
-        f"| Tasa de cambio USD/COP | {_numero(tasa_cambio_base, 2)} ({f_fx:%d/%m/%Y}) | "
-        f"{_numero(tasa_cambio_escenario, 2)} |",
-        f"| Café ICE Coffee C (US¢/lb) | {_numero(precio_ny_base, 2)} ({f_ny:%d/%m/%Y}) | "
-        f"{_numero(precio_ny_escenario, 2)} |",
-        f"| Costo de producción (COP/carga 125 kg) | {_numero(costo_produccion, 0)} | — |",
-        f"| Volumen (cargas de 125 kg) | {cargas} | — |",
+        "| Variable | Valor |",
+        "| --- | --- |",
+        f"| Último precio FNC observado | {_numero(precio_fnc_observado, 0)} "
+        f"COP/carga ({f_fnc:%d/%m/%Y}) |",
+        f"| Tasa de cambio USD/COP del escenario | {_numero(tasa_cambio_escenario, 2)} |",
+        f"| Café ICE Coffee C del escenario | {_numero(precio_ny_escenario, 2)} US¢/lb |",
+        f"| Costo de producción | {_numero(costo_produccion, 0)} COP/carga |",
+        f"| Volumen | {cargas} carga{plural} de 125 kg |",
         *(
             [
-                f"| Factor de rendimiento | {_numero(factor_referencia, 0)} (referencia) "
-                f"| {_numero(factor_rendimiento, 0)} |"
+                f"| Factor de rendimiento | {_numero(factor_rendimiento, 0)} "
+                f"(referencia {_numero(factor_referencia, 0)}) |"
             ]
             if factor_rendimiento is not None and factor_referencia is not None
             else []
@@ -246,8 +239,8 @@ def generar_informe_simulador(
         "",
         "## Resultados",
         "",
-        f"- Precio interno FNC proyectado: {_cop(resultado.precio_fnc_proyectado)} por carga "
-        f"({_numero(resultado.cambio_precio_fnc_pct, 1)}% frente a la base).",
+        f"- Precio interno FNC estimado: {_cop(resultado.precio_fnc_estimado)} por carga "
+        f"({_numero(resultado.diferencia_fnc_observado_pct, 1)}% frente al último observado).",
         f"- Margen bruto por carga: {_cop(resultado.margen_por_carga)} "
         f"({_numero(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso).",
         f"- Ingreso por {cargas} carga{plural}: {_cop(resultado.ingreso_total)}.",
@@ -256,8 +249,8 @@ def generar_informe_simulador(
         "",
         "## Metodología",
         "",
-        "Precio FNC proyectado = precio FNC base × (USD/COP escenario ÷ USD/COP base) "
-        "× (Coffee C escenario ÷ Coffee C base)"
+        "Precio FNC estimado = USD/COP escenario × Coffee C escenario × "
+        "coeficiente calibrado"
         + (
             " × (factor referencia ÷ factor de rendimiento)"
             if factor_rendimiento is not None and factor_referencia is not None
@@ -265,16 +258,31 @@ def generar_informe_simulador(
         )
         + ".",
         "",
-        "El ajuste por factor de rendimiento es aproximado, no la fórmula oficial de "
-        "la FNC. El margen bruto resta el costo por carga editable y lo multiplica por "
-        "el número de cargas.",
+        (
+            f"El coeficiente se deriva del precio interno, Coffee C y TRM que la FNC "
+            f"publicó conjuntamente el {modelo.fecha_fin_calibracion:%d/%m/%Y}."
+            if modelo.calibracion_oficial
+            else (
+                f"El coeficiente se calibra con {modelo.observaciones_calibracion} fechas "
+                f"comparables recientes ({modelo.fecha_inicio_calibracion:%d/%m/%Y} a "
+                f"{modelo.fecha_fin_calibracion:%d/%m/%Y}) y pondera más las "
+                "observaciones más nuevas."
+            )
+        )
+        + " El ajuste por factor de rendimiento es aproximado, no la fórmula "
+        "oficial de la FNC. El margen bruto resta el costo por carga editable y lo "
+        "multiplica por el número de cargas.",
         "",
         "## Alcance y limitaciones",
         "",
-        "- No es un pronóstico: desplaza proporcionalmente el último precio FNC observado.",
+        f"- Validación caminando: error absoluto medio de "
+        f"{_numero(modelo.error_absoluto_medio, 0)} COP/carga "
+        f"({_numero(modelo.error_porcentual_medio, 2)}%) sobre "
+        f"{modelo.observaciones_validacion} observaciones.",
+        "- Es una estimación estadística; el precio FNC observado no se usa como entrada ni piso.",
         "- Margen bruto, antes de impuestos, logística, financiación, prima por calidad y "
         "otros costos no incluidos.",
-        "- No modela prima, calidad, pasilla, factor de rendimiento ni acopio por separado.",
+        "- No modela prima, calidad, pasilla ni acopio por separado.",
         f"- Costo de referencia nacional ({costo_fuente}): {_numero(costo_referencia, 0)} "
         f"COP/carga, dato de {pd.Timestamp(costo_fecha):%m/%Y}; editable porque no "
         "representa cada finca.",

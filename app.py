@@ -26,10 +26,14 @@ from config import (
 )
 from procesar.proyeccion import (
     ResultadoEscenario,
+    calibrar_modelo,
     calcular_escenario,
     crear_matriz_sensibilidad,
     obtener_bases,
+    obtener_bases_calibracion,
 )
+from procesar.historico import RUTA_DIARIO
+from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 from procesar.visualizacion import (
     RUTA_SERIES,
     ejecutar as preparar_visualizacion,
@@ -177,6 +181,28 @@ def _cargar_datos() -> pd.DataFrame:
     return _leer_series(str(ruta), ruta.stat().st_mtime)
 
 
+@st.cache_data(show_spinner=False)
+def _leer_historico_diario(ruta: str, marca_tiempo: float) -> pd.DataFrame:
+    """Carga las observaciones diarias usadas para calibrar el estimador."""
+    del marca_tiempo
+    return pd.read_csv(ruta, parse_dates=["fecha"])
+
+
+def _cargar_historico_diario() -> pd.DataFrame:
+    ruta = Path(RUTA_DIARIO)
+    if not ruta.exists():
+        raise FileNotFoundError(f"No existe el histórico diario: {ruta}")
+    return _leer_historico_diario(str(ruta), ruta.stat().st_mtime)
+
+
+def _cargar_calibracion_fnc() -> pd.DataFrame:
+    """Carga referencias oficiales coherentes; permite respaldo si aún no existen."""
+    ruta = Path(RUTA_CALIBRACION_FNC)
+    if not ruta.exists():
+        return pd.DataFrame()
+    return pd.read_csv(ruta, parse_dates=["fecha"])
+
+
 def _numero_es(valor: float, decimales: int) -> str:
     texto = f"{valor:,.{decimales}f}"
     return texto.replace(",", "X").replace(".", ",").replace("X", ".")
@@ -281,13 +307,13 @@ def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
 
 
 def _grafico_resultado_escenario(
-    precio_base: float,
-    precio_proyectado: float,
+    precio_observado: float,
+    precio_estimado: float,
     costo_produccion: float,
 ) -> go.Figure:
-    """Compara costo, precio observado y precio proyectado por carga."""
-    valores = [costo_produccion, precio_base, precio_proyectado]
-    etiquetas = ["Costo medio", "Precio FNC base", "Precio proyectado"]
+    """Compara costo, último precio observado y precio estimado por carga."""
+    valores = [costo_produccion, precio_observado, precio_estimado]
+    etiquetas = ["Costo medio", "Último FNC observado", "Precio estimado"]
     colores = ["#B45309", COLORES_INTERFAZ["comparacion"], COLORES_INTERFAZ["acento"]]
     figura = go.Figure(
         go.Bar(
@@ -321,11 +347,11 @@ def _grafico_sensibilidad(
     tasa_escenario: float,
     precio_ny_escenario: float,
 ) -> go.Figure:
-    """Muestra cómo cambia el precio proyectado para combinaciones Coffee C–FX."""
+    """Muestra cómo cambia el precio estimado para combinaciones Coffee C–FX."""
     pivote = matriz.pivot(
         index="precio_ny",
         columns="tasa_cambio",
-        values="precio_fnc_proyectado",
+        values="precio_fnc_estimado",
     )
     figura = go.Figure(
         go.Heatmap(
@@ -341,7 +367,7 @@ def _grafico_sensibilidad(
             hovertemplate=(
                 "USD/COP: %{x:,.0f}<br>"
                 "Coffee C: %{y:.1f} US¢/lb<br>"
-                "Precio FNC: $%{z:,.0f}<extra></extra>"
+                "Precio FNC estimado: $%{z:,.0f}<extra></extra>"
             ),
         )
     )
@@ -380,7 +406,7 @@ def _grafico_sensibilidad(
         )
     )
     figura.update_layout(
-        title="Mapa de sensibilidad del precio FNC proyectado",
+        title="Mapa de sensibilidad del precio FNC estimado",
         xaxis_title="Tasa de cambio (COP/USD)",
         yaxis_title="Coffee C (US¢/lb)",
         hovermode="closest",
@@ -465,27 +491,24 @@ def _aplicar_clic_sensibilidad(
         firma = (punto["x"], punto["y"])
         if st.session_state.get("sens_firma") != firma:
             st.session_state["sim_tasa"] = _ajustar_a_paso(
-                float(punto["x"]), minimo_fx, maximo_fx, 10.0
+                float(punto["x"]), minimo_fx, maximo_fx, 0.01
             )
             st.session_state["sim_ny"] = _ajustar_a_paso(
-                float(punto["y"]), minimo_cafe, maximo_cafe, 1.0
+                float(punto["y"]), minimo_cafe, maximo_cafe, 0.01
             )
             st.session_state["sens_firma"] = firma
     # Mantiene los valores guardados dentro del rango vigente si cambió la base.
     st.session_state["sim_tasa"] = _ajustar_a_paso(
-        st.session_state["sim_tasa"], minimo_fx, maximo_fx, 10.0
+        st.session_state["sim_tasa"], minimo_fx, maximo_fx, 0.01
     )
     st.session_state["sim_ny"] = _ajustar_a_paso(
-        st.session_state["sim_ny"], minimo_cafe, maximo_cafe, 1.0
+        st.session_state["sim_ny"], minimo_cafe, maximo_cafe, 0.01
     )
 
 
 def _restablecer_simulador() -> None:
     """Borra el estado del escenario para que vuelva a sus valores iniciales."""
     for clave in (
-        "sim_base_fnc",
-        "sim_base_tasa",
-        "sim_base_ny",
         "sim_tasa",
         "sim_ny",
         "sim_costo",
@@ -497,92 +520,81 @@ def _restablecer_simulador() -> None:
         st.session_state.pop(clave, None)
 
 
-def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
-    """Renderiza controles y resultados del escenario económico."""
-    bases = obtener_bases(tabla)
-    st.subheader("Simulador de precio interno y margen")
+def _simulador_proyeccion(
+    historico_diario: pd.DataFrame,
+    calibracion_fnc: pd.DataFrame,
+) -> None:
+    """Renderiza el estimador de precio FNC y el margen del escenario."""
+    bases = obtener_bases_calibracion(calibracion_fnc) or obtener_bases(
+        historico_diario
+    )
+    modelo = calibrar_modelo(historico_diario, calibracion_fnc)
+    st.subheader("Estimador de precio interno y margen")
     st.caption(
-        "Explore supuestos de Coffee C y USD/COP. No es un pronóstico: el modelo "
-        "desplaza proporcionalmente el último precio FNC observado y mantiene "
-        "constantes los factores no modelados."
+        "Ingrese supuestos de Coffee C y USD/COP para estimar el precio interno "
+        "FNC. El precio FNC observado ya no es una entrada ni funciona como piso."
     )
 
-    st.session_state.setdefault("sim_base_fnc", float(bases.precio_fnc))
-    st.session_state.setdefault("sim_base_tasa", float(bases.tasa_cambio))
-    st.session_state.setdefault("sim_base_ny", float(bases.precio_ny))
-
-    with st.expander("Valores base y metodología", expanded=False):
-        base_1, base_2, base_3 = st.columns(3)
-        precio_fnc_base = base_1.number_input(
-            "Precio FNC base · COP/carga",
-            min_value=1.0,
-            step=10_000.0,
-            format="%.0f",
-            key="sim_base_fnc",
-        )
-        tasa_cambio_base = base_2.number_input(
-            "USD/COP base",
-            min_value=1.0,
-            step=10.0,
-            format="%.2f",
-            key="sim_base_tasa",
-        )
-        precio_ny_base = base_3.number_input(
-            "Coffee C base · US¢/lb",
-            min_value=1.0,
-            step=1.0,
-            format="%.2f",
-            key="sim_base_ny",
-        )
-        st.caption(
-            f"Fechas base: FNC {bases.fecha_precio_fnc:%d/%m/%Y} · "
-            f"USD/COP {bases.fecha_tasa_cambio:%d/%m/%Y} · "
-            f"Coffee C {bases.fecha_precio_ny:%d/%m/%Y}. La base es el último dato "
-            "recolectado; para reflejar el precio FNC de hoy, edítela con el valor "
-            "publicado o espere la actualización semanal automática."
-        )
+    with st.expander("Calibración y metodología", expanded=False):
+        if modelo.calibracion_oficial:
+            st.caption(
+                f"Calibración oficial FNC del {modelo.fecha_fin_calibracion:%d/%m/%Y}: "
+                "precio interno, Coffee C y TRM publicados juntos para evitar mezclar "
+                "fuentes u horas de cierre. Si esa referencia falla, el respaldo "
+                f"estadístico tiene un error histórico medio de "
+                f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
+                f"({modelo.error_porcentual_medio:.2f}%)."
+            )
+        else:
+            st.caption(
+                f"Calibración de respaldo: {modelo.observaciones_calibracion} fechas "
+                f"comparables, de {modelo.fecha_inicio_calibracion:%d/%m/%Y} a "
+                f"{modelo.fecha_fin_calibracion:%d/%m/%Y}. Validación caminando sobre "
+                f"{modelo.observaciones_validacion} observaciones: error absoluto medio "
+                f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
+                f"({modelo.error_porcentual_medio:.2f}%)."
+            )
         st.markdown(
-            "**Fórmula:** precio FNC base × (USD/COP escenario ÷ USD/COP base) "
-            "× (Coffee C escenario ÷ Coffee C base) × (factor referencia ÷ factor "
-            "de rendimiento). El **precio FNC base actúa como piso** (garantía de "
-            "compra de la FNC): la transmisión de mercado no proyecta por debajo "
-            "de él; solo un factor de rendimiento peor que el de referencia puede "
-            "bajarlo. El ajuste por factor es aproximado, no la fórmula oficial. "
-            "La prima o diferencial, calidad, pasilla y acopio no se modelan por "
-            "separado."
+            "**Fórmula:** USD/COP escenario × Coffee C escenario × coeficiente "
+            "calibrado × (factor referencia ÷ factor de rendimiento). El coeficiente "
+            "se recalcula con los últimos datos diarios comparables y pondera más "
+            "los recientes. Resume prima, conversiones y otros componentes que no "
+            "se modelan por separado; no reproduce la fórmula oficial de la FNC."
         )
 
-    minimo_fx = float(floor(tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[0] / 50) * 50)
-    maximo_fx = float(ceil(tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[1] / 50) * 50)
-    minimo_cafe = float(floor(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[0]))
-    maximo_cafe = float(ceil(precio_ny_base * PROYECCION_RANGO_FACTOR_CAFE[1]))
+    minimo_fx = float(floor(bases.tasa_cambio * PROYECCION_RANGO_FACTOR_FX[0] / 50) * 50)
+    maximo_fx = float(ceil(bases.tasa_cambio * PROYECCION_RANGO_FACTOR_FX[1] / 50) * 50)
+    minimo_cafe = float(floor(bases.precio_ny * PROYECCION_RANGO_FACTOR_CAFE[0]))
+    maximo_cafe = float(ceil(bases.precio_ny * PROYECCION_RANGO_FACTOR_CAFE[1]))
 
     st.session_state.setdefault(
-        "sim_tasa", _ajustar_a_paso(tasa_cambio_base, minimo_fx, maximo_fx, 10.0)
+        "sim_tasa", _ajustar_a_paso(bases.tasa_cambio, minimo_fx, maximo_fx, 0.01)
     )
     st.session_state.setdefault(
-        "sim_ny", _ajustar_a_paso(precio_ny_base, minimo_cafe, maximo_cafe, 1.0)
+        "sim_ny", _ajustar_a_paso(bases.precio_ny, minimo_cafe, maximo_cafe, 0.01)
     )
     _aplicar_clic_sensibilidad(minimo_fx, maximo_fx, minimo_cafe, maximo_cafe)
 
     control_1, control_2 = st.columns(2)
-    tasa_escenario = control_1.slider(
+    tasa_escenario = control_1.number_input(
         "Tasa de cambio del escenario · COP/USD",
         min_value=minimo_fx,
         max_value=maximo_fx,
-        step=10.0,
+        step=0.01,
+        format="%.2f",
         key="sim_tasa",
     )
-    precio_ny_escenario = control_2.slider(
+    precio_ny_escenario = control_2.number_input(
         "Coffee C del escenario · US¢/lb",
         min_value=minimo_cafe,
         max_value=maximo_cafe,
-        step=1.0,
+        step=0.01,
+        format="%.2f",
         key="sim_ny",
     )
     st.caption(
-        "Mueve los sliders o haz clic en una celda del mapa de sensibilidad para "
-        "fijar ese escenario."
+        "Escriba los valores del día o haga clic en el mapa de sensibilidad para "
+        "fijar un escenario."
     )
 
     st.session_state.setdefault("sim_costo", float(COSTO_PRODUCCION_REFERENCIA))
@@ -622,26 +634,29 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
     st.button(
         "↺ Restablecer valores predeterminados",
         on_click=_restablecer_simulador,
-        help="Vuelve los controles del escenario y la base a sus valores iniciales.",
+        help="Vuelve los controles del escenario a los últimos valores disponibles.",
     )
 
     resultado = calcular_escenario(
-        precio_fnc_base,
-        tasa_cambio_base,
-        precio_ny_base,
+        modelo,
         tasa_escenario,
         precio_ny_escenario,
         costo_produccion,
         cargas,
+        bases.precio_fnc,
         factor_rendimiento,
         FACTOR_RENDIMIENTO_REFERENCIA,
     )
 
     metricas = st.columns(4)
     metricas[0].metric(
-        "Precio FNC proyectado",
-        f"${_numero_es(resultado.precio_fnc_proyectado, 0)}",
-        f"{resultado.cambio_precio_fnc_pct:+.1f}% frente a la base",
+        "Precio FNC estimado",
+        f"${_numero_es(resultado.precio_fnc_estimado, 0)}",
+        (
+            f"{resultado.diferencia_fnc_observado_pct:+.1f}% frente al último observado"
+            if pd.notna(resultado.diferencia_fnc_observado_pct)
+            else None
+        ),
         delta_color="off",
     )
     metricas[1].metric(
@@ -670,8 +685,8 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
     with grafico_1:
         st.plotly_chart(
             _grafico_resultado_escenario(
-                precio_fnc_base,
-                resultado.precio_fnc_proyectado,
+                bases.precio_fnc,
+                resultado.precio_fnc_estimado,
                 costo_produccion,
             ),
             width="stretch",
@@ -683,9 +698,7 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         tasas = _puntos_lineales(minimo_fx, maximo_fx)
         precios_ny = _puntos_lineales(minimo_cafe, maximo_cafe)
         matriz = crear_matriz_sensibilidad(
-            precio_fnc_base,
-            tasa_cambio_base,
-            precio_ny_base,
+            modelo,
             tasas,
             precios_ny,
             factor_rendimiento,
@@ -702,12 +715,9 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         )
 
     informe = generar_informe_simulador(
-        precio_fnc_base=precio_fnc_base,
-        tasa_cambio_base=tasa_cambio_base,
-        precio_ny_base=precio_ny_base,
+        modelo=modelo,
+        precio_fnc_observado=bases.precio_fnc,
         fecha_precio_fnc=bases.fecha_precio_fnc,
-        fecha_tasa_cambio=bases.fecha_tasa_cambio,
-        fecha_precio_ny=bases.fecha_precio_ny,
         tasa_cambio_escenario=tasa_escenario,
         precio_ny_escenario=precio_ny_escenario,
         costo_produccion=costo_produccion,
@@ -735,7 +745,7 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
     )
     st.markdown(f"**Fuente del costo:** [{COSTO_PRODUCCION_FUENTE}]({COSTO_PRODUCCION_URL})")
     st.caption(
-        "El margen es una simulación bruta: precio proyectado menos costo de "
+        "El margen es una simulación bruta: precio estimado menos costo de "
         "producción supuesto. No incluye prima modelada, impuestos, logística, "
         "financiación, descuentos por calidad ni diferencias regionales."
     )
@@ -886,6 +896,8 @@ def _brief_pdf(inicio: pd.Timestamp, fin: pd.Timestamp, marca_datos: float) -> b
 
 _estilos()
 datos = _cargar_datos()
+historico_diario = _cargar_historico_diario()
+calibracion_fnc = _cargar_calibracion_fnc()
 ultima_semana = datos["semana_fin"].max()
 semanas_disponibles_total = datos["semana_fin"].nunique()
 
@@ -898,7 +910,7 @@ st.caption(
 st.markdown(
     "Explore series para análisis, informes y reuniones. El panorama nacional "
     "permite leer conjuntamente precio interno FNC, Coffee C y USD/COP, y el "
-    "simulador estima precio proyectado y margen bajo distintos supuestos."
+    "simulador estima precio interno y margen bajo distintos supuestos."
 )
 
 st.sidebar.header("Filtros")
@@ -1022,7 +1034,7 @@ with tab_panorama:
         )
 
 with tab_proyeccion:
-    _simulador_proyeccion(datos)
+    _simulador_proyeccion(historico_diario, calibracion_fnc)
 
 st.divider()
 st.caption(

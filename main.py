@@ -7,7 +7,16 @@ correctamente y que cada obtener() cumple el contrato de columnas.
 
 import pandas as pd
 
-from fuentes import cafe, clima, contexto, fx, noticias, precio_interno, produccion
+from fuentes import (
+    cafe,
+    clima,
+    contexto,
+    fx,
+    noticias,
+    precio_interno,
+    produccion,
+    referencia_mercado_fnc,
+)
 from procesar import score, unir
 from reporte import generar
 
@@ -52,6 +61,7 @@ def main() -> None:
         _validar("fx",             fx.obtener(),             COLS_NUMERICAS),
         _validar("cafe",           cafe.obtener(),           COLS_NUMERICAS),
         _validar("precio_interno", precio_interno.obtener(), COLS_NUMERICAS),
+        _validar("referencia_fnc", referencia_mercado_fnc.obtener(), COLS_NUMERICAS),
         _validar("produccion",     produccion.obtener(),     COLS_NUMERICAS),
         _validar("clima",          clima.obtener(),          COLS_NUMERICAS),
         _validar("noticias",       noticias.obtener(),       COLS_NOTICIAS),
