@@ -123,6 +123,12 @@ def _estilos() -> None:
             font-size: 1.55rem;
         }}
         [data-testid="stMetricDelta"] {{ color: var(--monitor-secundario) !important; }}
+        /* Margen por carga y total: ocultar la flecha (es un ratio, no una
+           variación) pero conservar el texto dentro de la tarjeta. */
+        .st-key-metrica_margen_carga [data-testid="stMetricDelta"] svg,
+        .st-key-metrica_margen_total [data-testid="stMetricDelta"] svg {{ display: none; }}
+        .st-key-metrica_margen_carga [data-testid="stMetricDelta"],
+        .st-key-metrica_margen_total [data-testid="stMetricDelta"] {{ padding-left: 0; }}
         [data-testid="stPlotlyChart"] {{
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
@@ -470,6 +476,9 @@ def _grafico_sensibilidad(
     matriz: pd.DataFrame,
     tasa_escenario: float,
     precio_ny_escenario: float,
+    coeficiente: float,
+    factor_rendimiento: float,
+    factor_referencia: float,
 ) -> go.Figure:
     """Muestra cómo cambia el precio estimado para combinaciones Coffee C–FX."""
     pivote = matriz.pivot(
@@ -488,33 +497,40 @@ def _grafico_sensibilidad(
                 [1, "#176B4D"],
             ],
             colorbar=dict(title="COP/carga", tickformat=",.0f"),
-            hovertemplate=(
-                "USD/COP: %{x:,.0f}<br>"
-                "Coffee C: %{y:.1f} US¢/lb<br>"
-                "Precio FNC estimado: $%{z:,.0f}<extra></extra>"
-            ),
+            # Solo color: el hover y el clic los maneja la rejilla de puntos.
+            hoverinfo="skip",
         )
     )
     # Rejilla fina e invisible para capturar el clic con precisión: el Heatmap no
-    # emite eventos de clic, pero un Scatter sí. Con hovermode "closest" el clic
-    # elige el punto más cercano; al ser densa, ese punto queda casi donde se
-    # hizo clic. El hover lo sigue dando el heatmap (esta capa lo deja pasar).
-    resolucion = 45
+    # emite eventos de clic, pero un Scatter sí. Cada punto lleva su precio
+    # estimado para mostrar el hover y permitir la selección. CLAVE: el hoverinfo
+    # no puede ser "skip" porque en Plotly "skip" también anula el clic; por eso
+    # se usa un hovertemplate. Los marcadores son grandes para cubrir el área sin
+    # huecos y que cualquier clic caiga sobre un punto.
+    ajuste = factor_referencia / factor_rendimiento
+    resolucion = 50
     tasa_min, tasa_max = float(matriz["tasa_cambio"].min()), float(matriz["tasa_cambio"].max())
     ny_min, ny_max = float(matriz["precio_ny"].min()), float(matriz["precio_ny"].max())
-    rejilla_x, rejilla_y = [], []
+    rejilla_x, rejilla_y, rejilla_precio = [], [], []
     for indice_ny in range(resolucion):
         ny = ny_min + indice_ny * (ny_max - ny_min) / (resolucion - 1)
         for indice_tasa in range(resolucion):
-            rejilla_x.append(tasa_min + indice_tasa * (tasa_max - tasa_min) / (resolucion - 1))
+            tasa = tasa_min + indice_tasa * (tasa_max - tasa_min) / (resolucion - 1)
+            rejilla_x.append(tasa)
             rejilla_y.append(ny)
+            rejilla_precio.append(tasa * ny * coeficiente * ajuste)
     figura.add_trace(
         go.Scatter(
             x=rejilla_x,
             y=rejilla_y,
             mode="markers",
-            marker=dict(size=12, color="rgba(0,0,0,0)"),
-            hoverinfo="skip",
+            marker=dict(size=16, color="rgba(0,0,0,0)"),
+            customdata=rejilla_precio,
+            hovertemplate=(
+                "USD/COP: %{x:,.0f}<br>"
+                "Coffee C: %{y:.1f} US¢/lb<br>"
+                "Precio FNC estimado: $%{customdata:,.0f}<extra></extra>"
+            ),
             showlegend=False,
             name="celdas",
         )
@@ -777,34 +793,37 @@ def _simulador_proyeccion(
         "Precio FNC estimado",
         f"${_numero_es(resultado.precio_fnc_estimado, 0)}",
         (
-            f"{resultado.diferencia_fnc_observado_pct:+.1f}% frente al último observado"
+            f"{_numero_es(resultado.diferencia_fnc_observado_pct, 1)}% frente al último observado"
             if pd.notna(resultado.diferencia_fnc_observado_pct)
             else None
         ),
         delta_color="off",
     )
-    # Estos dos porcentajes son ratios (margen sobre ingreso, retorno sobre
-    # costo), no variaciones: se muestran como nota debajo y no con `delta`, que
-    # siempre dibuja una flecha de subida/bajada que aquí no aplica.
-    metricas[1].metric(
-        "Margen bruto por carga",
-        f"${_numero_es(resultado.margen_por_carga, 0)}",
-    )
-    metricas[1].caption(
-        f"{_numero_es(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso"
-    )
+    # Margen por carga y margen total muestran ratios (% del ingreso, % sobre el
+    # costo), no variaciones; van dentro de la tarjeta con `delta`, pero se les
+    # oculta la flecha por CSS (clases st-key-*) porque no indican subida/bajada.
+    with metricas[1].container(key="metrica_margen_carga"):
+        st.metric(
+            "Margen bruto por carga",
+            f"${_numero_es(resultado.margen_por_carga, 0)}",
+            f"{_numero_es(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso",
+            delta_color="off",
+        )
     metricas[2].metric(
         f"Ingreso por {cargas} carga{'s' if cargas != 1 else ''}",
         f"${_numero_es(resultado.ingreso_total, 0)}",
         delta=None,
     )
-    metricas[3].metric(
-        "Margen bruto total",
-        f"${_numero_es(resultado.margen_total, 0)}",
-    )
-    if pd.notna(resultado.retorno_sobre_costo_pct):
-        metricas[3].caption(
-            f"{_numero_es(resultado.retorno_sobre_costo_pct, 1)}% sobre el costo"
+    with metricas[3].container(key="metrica_margen_total"):
+        st.metric(
+            "Margen bruto total",
+            f"${_numero_es(resultado.margen_total, 0)}",
+            (
+                f"{_numero_es(resultado.retorno_sobre_costo_pct, 1)}% sobre el costo"
+                if pd.notna(resultado.retorno_sobre_costo_pct)
+                else None
+            ),
+            delta_color="off",
         )
 
     grafico_1, grafico_2 = st.columns([0.85, 1.15])
@@ -831,7 +850,14 @@ def _simulador_proyeccion(
             FACTOR_RENDIMIENTO_REFERENCIA,
         )
         st.plotly_chart(
-            _grafico_sensibilidad(matriz, tasa_escenario, precio_ny_escenario),
+            _grafico_sensibilidad(
+                matriz,
+                tasa_escenario,
+                precio_ny_escenario,
+                modelo.coeficiente,
+                factor_rendimiento,
+                FACTOR_RENDIMIENTO_REFERENCIA,
+            ),
             width="stretch",
             theme=None,
             config=CONFIG_GRAFICO,

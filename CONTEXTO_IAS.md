@@ -102,11 +102,18 @@ rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
 (prefijo `sim_`) y un botón "Restablecer valores predeterminados" (callback
 `_restablecer_simulador` que limpia esas claves). El escenario se fija con
 entradas numéricas o haciendo clic en el mapa de sensibilidad: el Heatmap no emite eventos
-de clic, así que se superpone una rejilla fina e invisible (Scatter 45×45, capa
-"celdas") y con `hovermode="closest"` + `on_select="rerun"` un clic elige el punto
-más cercano (al ser densa, queda casi donde se hizo clic). El parser descarta la
-curva del marcador del escenario. La matriz coloreada se alinea al rango exacto
-de los controles y el heatmap conserva el hover de precios. Muestra precio
+de clic, así que se superpone una rejilla fina e invisible (Scatter 50×50, capa
+"celdas") con `on_select="rerun"`. **Clave (corregido):** la rejilla NO puede usar
+`hoverinfo="skip"` porque en Plotly `skip` también anula el clic (por eso antes el
+hover funcionaba pero no seleccionaba); ahora la rejilla lleva su propio
+`hovertemplate` con el precio estimado de cada punto (z = `tasa×ny×coef×ajuste`),
+marcadores grandes (size 16) que cubren el área sin huecos, y el heatmap queda
+solo como color (`hoverinfo="skip"`). El parser descarta la curva del marcador del
+escenario (curva 2). La matriz coloreada se alinea al rango exacto de los
+controles. Las métricas margen-por-carga y margen-total muestran su ratio dentro
+de la tarjeta con `delta` pero ocultan la flecha por CSS (contenedores
+`st.container(key="metrica_margen_carga"/"metrica_margen_total")` → clases
+`st-key-*`), porque un ratio no indica subida/bajada. Muestra precio
 estimado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
 = margen) y la matriz. Botón para descargar un informe Markdown
 (`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé
