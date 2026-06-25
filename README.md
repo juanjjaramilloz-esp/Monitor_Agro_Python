@@ -16,6 +16,8 @@ para analizar tendencias antes de construir un score.
 - Dashboard publicado: panorama comercial y simulador.
 - Comparación mensual: gráficas de producción, exportaciones y diferencia
   producción menos exportaciones para los meses con ambos datos.
+- Coherencia entre vistas: Panorama y Simulador usan el mismo último trío
+  oficial FNC/Coffee C/TRM como referencia comercial actual.
 - Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
   ejecutivo en PDF con las gráficas (matplotlib + reportlab).
 - Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,

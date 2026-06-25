@@ -30,7 +30,8 @@ No necesita instalar nada. Todo funciona desde el navegador.
    USD/COP y precio interno FNC en una escala base 100 para compararlos en un
    mismo gráfico, más producción, exportaciones y su diferencia mensual. Aquí
    están las descargas por periodo: las series comerciales en CSV y un brief en
-   PDF con las gráficas.
+   PDF con las gráficas. La referencia comercial más reciente coincide con la
+   usada por el simulador; el histórico permanece agregado por semanas cerradas.
 2. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
    Coffee C, USD/COP, costo, volumen y factor de rendimiento, con la opción de
    descargar un informe del escenario (ver más abajo).

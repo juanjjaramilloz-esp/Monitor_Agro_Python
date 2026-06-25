@@ -78,6 +78,9 @@ Jaramillo) al pie del sidebar y del pie de
 página, con aviso `© 2026 ... Todos los derechos reservados` (`LICENSE`
 propietario; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
+Panorama y simulador usan como referencia actual el mismo último trío coherente
+FNC/Coffee C/TRM guardado en `calibracion_fnc.csv`; el panorama conserva además
+el histórico semanal cerrado y distingue ambas fechas en el encabezado.
 
 **Simulador.** Controles: Coffee C, USD/COP, costo, cargas y factor de
 rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
@@ -101,7 +104,7 @@ COP/carga, MAPE 1,02%, últimas 300 observaciones). Con la referencia oficial de
 a los valores del 24/06/2026 estima 2.163.736 frente a 2.165.000 (error 1.264
 COP, 0,06%). TRM y Coffee C aceptan dos decimales.
 
-**Validación última.** 50 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 51 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con

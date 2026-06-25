@@ -8,6 +8,7 @@ from procesar.visualizacion import (
     _estado_anomalia,
     crear_resumen_visual,
     faltan_variables_historicas,
+    incorporar_referencia_comercial_actual,
     preparar,
     preparar_descarga_comercial,
 )
@@ -97,6 +98,21 @@ class PreparacionVisualTests(unittest.TestCase):
             faltan_variables_historicas(historico, {"produccion_nacional"})
         )
         self.assertFalse(faltan_variables_historicas(historico, historico))
+
+    def test_incorpora_referencia_actual_sin_reemplazar_historico(self) -> None:
+        historico = preparar(self._historico())
+        actualizado = incorporar_referencia_comercial_actual(
+            historico,
+            {"fx_usd_local": (4300.0, pd.Timestamp("2026-02-05"))},
+        )
+        actual = actualizado[
+            actualizado["variable"].eq("fx_usd_local")
+        ].sort_values("fecha_dato").iloc[-1]
+
+        self.assertEqual(len(actualizado), len(historico) + 1)
+        self.assertEqual(actual["valor"], 4300.0)
+        self.assertEqual(actual["fecha_dato"], pd.Timestamp("2026-02-05"))
+        self.assertEqual(actual["fuente"], "FNC")
 
 
 if __name__ == "__main__":

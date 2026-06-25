@@ -37,6 +37,7 @@ from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 from procesar.visualizacion import (
     RUTA_SERIES,
     ejecutar as preparar_visualizacion,
+    incorporar_referencia_comercial_actual,
     preparar_descarga_comercial,
     series_necesitan_regenerarse,
 )
@@ -217,7 +218,7 @@ def _valor_metrica(fila: pd.Series) -> str:
 def _delta_pct(fila: pd.Series) -> str | None:
     if pd.isna(fila["cambio_1s_pct"]):
         return None
-    return f"{_numero_es(float(fila['cambio_1s_pct']), 1)}% semanal"
+    return f"{_numero_es(float(fila['cambio_1s_pct']), 1)}% vs cierre semanal"
 
 
 def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
@@ -879,12 +880,17 @@ def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
     filas = []
     for _, fila in ultimos.iterrows():
         metadatos = FUENTES_COMERCIALES[fila["variable"]]
+        fuente = (
+            "Federación Nacional de Cafeteros (FNC)"
+            if fila["fuente"] == "FNC"
+            else metadatos["nombre"]
+        )
         filas.append(
             {
                 "Indicador": fila["etiqueta_variable"],
                 "Último dato": pd.Timestamp(fila["fecha_dato"]).strftime("%d/%m/%Y"),
                 "Unidad": fila["unidad"],
-                "Fuente": metadatos["nombre"],
+                "Fuente": fuente,
                 "Alcance": metadatos["alcance"],
                 "Cadencia": fila["cadencia"],
             }
@@ -1009,23 +1015,47 @@ def _brief_pdf(inicio: pd.Timestamp, fin: pd.Timestamp, marca_datos: float) -> b
         inicio=inicio,
         fin=fin,
         periodo=periodo,
-        variaciones=_variaciones_mercado(datos),
+        variaciones=_variaciones_mercado(datos_semanales),
         cobertura=_resumen_fuentes_comerciales(periodo),
     )
 
 
 _estilos()
-datos = _cargar_datos()
+datos_semanales = _cargar_datos()
 historico_diario = _cargar_historico_diario()
 calibracion_fnc = _cargar_calibracion_fnc()
-ultima_semana = datos["semana_fin"].max()
-semanas_disponibles_total = datos["semana_fin"].nunique()
+bases_actuales = obtener_bases_calibracion(calibracion_fnc) or obtener_bases(
+    historico_diario
+)
+referencia_actual = {
+    "precio_interno_referencia": (
+        bases_actuales.precio_fnc,
+        bases_actuales.fecha_precio_fnc,
+    ),
+    "fx_usd_local": (
+        bases_actuales.tasa_cambio,
+        bases_actuales.fecha_tasa_cambio,
+    ),
+    "precio_cafe_arabica": (
+        bases_actuales.precio_ny,
+        bases_actuales.fecha_precio_ny,
+    ),
+}
+datos = incorporar_referencia_comercial_actual(datos_semanales, referencia_actual)
+ultima_semana = datos_semanales["semana_fin"].max()
+ultima_referencia = max(
+    bases_actuales.fecha_precio_fnc,
+    bases_actuales.fecha_tasa_cambio,
+    bases_actuales.fecha_precio_ny,
+)
+semanas_disponibles_total = datos_semanales["semana_fin"].nunique()
 
 st.title("Herramienta Consultas y Reportes")
 st.caption(
     "Kit de consulta y reporte para integrar, comparar y exportar "
     "evidencia comercial del café colombiano · "
-    f"{semanas_disponibles_total} semanas · datos hasta {ultima_semana:%d/%m/%Y}"
+    f"{semanas_disponibles_total} semanas cerradas hasta {ultima_semana:%d/%m/%Y} · "
+    f"referencia comercial al {ultima_referencia:%d/%m/%Y}"
 )
 st.markdown(
     "Explore series para análisis, informes y reuniones. El panorama nacional "
@@ -1096,7 +1126,7 @@ with tab_panorama:
     )
     st.markdown("**Variaciones por indicador**")
     st.dataframe(
-        _variaciones_mercado(datos).style.format(
+        _variaciones_mercado(datos_semanales).style.format(
             {
                 "Semanal": "{:+.1f}%",
                 "Mensual (4 sem.)": "{:+.1f}%",

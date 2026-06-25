@@ -35,6 +35,50 @@ def faltan_variables_historicas(
     return not variables_historico.issubset(variables_series)
 
 
+def incorporar_referencia_comercial_actual(
+    tabla: pd.DataFrame,
+    referencia: dict[str, tuple[float, pd.Timestamp]],
+) -> pd.DataFrame:
+    """Añade a las series semanales un punto comercial actual y coherente."""
+    resultado = tabla.copy()
+    resultado["semana_fin"] = pd.to_datetime(resultado["semana_fin"])
+    resultado["fecha_dato"] = pd.to_datetime(resultado["fecha_dato"])
+    filas = []
+    for variable, (valor, fecha) in referencia.items():
+        serie = resultado[resultado["variable"].eq(variable)].sort_values("fecha_dato")
+        if serie.empty:
+            continue
+        fecha = pd.Timestamp(fecha)
+        ultima = serie.iloc[-1].copy()
+        valor_anterior = float(ultima["valor"])
+        valor_base = float(serie.iloc[0]["valor"])
+        ultima["semana_fin"] = fecha
+        ultima["fecha_dato"] = fecha
+        ultima["valor"] = float(valor)
+        ultima["fuente"] = "FNC"
+        ultima["cadencia"] = "Referencia oficial diaria más reciente"
+        ultima["dias_observados"] = 1
+        ultima["indice_base_100"] = (
+            float(valor) / valor_base * 100 if valor_base else pd.NA
+        )
+        ultima["cambio_1s_absoluto"] = float(valor) - valor_anterior
+        ultima["cambio_1s_pct"] = (
+            (float(valor) / valor_anterior - 1) * 100 if valor_anterior else pd.NA
+        )
+        filas.append(ultima)
+
+    if not filas:
+        return resultado
+    actuales = pd.DataFrame(filas, columns=resultado.columns)
+    claves = ["fecha_dato", "geografia", "variable"]
+    resultado = pd.concat([resultado, actuales], ignore_index=True)
+    return (
+        resultado.drop_duplicates(claves, keep="last")
+        .sort_values(["semana_fin", "orden_geografia", "orden_variable"])
+        .reset_index(drop=True)
+    )
+
+
 def series_necesitan_regenerarse(
     ruta_series: Path = RUTA_SERIES,
     ruta_historico: Path = RUTA_HISTORICO,

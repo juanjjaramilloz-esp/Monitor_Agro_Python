@@ -155,6 +155,9 @@ concentrar el producto visible en consulta, reporte y simulación comercial.
   cierres de Coffee C y USD/COP de otro proveedor u otra hora cuando exista el
   trío diario publicado conjuntamente por la FNC. Los cierres de Yahoo se
   conservan para las series de mercado y como respaldo estadístico.
+- **Coherencia entre vistas:** Panorama nacional y Simulador muestran como
+  referencia actual el mismo último trío FNC/Coffee C/TRM; el panorama conserva
+  adicionalmente el histórico de semanas cerradas.
 - **Credibilidad visible:** el producto final debe explicar fuentes,
   metodología, alcance y limitaciones.
 - **Integrar antes que multiplicar:** para CRECE, el valor principal está en
