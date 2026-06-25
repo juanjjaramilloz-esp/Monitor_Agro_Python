@@ -1,8 +1,14 @@
 # Monitor Agro Colombia
 
-Monitor semanal de condiciones comerciales y climáticas que afectan al café
-colombiano. Compara ocho departamentos cafeteros y conserva datos históricos
-para analizar tendencias antes de construir un score.
+**App en vivo: [kitconsultayreporte.streamlit.app](https://kitconsultayreporte.streamlit.app/)**
+
+Kit de consulta y reporte sobre las condiciones que afectan la agroexportación
+de café de Colombia: precio internacional del café (Coffee C), USD/COP, precio
+interno FNC y producción/exportaciones nacionales mensuales. La app deja
+consultar y exportar la evidencia, generar un brief del periodo y simular el
+precio interno y el margen ante cambios de mercado. Conserva el histórico desde
+2023 para analizar tendencias antes de construir un score. El clima de los
+departamentos cafeteros sigue en el pipeline de datos, pero no en la interfaz.
 
 ## Estado actual
 
