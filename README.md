@@ -10,6 +10,11 @@ precio interno y el margen ante cambios de mercado. Conserva el histórico desde
 2023 para analizar tendencias antes de construir un score. El clima de los
 departamentos cafeteros sigue en el pipeline de datos, pero no en la interfaz.
 
+## Stack
+
+Python · pandas · Plotly · Streamlit · matplotlib + reportlab (brief en PDF) ·
+yfinance / Open-Meteo / GDELT (fuentes) · GitHub Actions (automatización).
+
 ## Estado actual
 
 - Fuentes activas: USD/COP, café arábica internacional, precio interno FNC,
