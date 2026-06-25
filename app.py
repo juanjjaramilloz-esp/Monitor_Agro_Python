@@ -14,11 +14,9 @@ from config import (
     COSTO_PRODUCCION_FUENTE,
     COSTO_PRODUCCION_REFERENCIA,
     COSTO_PRODUCCION_URL,
-    DEPARTAMENTOS,
     FACTOR_RENDIMIENTO_RANGO,
     FACTOR_RENDIMIENTO_REFERENCIA,
     FUENTES_COMERCIALES,
-    GEOGRAFIA_PRIORITARIA,
     PERIODOS_VISUALIZACION,
     PROYECCION_CARGAS_MAXIMAS,
     PROYECCION_CARGAS_PREDETERMINADAS,
@@ -49,7 +47,7 @@ CONFIG_GRAFICO = {
 
 
 st.set_page_config(
-    page_title="Monitor Agro Colombia",
+    page_title="Herramienta Consultas y Reportes",
     page_icon="☕",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -195,14 +193,6 @@ def _delta_pct(fila: pd.Series) -> str | None:
     return f"{_numero_es(float(fila['cambio_1s_pct']), 1)}% semanal"
 
 
-def _delta_absoluto(fila: pd.Series) -> str | None:
-    if pd.isna(fila["cambio_1s_absoluto"]):
-        return None
-    decimales = int(fila["decimales"])
-    cambio = _numero_es(float(fila["cambio_1s_absoluto"]), decimales)
-    return f"{cambio} {fila['unidad']} semanal"
-
-
 def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
     if semanas is None:
         return tabla.copy()
@@ -288,60 +278,6 @@ def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
         ),
     )
     return _layout(figura, 350)
-
-
-def _grafico_lluvia(tabla: pd.DataFrame, departamento: str) -> go.Figure:
-    datos = tabla[
-        (tabla["geografia"] == departamento)
-        & (tabla["variable"] == "precipitacion_semanal")
-    ]
-    color = CATALOGO_VARIABLES["precipitacion_semanal"]["color"]
-    figura = go.Figure()
-    figura.add_trace(
-        go.Bar(
-            x=datos["semana_fin"],
-            y=datos["valor"],
-            name="Precipitación",
-            marker_color=color,
-            opacity=0.68,
-            hovertemplate="%{x|%d %b %Y}<br>%{y:.1f} mm<extra></extra>",
-        )
-    )
-    figura.add_trace(
-        go.Scatter(
-            x=datos["semana_fin"],
-            y=datos["promedio_movil_4s"],
-            name="Promedio 4 semanas",
-            line=dict(color="#174E73", width=2.5),
-            hovertemplate="%{x|%d %b %Y}<br>%{y:.1f} mm<extra></extra>",
-        )
-    )
-    figura.update_layout(title=f"Precipitación · {departamento}", bargap=0.1)
-    return _layout(figura, 390)
-
-
-def _grafico_temperaturas(tabla: pd.DataFrame, departamento: str) -> go.Figure:
-    variables = ["temp_min_semanal", "temp_promedio_semanal", "temp_max_semanal"]
-    datos = tabla[(tabla["geografia"] == departamento) & tabla["variable"].isin(variables)]
-    figura = go.Figure()
-    for variable in variables:
-        grupo = datos[datos["variable"] == variable]
-        metadatos = CATALOGO_VARIABLES[variable]
-        figura.add_trace(
-            go.Scatter(
-                x=grupo["semana_fin"],
-                y=grupo["valor"],
-                mode="lines",
-                name=metadatos["etiqueta"].replace(" semanal", ""),
-                line=dict(
-                    color=metadatos["color"],
-                    width=3 if variable == "temp_promedio_semanal" else 1.8,
-                ),
-                hovertemplate="%{x|%d %b %Y}<br>%{y:.1f} °C<extra></extra>",
-            )
-        )
-    figura.update_layout(title=f"Temperaturas · {departamento}")
-    return _layout(figura, 390)
 
 
 def _grafico_resultado_escenario(
@@ -601,14 +537,19 @@ def _simulador_proyeccion(tabla: pd.DataFrame) -> None:
         st.caption(
             f"Fechas base: FNC {bases.fecha_precio_fnc:%d/%m/%Y} · "
             f"USD/COP {bases.fecha_tasa_cambio:%d/%m/%Y} · "
-            f"Coffee C {bases.fecha_precio_ny:%d/%m/%Y}."
+            f"Coffee C {bases.fecha_precio_ny:%d/%m/%Y}. La base es el último dato "
+            "recolectado; para reflejar el precio FNC de hoy, edítela con el valor "
+            "publicado o espere la actualización semanal automática."
         )
         st.markdown(
             "**Fórmula:** precio FNC base × (USD/COP escenario ÷ USD/COP base) "
             "× (Coffee C escenario ÷ Coffee C base) × (factor referencia ÷ factor "
-            "de rendimiento). El ajuste por factor es aproximado, no la fórmula "
-            "oficial. La prima o diferencial, calidad, pasilla y acopio no se "
-            "modelan por separado."
+            "de rendimiento). El **precio FNC base actúa como piso** (garantía de "
+            "compra de la FNC): la transmisión de mercado no proyecta por debajo "
+            "de él; solo un factor de rendimiento peor que el de referencia puede "
+            "bajarlo. El ajuste por factor es aproximado, no la fórmula oficial. "
+            "La prima o diferencial, calidad, pasilla y acopio no se modelan por "
+            "separado."
         )
 
     minimo_fx = float(floor(tasa_cambio_base * PROYECCION_RANGO_FACTOR_FX[0] / 50) * 50)
@@ -929,33 +870,6 @@ def _metodologia_comercial() -> pd.DataFrame:
     return pd.DataFrame(filas)
 
 
-def _metricas_clima(tabla: pd.DataFrame, departamento: str) -> None:
-    ultima = tabla["semana_fin"].max()
-    datos = tabla[(tabla["semana_fin"] == ultima) & (tabla["geografia"] == departamento)]
-    variables = [
-        "precipitacion_semanal",
-        "temp_min_semanal",
-        "temp_promedio_semanal",
-        "temp_max_semanal",
-    ]
-    columnas = st.columns(4)
-    for columna, variable in zip(columnas, variables):
-        fila = datos[datos["variable"] == variable].iloc[0]
-        delta = _delta_pct(fila) if variable == "precipitacion_semanal" else _delta_absoluto(fila)
-        historial = tabla[
-            (tabla["geografia"] == departamento) & (tabla["variable"] == variable)
-        ].sort_values("semana_fin").tail(12)
-        columna.metric(
-            label=fila["etiqueta_variable"],
-            value=_valor_metrica(fila),
-            delta=delta,
-            delta_color="off",
-            chart_data=historial["valor"].tolist(),
-            chart_type="bar" if variable == "precipitacion_semanal" else "line",
-            help=fila["descripcion_variable"],
-        )
-
-
 @st.cache_data(show_spinner="Preparando el brief en PDF…")
 def _brief_pdf(inicio: pd.Timestamp, fin: pd.Timestamp, marca_datos: float) -> bytes:
     """Genera el PDF del periodo; la caché solo se invalida si cambian los datos."""
@@ -975,16 +889,16 @@ datos = _cargar_datos()
 ultima_semana = datos["semana_fin"].max()
 semanas_disponibles_total = datos["semana_fin"].nunique()
 
-st.title("Monitor Agro Colombia")
+st.title("Herramienta Consultas y Reportes")
 st.caption(
-    "Herramienta de consulta y reporte para integrar, comparar y exportar "
+    "Kit de consulta y reporte para integrar, comparar y exportar "
     "evidencia comercial del café colombiano · "
     f"{semanas_disponibles_total} semanas · datos hasta {ultima_semana:%d/%m/%Y}"
 )
 st.markdown(
     "Explore series para análisis, informes y reuniones. El panorama nacional "
-    "permite leer conjuntamente precio interno FNC, Coffee C y USD/COP; las "
-    "vistas territoriales conservan el contexto climático ya disponible."
+    "permite leer conjuntamente precio interno FNC, Coffee C y USD/COP, y el "
+    "simulador estima precio proyectado y margen bajo distintos supuestos."
 )
 
 st.sidebar.header("Filtros")
@@ -1019,24 +933,13 @@ else:
         )
     else:
         filtrados = _filtrar_periodo(datos, PERIODOS_VISUALIZACION["1 año"])
-departamento = st.sidebar.selectbox(
-    "Departamento / zona de referencia",
-    options=DEPARTAMENTOS,
-    index=DEPARTAMENTOS.index(GEOGRAFIA_PRIORITARIA),
-)
-municipio = datos.loc[
-    datos["geografia"] == departamento, "municipio_referencia"
-].iloc[0]
-st.sidebar.markdown(f"**Referencia climática:** {municipio}")
-
 st.sidebar.divider()
 st.sidebar.caption("Autor: Juan José Jaramillo")
 
-tab_panorama, tab_proyeccion, tab_departamento = st.tabs(
+tab_panorama, tab_proyeccion = st.tabs(
     [
         "Panorama nacional",
         "Simulador",
-        "Climatología cafetera",
     ],
     default="Panorama nacional",
     key="vistas_principales",
@@ -1117,29 +1020,6 @@ with tab_panorama:
             hide_index=True,
             width="stretch",
         )
-
-with tab_departamento:
-    st.subheader(f"{departamento} · referencia {municipio}")
-    _metricas_clima(filtrados, departamento)
-    col_lluvia, col_temperatura = st.columns(2)
-    with col_lluvia:
-        st.plotly_chart(
-            _grafico_lluvia(filtrados, departamento),
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
-    with col_temperatura:
-        st.plotly_chart(
-            _grafico_temperaturas(filtrados, departamento),
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
-    st.caption(
-        "El clima representa una coordenada municipal de referencia y no toda la "
-        "variación interna del departamento."
-    )
 
 with tab_proyeccion:
     _simulador_proyeccion(datos)

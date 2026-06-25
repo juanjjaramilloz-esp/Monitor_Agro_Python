@@ -20,6 +20,18 @@ class ProyeccionTests(unittest.TestCase):
         resultado = proyectar_precio_fnc(2_000_000, 4_000, 250, 4_400, 275)
         self.assertAlmostEqual(resultado, 2_420_000)
 
+    def test_precio_fnc_base_es_piso_ante_mercado_a_la_baja(self) -> None:
+        # Coffee C y USD/COP por debajo de la base no proyectan bajo el precio FNC.
+        resultado = proyectar_precio_fnc(2_000_000, 4_000, 250, 3_600, 240)
+        self.assertEqual(resultado, 2_000_000)
+
+    def test_factor_peor_que_referencia_si_puede_bajar_del_piso(self) -> None:
+        # Un peor rendimiento sí reduce lo que recibe el productor.
+        resultado = proyectar_precio_fnc(
+            2_000_000, 4_000, 250, 4_000, 250, 100, 94
+        )
+        self.assertAlmostEqual(resultado, 2_000_000 * 94 / 100)
+
     def test_calcula_margen_por_carga_y_total(self) -> None:
         resultado = calcular_escenario(
             2_000_000,

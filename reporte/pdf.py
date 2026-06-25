@@ -263,12 +263,12 @@ def generar_pdf_brief(
         rightMargin=2 * cm,
         topMargin=1.8 * cm,
         bottomMargin=1.8 * cm,
-        title="Brief del periodo — Monitor Agro Colombia",
-        author="Monitor Agro Colombia",
+        title="Brief del periodo — Herramienta Consultas y Reportes",
+        author="Herramienta Consultas y Reportes",
     )
 
     elementos = [
-        Paragraph("Monitor Agro Colombia", estilos["titulo"]),
+        Paragraph("Herramienta Consultas y Reportes", estilos["titulo"]),
         Paragraph(
             f"Brief del periodo · {inicio_ts:%d/%m/%Y} a {fin_ts:%d/%m/%Y} · "
             f"generado el {fecha_generacion:%d/%m/%Y}",

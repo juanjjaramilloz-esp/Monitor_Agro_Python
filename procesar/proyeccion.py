@@ -75,10 +75,13 @@ def proyectar_precio_fnc(
     """
     Desplaza el precio FNC proporcionalmente al producto Coffee C × USD/COP.
 
-    El precio FNC observado sirve como ancla. Opcionalmente aplica un ajuste
-    aproximado por factor de rendimiento (referencia ÷ factor): un factor menor
-    sube el precio y uno mayor lo baja. La prima, calidad, pasilla y los costos
-    de acopio no se modelan por separado.
+    El precio FNC observado sirve como ancla y como **piso**: es la garantía de
+    compra de la FNC, por lo que la transmisión de mercado nunca proyecta por
+    debajo de él. Opcionalmente aplica un ajuste aproximado por factor de
+    rendimiento (referencia ÷ factor): un factor menor sube el precio y uno mayor
+    lo baja; este ajuste sí puede quedar por debajo del piso, porque un peor
+    rendimiento reduce lo que recibe el productor. La prima, calidad, pasilla y
+    los costos de acopio no se modelan por separado.
     """
     valores = [
         precio_fnc_base,
@@ -91,7 +94,7 @@ def proyectar_precio_fnc(
         raise ValueError("proyeccion: todos los precios y tasas deben ser positivos")
     factor_fx = tasa_cambio_escenario / tasa_cambio_base
     factor_cafe = precio_ny_escenario / precio_ny_base
-    precio = precio_fnc_base * factor_fx * factor_cafe
+    precio = max(precio_fnc_base * factor_fx * factor_cafe, precio_fnc_base)
     if factor_rendimiento is not None and factor_referencia is not None:
         if factor_rendimiento <= 0 or factor_referencia <= 0:
             raise ValueError("proyeccion: el factor de rendimiento debe ser positivo")

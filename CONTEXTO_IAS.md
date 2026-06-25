@@ -51,22 +51,26 @@ clima suma lluvia y agrega min/max/promedio.
 menor riesgo). Derivados: 45.015 filas, rankings 1-8, sin duplicados. Visual:
 6.341 filas para gráficos, 35 de resumen reciente, catálogo de 8 variables.
 
-**Dashboard (3 pestañas).** Orden: `Panorama nacional` (entrada por defecto),
-`Simulador` y `Climatología cafetera` (detalle climático del departamento; antes
-se llamaba con el nombre del departamento·municipio). La pestaña `Comparación` se
-retiró (recuperable en git). El panorama no cambia al elegir departamento (series
-global/nacional);
-permite descargar el periodo en CSV (fecha real, unidad, variaciones, fuente,
-alcance) y un brief en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas,
-variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`,
-descarga en un clic). El brief Markdown (`reporte.generar.generar`) se conserva
-como pieza testeada. Producción es un bloque mensual aparte (cambio mensual e
-interanual, fecha real, barras de ancho fijo, sin relleno semanal). Periodos: 3
-y 6 meses, 1 y 3 años, todo. Al cambiar departamento se activa su pestaña con su
-municipio; no hay selector municipal (una coordenada por departamento). Nombre
-del autor (Juan José Jaramillo) al pie del sidebar y del pie de página, con aviso
-`© 2026 ... Todos los derechos reservados` (ver `LICENSE` propietario y sección
-en `README.md`; repo público solo para portafolio, prohibido reutilizar). Tema
+**App.** Título visible = "Herramienta Consultas y Reportes" (page_title,
+`st.title` y los entregables PDF/brief/informe). Internamente el proyecto/repo
+sigue llamándose Monitor Agro Colombia.
+
+**Dashboard (2 pestañas).** `Panorama nacional` (entrada) y `Simulador`. La
+pestaña climática (`Climatología cafetera`) se **retiró de la UI** por petición
+del usuario, junto con el selector de departamento y las funciones
+`_grafico_lluvia`/`_grafico_temperaturas`/`_metricas_clima`/`_delta_absoluto`
+(recuperables en git). El pipeline climático se conserva: `fuentes/clima.py`,
+`REGIONES_CAFE`, la agregación en `historico.py` y los datos siguen en el repo;
+el clima se sigue recolectando, solo no se muestra. El panorama permite descargar
+el periodo en CSV (fecha real, unidad, variaciones, fuente, alcance) y un brief
+en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas comerciales,
+variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`).
+El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
+Producción es un bloque mensual aparte (cambio mensual e interanual, fecha real,
+barras de ancho fijo, sin relleno semanal). Periodos: 3 y 6 meses, 1 y 3 años,
+todo. Nombre del autor (Juan José Jaramillo) al pie del sidebar y del pie de
+página, con aviso `© 2026 ... Todos los derechos reservados` (`LICENSE`
+propietario; repo público solo para portafolio, prohibido reutilizar). Tema
 claro en `.streamlit/config.toml`; colores en `config.py`.
 
 **Simulador.** Controles: Coffee C, USD/COP, precio FNC base, costo, cargas y
@@ -82,7 +86,12 @@ de los sliders y el heatmap conserva el hover de precios. Muestra precio
 proyectado, ingreso, costo, margen por carga/total, una cuenta (ingreso − costo
 = margen) y la matriz. Botón para descargar un informe Markdown
 (`generar_informe_simulador`). Costo inicial: 1.624.000 COP/carga 125 kg, FEPCafé
-abril 2026 (editable).
+abril 2026 (editable). **Piso:** la transmisión de mercado se acota con
+`max(..., precio_fnc_base)` (garantía de compra FNC), así nunca proyecta por
+debajo del precio FNC base; solo un factor de rendimiento peor que la referencia
+puede bajar de ese piso. La base es el último dato recolectado (puede estar
+desfasada hasta que corra la actualización semanal); para el precio de hoy hay
+que editar el FNC base.
 
 **Validación última.** 39 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
@@ -111,9 +120,10 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
   refresque; el push dispara el redespliegue de Streamlit. GitHub deshabilita
   los cron tras 60 días de inactividad del repo.
 - Coordenadas climáticas = referencias municipales, no toda la variación interna.
-- Simulador: transmisión proporcional anclada al FNC observado; fórmula = FNC
-  base × (USD/COP esc ÷ base) × (Coffee C esc ÷ base) × (94 ÷ factor); no es la
-  fórmula oficial ni una predicción.
+- Simulador: transmisión proporcional anclada al FNC observado; fórmula =
+  max(FNC base × (USD/COP esc ÷ base) × (Coffee C esc ÷ base), FNC base) ×
+  (94 ÷ factor). El `max` es el piso (garantía de compra FNC). No es la fórmula
+  oficial ni una predicción.
 
 ## Límites vigentes
 
