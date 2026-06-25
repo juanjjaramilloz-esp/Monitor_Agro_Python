@@ -28,13 +28,15 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 - Remoto `origin` en GitHub; app desplegada en Streamlit Community Cloud,
   verificada por el usuario. `ACERCA_DE.md` = guía para visitantes de la app
   pública; `README.md` = guía técnica local.
-- Fase 6 (automatización) implementada: `.github/workflows/actualizar-datos.yml`
-  refresca el histórico y hace commit/push cada 2 días (10:00 UTC +
-  `workflow_dispatch`). Pendiente: validar la primera corrida real en el runner
-  (las fuentes por scraping/yfinance pueden fallar allí; los pasos toleran error
-  y solo commitea si hay cambios). Aún falta producir un snapshot semanal en CI.
-- Próximo: lanzar la primera corrida manual del workflow y validar kit, brief y
-  simulador con una tarea real de CRECE.
+- Fase 6 (automatización) implementada y **validada en runner real**
+  (2026-06-25): la primera corrida manual (`workflow_dispatch`, run 28207717834)
+  terminó en `success`, descargó datos frescos y pusheó el commit automático
+  `Datos: actualización automática...`, confirmando el ciclo refresca→commit→push→
+  redespliegue. `.github/workflows/actualizar-datos.yml` corre cada 2 días (10:00
+  UTC). Aún falta producir un snapshot semanal en CI.
+- Próximo: validar kit, brief y simulador con una tarea real de CRECE; preparar
+  el repo para LinkedIn (captura/GIF en README, link a la app arriba, relato del
+  README alineado al producto actual).
 
 ## Estado verificable
 
