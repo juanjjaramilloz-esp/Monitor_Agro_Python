@@ -18,12 +18,15 @@ para analizar tendencias antes de construir un score.
 - Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
   ejecutivo en PDF con las gráficas (matplotlib + reportlab).
 - Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,
-  costo por carga y volumen, con margen bruto, mapa de sensibilidad e informe
-  del escenario descargable en Markdown.
+  costo por carga, volumen y factor de rendimiento, con margen bruto, mapa de
+  sensibilidad clicable, botón para restablecer e informe del escenario
+  descargable en Markdown.
+- Automatización: GitHub Actions semanal (`.github/workflows/actualizar-datos.yml`)
+  que refresca el histórico y hace commit/push; el push redespliega la app.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
   incompletas.
-- Pendiente: validar el kit con una tarea real de CRECE, automatizar la
-  actualización y definir criterios expertos antes de construir el score.
+- Pendiente: validar el kit con una tarea real de CRECE y definir criterios
+  expertos antes de construir el score.
 
 ## Cómo probarlo
 
@@ -84,18 +87,30 @@ colores y escalas comparables. No genera score ni interpreta riesgo.
 streamlit run app.py
 ```
 
-Luego abre `http://localhost:8501`. El tablero tiene tres vistas:
+Luego abre `http://localhost:8501`. El tablero tiene tres vistas (la de entrada
+es `Panorama nacional`):
 
 - `Panorama nacional`: café, USD/COP y precio interno en una escala base 100,
   producción nacional mensual, descarga de series en CSV y brief del periodo en
   PDF con las gráficas.
-- Departamento: lluvia y temperaturas de la referencia municipal elegida. Al
-  cambiar el departamento, el tablero abre esta vista automáticamente.
 - `Simulador`: escenarios de precio interno y margen al modificar Coffee C,
-  USD/COP, costo medio y número de cargas, con informe del escenario descargable.
+  USD/COP, costo medio, número de cargas y factor de rendimiento; el escenario se
+  fija con los controles o clicando el mapa de sensibilidad, con botón de
+  restablecer e informe del escenario descargable.
+- `Climatología cafetera`: lluvia y temperaturas de la referencia municipal del
+  departamento elegido en el panel izquierdo.
 
 Esta es una versión para feedback. El simulador no es un pronóstico y el
 tablero no contiene score ni semáforos de riesgo.
+
+## Actualización automática
+
+`.github/workflows/actualizar-datos.yml` corre en GitHub Actions cada sábado
+(10:00 UTC) y también a mano (`workflow_dispatch`). Refresca una ventana reciente
+del histórico de forma idempotente, recalcula indicadores y visualización, y hace
+commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit
+Community Cloud, así que los datos se actualizan sin intervención. Los pasos de
+datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 
 ## Archivos de resultados
 

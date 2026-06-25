@@ -96,13 +96,16 @@ Ya existe un MVP funcional con:
 - cuatro variables climáticas para cada uno de los ocho departamentos;
 - tendencias, cambios, promedios móviles, anomalías estadísticas neutrales y
   comparaciones entre departamentos;
-- un dashboard publicado con tres vistas: panorama nacional, detalle climático
-  del departamento elegido y simulador;
+- un dashboard publicado con tres vistas, en orden: panorama nacional (entrada),
+  simulador y climatología cafetera (detalle climático del departamento elegido);
 - filtros de periodo y departamento;
 - selector de fechas personalizadas, descarga CSV y brief en PDF por periodo,
   con las gráficas, las variaciones y las fuentes incluidas;
-- simulador de supuestos para Coffee C, USD/COP, precio FNC y costo por carga,
-  con margen bruto, mapa de sensibilidad e informe del escenario descargable;
+- simulador de supuestos para Coffee C, USD/COP, precio FNC, costo por carga y
+  factor de rendimiento, con margen bruto, mapa de sensibilidad clicable, botón
+  de restablecer e informe del escenario descargable;
+- actualización semanal automatizada (GitHub Actions) que refresca los datos y
+  redespliega la app sin intervención;
 - tema visual claro y selección departamental visible mediante su municipio de
   referencia.
 
@@ -137,6 +140,9 @@ El selector sí cambia las vistas climáticas departamentales.
 - **Prima fuera del primer simulador:** el diferencial del café colombiano y
   otros componentes de la fórmula oficial se mantienen constantes y no se
   modelan por separado en esta versión.
+- **Factor de rendimiento aproximado:** a petición del usuario se añadió un
+  ajuste por factor de rendimiento (referencia 94) como multiplicador simple,
+  marcado explícitamente como aproximado y no como la fórmula oficial de la FNC.
 - **Credibilidad visible:** el producto final debe explicar fuentes,
   metodología, alcance y limitaciones.
 - **Integrar antes que multiplicar:** para CRECE, el valor principal está en
@@ -215,8 +221,8 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - **Producción y productividad territorial:** primera ampliación de datos a
   evaluar más adelante. La ampliación confirmada actual es solo producción
   nacional mensual; el nivel departamental o municipal queda fuera de alcance.
-- **Automatización semanal y publicación:** después de estabilizar contenido e
-  interfaz.
+- **Automatización semanal:** ya implementada con GitHub Actions; queda validar
+  su primera corrida real y, opcionalmente, archivar un snapshot semanal.
 
 ---
 
@@ -229,12 +235,15 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - Una anomalía estadística no equivale por sí sola a riesgo agronómico.
 - Un score sin calendario productivo, costos y validación experta parecería
   preciso, pero sería conceptualmente débil.
-- El simulador simplifica la transmisión de Coffee C y USD/COP y omite prima,
-  calidad, factor de rendimiento, pasilla, acopio, impuestos y logística.
-- El código está respaldado en GitHub y la aplicación está publicada y
-  funcional en Streamlit Community Cloud. La versión con simulador ya fue
-  enviada para redespliegue; debe comprobarse en la aplicación pública. La
-  actualización automática de datos todavía no está implementada.
+- El simulador simplifica la transmisión de Coffee C y USD/COP, aplica un ajuste
+  aproximado por factor de rendimiento y omite prima, calidad, pasilla, acopio,
+  impuestos y logística.
+- El código está respaldado en GitHub y la aplicación está publicada y funcional
+  en Streamlit Community Cloud, verificada por el usuario. La actualización
+  automática de datos ya está implementada (GitHub Actions semanal); falta
+  validar su primera corrida real en el runner.
+- El repositorio es público solo para portafolio, con licencia propietaria
+  ("Todos los derechos reservados"): el código no puede reutilizarse sin permiso.
 
 ---
 
