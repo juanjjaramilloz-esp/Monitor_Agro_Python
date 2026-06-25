@@ -783,11 +783,15 @@ def _simulador_proyeccion(
         ),
         delta_color="off",
     )
+    # Estos dos porcentajes son ratios (margen sobre ingreso, retorno sobre
+    # costo), no variaciones: se muestran como nota debajo y no con `delta`, que
+    # siempre dibuja una flecha de subida/bajada que aquí no aplica.
     metricas[1].metric(
         "Margen bruto por carga",
         f"${_numero_es(resultado.margen_por_carga, 0)}",
-        f"{resultado.margen_sobre_ingreso_pct:.1f}% del ingreso",
-        delta_color="off",
+    )
+    metricas[1].caption(
+        f"{_numero_es(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso"
     )
     metricas[2].metric(
         f"Ingreso por {cargas} carga{'s' if cargas != 1 else ''}",
@@ -797,13 +801,11 @@ def _simulador_proyeccion(
     metricas[3].metric(
         "Margen bruto total",
         f"${_numero_es(resultado.margen_total, 0)}",
-        (
-            f"{resultado.retorno_sobre_costo_pct:.1f}% sobre costo"
-            if pd.notna(resultado.retorno_sobre_costo_pct)
-            else None
-        ),
-        delta_color="off",
     )
+    if pd.notna(resultado.retorno_sobre_costo_pct):
+        metricas[3].caption(
+            f"{_numero_es(resultado.retorno_sobre_costo_pct, 1)}% sobre el costo"
+        )
 
     grafico_1, grafico_2 = st.columns([0.85, 1.15])
     with grafico_1:
