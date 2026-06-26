@@ -624,8 +624,12 @@ def _aplicar_clic_sensibilidad(
     if estado is not None and hasattr(estado, "get"):
         seleccion = estado.get("selection") or {}
         puntos = seleccion.get("points", []) if hasattr(seleccion, "get") else []
-    # Excluye el marcador del escenario (curva 2) para que no capture el clic.
-    candidatos = [p for p in puntos if p.get("curve_number") != 2] or puntos
+    # Solo acepta los puntos de la rejilla invisible (curva 1), que trae X e Y
+    # precisas. El mapa de calor (curva 0) también emite clic, pero reporta la
+    # coordenada Y pegada al tope: si se aceptaba, el eje Coffee C saltaba
+    # siempre al máximo aunque la X cayera bien. El marcador del escenario
+    # (curva 2) tampoco debe capturar el clic.
+    candidatos = [p for p in puntos if p.get("curve_number") == 1]
     if candidatos and candidatos[0].get("x") is not None:
         punto = candidatos[0]
         firma = (punto["x"], punto["y"])
