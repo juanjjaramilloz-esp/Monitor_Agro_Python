@@ -89,6 +89,18 @@ solo al mostrar (`UNIDADES_LEGIBLES`/`_unidad_legible`: `COP/carga_125kg`→
 el contrato y los CSV no cambian. Los `subheader` (h3) pasaron de 1rem a 1,18rem
 en negrita con más margen para marcar bloques. Para previsualizar local con el
 servidor gestionado existe `.claude/launch.json` (config `streamlit`).
+**Formato numérico unificado (coma decimal, punto de miles):** los textos de
+Python ya usaban `_numero_es`; lo que faltaba era Plotly. Se añadió
+`separators=",."` en `_layout` (cubre hover, ejes y barra de color de **todas**
+las gráficas, que pasan por ahí) y se pasaron a `_numero_es` los pocos strings
+preformateados que `separators` no toca (etiquetas de barra del gráfico de
+resultado, porcentajes de error de calibración, costo en el `st.info`).
+**Idioma EN (paso 1 de 3, andamiaje):** selector `Idioma / Language` en la barra
+lateral, diccionario `TEXTOS`, variable global `IDIOMA` y función `_t()`. Solo se
+tradujeron los textos de cabecera (título, subtítulo, introducción, rótulo de
+filtros); el resto sigue en español. Paso 2 = navegación/estructura (pestañas,
+subtítulos, captions, filtros); paso 3 = simulador, metodología, tablas, ejes de
+gráficas y formato de fechas.
 Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
 (`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
 mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =
@@ -129,7 +141,10 @@ estadística de respaldo se valida caminando sin datos futuros (MAE 26.376
 COP/carga, MAPE 1,02%, últimas 300 observaciones). Con la referencia oficial del
 25/06/2026 reproduce 2.160.000 COP para TRM 3.435,99 y Coffee C 276,40; aplicada
 a los valores del 24/06/2026 estima 2.163.736 frente a 2.165.000 (error 1.264
-COP, 0,06%). TRM y Coffee C aceptan dos decimales.
+COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
+(`PASO_FX=20` COP, `PASO_CAFE=2,5` US¢/lb); la tasa se muestra sin decimales
+(`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
+ajustan al mismo paso.
 
 **Validación última.** 51 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento

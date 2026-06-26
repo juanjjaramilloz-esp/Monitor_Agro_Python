@@ -52,6 +52,12 @@ CONFIG_GRAFICO = {
 }
 
 
+# Paso de los botones +/- del simulador: la tasa de cambio se mueve de a 20 COP
+# y el Coffee C de a 2,5 US¢/lb, escalas legibles para el escenario.
+PASO_FX = 20.0
+PASO_CAFE = 2.5
+
+
 # Las fuentes usan unidades "de máquina" en el contrato de datos; aquí se
 # traducen a etiquetas legibles solo al mostrarlas, sin tocar el esquema.
 UNIDADES_LEGIBLES = {
@@ -63,6 +69,61 @@ UNIDADES_LEGIBLES = {
 def _unidad_legible(unidad: str) -> str:
     """Traduce la unidad técnica del contrato a una etiqueta legible en la UI."""
     return UNIDADES_LEGIBLES.get(unidad, unidad)
+
+
+# --- Internacionalización (paso 1 de 3) -----------------------------------
+# La página será bilingüe español/inglés; se construye en tres pasos para no
+# mezclar todo de golpe:
+#   Paso 1 (este): andamiaje — selector de idioma en la barra lateral, el
+#     diccionario TEXTOS, la función _t() y la traducción de los textos de
+#     cabecera (título, subtítulo, introducción y rótulo de filtros) como
+#     prueba de que el mecanismo funciona. El resto sigue en español.
+#   Paso 2 (pendiente): navegación y estructura — pestañas, subtítulos,
+#     captions y los filtros de la barra lateral.
+#   Paso 3 (pendiente): el resto — controles y ayudas del simulador,
+#     metodología, encabezados de tablas, títulos y ejes de las gráficas, y el
+#     formato de fechas según idioma.
+IDIOMAS = {"Español": "es", "English": "en"}
+IDIOMA = "es"
+
+TEXTOS = {
+    "titulo": {
+        "es": "Herramienta Consultas y Reportes",
+        "en": "Consultation and Reporting Tool",
+    },
+    "subtitulo": {
+        "es": (
+            "Kit de consulta y reporte para integrar, comparar y exportar "
+            "evidencia comercial del café colombiano · {semanas} semanas "
+            "cerradas hasta {ultima} · referencia comercial al {referencia}"
+        ),
+        "en": (
+            "Consultation and reporting kit to integrate, compare and export "
+            "commercial evidence on Colombian coffee · {semanas} closed weeks "
+            "through {ultima} · commercial reference as of {referencia}"
+        ),
+    },
+    "introduccion": {
+        "es": (
+            "Explore series para análisis, informes y reuniones. El panorama "
+            "nacional permite leer conjuntamente precio interno FNC, Coffee C y "
+            "USD/COP, y el simulador estima precio interno y margen bajo "
+            "distintos supuestos."
+        ),
+        "en": (
+            "Explore the series for analysis, reports and meetings. The "
+            "national overview reads the FNC internal price, Coffee C and "
+            "USD/COP together, and the simulator estimates the internal price "
+            "and margin under different assumptions."
+        ),
+    },
+    "filtros": {"es": "Filtros", "en": "Filters"},
+}
+
+
+def _t(clave: str) -> str:
+    """Texto en el idioma activo; cae al español si falta la traducción."""
+    return TEXTOS[clave].get(IDIOMA, TEXTOS[clave]["es"])
 
 
 st.set_page_config(
@@ -291,6 +352,9 @@ def _layout(figura: go.Figure, altura: int = 400) -> go.Figure:
     colores = COLORES_INTERFAZ
     figura.update_layout(
         height=altura,
+        # Coma decimal y punto de miles en todo lo que Plotly formatea
+        # (hover, ejes, barra de color), igual que el resto de la interfaz.
+        separators=",.",
         margin=dict(l=24, r=20, t=84, b=28),
         paper_bgcolor=colores["superficie"],
         plot_bgcolor=colores["superficie"],
@@ -451,7 +515,7 @@ def _grafico_resultado_escenario(
             y=etiquetas,
             orientation="h",
             marker_color=colores,
-            text=[f"${valor:,.0f}" for valor in valores],
+            text=[f"${_numero_es(valor, 0)}" for valor in valores],
             textposition="outside",
             cliponaxis=False,
             hovertemplate="%{y}<br>$%{x:,.0f} COP/carga<extra></extra>",
@@ -595,10 +659,10 @@ def _mantener_escenario_en_rango(
     con los campos numéricos, pero su valor debe reajustarse si cambia la base.
     """
     st.session_state["sim_tasa"] = _ajustar_a_paso(
-        st.session_state["sim_tasa"], minimo_fx, maximo_fx, 0.01
+        st.session_state["sim_tasa"], minimo_fx, maximo_fx, PASO_FX
     )
     st.session_state["sim_ny"] = _ajustar_a_paso(
-        st.session_state["sim_ny"], minimo_cafe, maximo_cafe, 0.01
+        st.session_state["sim_ny"], minimo_cafe, maximo_cafe, PASO_CAFE
     )
 
 
@@ -637,7 +701,7 @@ def _simulador_proyeccion(
                 "fuentes u horas de cierre. Si esa referencia falla, el respaldo "
                 f"estadístico tiene un error histórico medio de "
                 f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
-                f"({modelo.error_porcentual_medio:.2f}%)."
+                f"({_numero_es(modelo.error_porcentual_medio, 2)}%)."
             )
         else:
             st.caption(
@@ -646,7 +710,7 @@ def _simulador_proyeccion(
                 f"{modelo.fecha_fin_calibracion:%d/%m/%Y}. Validación caminando sobre "
                 f"{modelo.observaciones_validacion} observaciones: error absoluto medio "
                 f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
-                f"({modelo.error_porcentual_medio:.2f}%)."
+                f"({_numero_es(modelo.error_porcentual_medio, 2)}%)."
             )
         st.markdown(
             "**Fórmula:** USD/COP escenario × Coffee C escenario × coeficiente "
@@ -662,10 +726,10 @@ def _simulador_proyeccion(
     maximo_cafe = float(ceil(bases.precio_ny * PROYECCION_RANGO_FACTOR_CAFE[1]))
 
     st.session_state.setdefault(
-        "sim_tasa", _ajustar_a_paso(bases.tasa_cambio, minimo_fx, maximo_fx, 0.01)
+        "sim_tasa", _ajustar_a_paso(bases.tasa_cambio, minimo_fx, maximo_fx, PASO_FX)
     )
     st.session_state.setdefault(
-        "sim_ny", _ajustar_a_paso(bases.precio_ny, minimo_cafe, maximo_cafe, 0.01)
+        "sim_ny", _ajustar_a_paso(bases.precio_ny, minimo_cafe, maximo_cafe, PASO_CAFE)
     )
     _mantener_escenario_en_rango(minimo_fx, maximo_fx, minimo_cafe, maximo_cafe)
 
@@ -674,16 +738,16 @@ def _simulador_proyeccion(
         "Tasa de cambio del escenario · COP/USD",
         min_value=minimo_fx,
         max_value=maximo_fx,
-        step=0.01,
-        format="%.2f",
+        step=PASO_FX,
+        format="%.0f",
         key="sim_tasa",
     )
     precio_ny_escenario = control_2.number_input(
         "Coffee C del escenario · US¢/lb",
         min_value=minimo_cafe,
         max_value=maximo_cafe,
-        step=0.01,
-        format="%.2f",
+        step=PASO_CAFE,
+        format="%.1f",
         key="sim_ny",
     )
     st.caption(
@@ -840,7 +904,7 @@ def _simulador_proyeccion(
     )
 
     st.info(
-        f"Costo medio inicial: ${COSTO_PRODUCCION_REFERENCIA:,.0f} COP por carga, "
+        f"Costo medio inicial: ${_numero_es(COSTO_PRODUCCION_REFERENCIA, 0)} COP por carga, "
         f"referencia nacional con dato de {COSTO_PRODUCCION_FECHA:%m/%Y}. "
         "No representa necesariamente el costo de una finca particular."
     )
@@ -1090,20 +1154,21 @@ ultima_referencia = max(
 )
 semanas_disponibles_total = datos_semanales["semana_fin"].nunique()
 
-st.title("Herramienta Consultas y Reportes")
-st.caption(
-    "Kit de consulta y reporte para integrar, comparar y exportar "
-    "evidencia comercial del café colombiano · "
-    f"{semanas_disponibles_total} semanas cerradas hasta {ultima_semana:%d/%m/%Y} · "
-    f"referencia comercial al {ultima_referencia:%d/%m/%Y}"
-)
-st.markdown(
-    "Explore series para análisis, informes y reuniones. El panorama nacional "
-    "permite leer conjuntamente precio interno FNC, Coffee C y USD/COP, y el "
-    "simulador estima precio interno y margen bajo distintos supuestos."
-)
+IDIOMA = IDIOMAS[
+    st.sidebar.selectbox("Idioma / Language", list(IDIOMAS), index=0)
+]
 
-st.sidebar.header("Filtros")
+st.title(_t("titulo"))
+st.caption(
+    _t("subtitulo").format(
+        semanas=semanas_disponibles_total,
+        ultima=f"{ultima_semana:%d/%m/%Y}",
+        referencia=f"{ultima_referencia:%d/%m/%Y}",
+    )
+)
+st.markdown(_t("introduccion"))
+
+st.sidebar.header(_t("filtros"))
 tipo_periodo = st.sidebar.radio(
     "Rango de análisis",
     options=["Periodo predefinido", "Fechas personalizadas"],
