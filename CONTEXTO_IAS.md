@@ -102,23 +102,20 @@ el histórico semanal cerrado y distingue ambas fechas en el encabezado.
 **Simulador.** Controles: Coffee C, USD/COP, costo, cargas y factor de
 rendimiento (ref. 94 en `config.py`), todos con `key` en session_state
 (prefijo `sim_`) y un botón "Restablecer valores predeterminados" (callback
-`_restablecer_simulador` que limpia esas claves). El escenario se fija con
-entradas numéricas o haciendo clic en el mapa de sensibilidad (`on_select="rerun"`).
-**Historia del clic (2026-06-25):** se intentó una rejilla de puntos invisible
-(Scatter) sobre el heatmap porque Streamlit solo registra selección de trazas
-*scatter* (no de heatmap). Pero se verificó en Preview que **cualquier scatter
+`_restablecer_simulador` que limpia esas claves). El escenario se fija **solo con
+los dos campos numéricos** (Coffee C y USD/COP). **Mapa de sensibilidad = solo
+lectura (decidido 2026-06-25):** se intentó clic-para-seleccionar pero es inviable
+con este stack y se descartó tras validarlo con el usuario. Por qué: Streamlit solo
+propaga la selección de trazas *scatter* (no de heatmap), pero **cualquier scatter
 alineado en columnas devuelve la X correcta y colapsa la Y a la fila superior**
-(quirk de Plotly con X repetida, da igual densidad/tamaño de marcador): de ahí el
-síntoma "X bien, Y siempre al tope". El heatmap, en cambio, mapea el clic correcto
-en X e Y por geometría. **Enfoque actual:** se eliminó la rejilla; el propio
-**Heatmap** captura el clic (lleva `hovertemplate` con el precio `z` de la celda) y
-el parser `_aplicar_clic_sensibilidad` acepta la curva 0 (heatmap). El marcador del
-escenario es la curva 1 (`hoverinfo="skip"`). **Riesgo abierto pendiente de validar
-por el usuario:** Streamlit podría no propagar el clic del heatmap a `plotly_selected`
-(la prueba sintética lo sugirió); si el clic real no selecciona, el plan B es dejar el
-mapa de solo lectura y fijar el escenario solo con los campos numéricos. La matriz
-coloreada se alinea al rango exacto de los
-controles. Las métricas margen-por-carga y margen-total muestran su ratio dentro
+(quirk de Plotly con X repetida, da igual densidad/tamaño de marcador) → síntoma
+"X bien, Y siempre al tope". El heatmap sí mapea el clic correcto por geometría,
+pero Streamlit no lo registra (clic real no seleccionaba). Estado final: se
+quitaron `on_select`/`selection_mode`/`key`, la rejilla y el parser del clic; el
+heatmap conserva su `hovertemplate` (hover con el precio `z` de cada celda) como
+exploración, el marcador del escenario es la curva 1, y `_mantener_escenario_en_rango`
+solo reajusta el escenario guardado al rango vigente. La matriz coloreada se alinea
+al rango exacto de los controles. Las métricas margen-por-carga y margen-total muestran su ratio dentro
 de la tarjeta con `delta` pero ocultan la flecha por CSS (contenedores
 `st.container(key="metrica_margen_carga"/"metrica_margen_total")` → clases
 `st-key-*`), porque un ratio no indica subida/bajada. Muestra precio

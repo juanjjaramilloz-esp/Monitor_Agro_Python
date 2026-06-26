@@ -494,11 +494,10 @@ def _grafico_sensibilidad(
                 [1, "#176B4D"],
             ],
             colorbar=dict(title="COP/carga", tickformat=",.0f"),
-            # El propio Heatmap captura el clic y mapea el píxel a su celda por
-            # geometría directa (X e Y correctas). Antes se superponía una
-            # rejilla de puntos invisible, pero Plotly resolvía el clic sobre esa
-            # malla densa siempre a la fila superior de la columna (X bien, Y al
-            # tope); el Heatmap no tiene ese problema.
+            # Mapa de solo lectura: el hover muestra el precio estimado de cada
+            # celda. No se usa para fijar el escenario porque Streamlit no
+            # propaga el clic de un heatmap y un scatter superpuesto colapsa el
+            # eje Y; el escenario se fija con los campos numéricos.
             hovertemplate=(
                 "USD/COP: %{x:,.0f}<br>"
                 "Coffee C: %{y:.1f} US¢/lb<br>"
@@ -583,34 +582,18 @@ def _resumen_cuenta(resultado: ResultadoEscenario, cargas: int) -> None:
     )
 
 
-def _aplicar_clic_sensibilidad(
+def _mantener_escenario_en_rango(
     minimo_fx: float,
     maximo_fx: float,
     minimo_cafe: float,
     maximo_cafe: float,
 ) -> None:
-    """Lleva un clic en el mapa de sensibilidad a los sliders del escenario."""
-    estado = st.session_state.get("sens_sel")
-    puntos = []
-    if estado is not None and hasattr(estado, "get"):
-        seleccion = estado.get("selection") or {}
-        puntos = seleccion.get("points", []) if hasattr(seleccion, "get") else []
-    # El clic lo captura el mapa de calor (curva 0), que devuelve la celda
-    # exacta (X = tasa, Y = Coffee C). El marcador del escenario (curva 1) no
-    # debe fijar el escenario.
-    candidatos = [p for p in puntos if p.get("curve_number") == 0]
-    if candidatos and candidatos[0].get("x") is not None:
-        punto = candidatos[0]
-        firma = (punto["x"], punto["y"])
-        if st.session_state.get("sens_firma") != firma:
-            st.session_state["sim_tasa"] = _ajustar_a_paso(
-                float(punto["x"]), minimo_fx, maximo_fx, 0.01
-            )
-            st.session_state["sim_ny"] = _ajustar_a_paso(
-                float(punto["y"]), minimo_cafe, maximo_cafe, 0.01
-            )
-            st.session_state["sens_firma"] = firma
-    # Mantiene los valores guardados dentro del rango vigente si cambió la base.
+    """Mantiene el escenario guardado dentro del rango vigente de los controles.
+
+    El mapa de sensibilidad es de solo lectura (Streamlit no propaga el clic de
+    un heatmap y un scatter superpuesto colapsa el eje Y); el escenario se fija
+    con los campos numéricos, pero su valor debe reajustarse si cambia la base.
+    """
     st.session_state["sim_tasa"] = _ajustar_a_paso(
         st.session_state["sim_tasa"], minimo_fx, maximo_fx, 0.01
     )
@@ -627,8 +610,6 @@ def _restablecer_simulador() -> None:
         "sim_costo",
         "sim_cargas",
         "sim_factor",
-        "sens_sel",
-        "sens_firma",
     ):
         st.session_state.pop(clave, None)
 
@@ -686,7 +667,7 @@ def _simulador_proyeccion(
     st.session_state.setdefault(
         "sim_ny", _ajustar_a_paso(bases.precio_ny, minimo_cafe, maximo_cafe, 0.01)
     )
-    _aplicar_clic_sensibilidad(minimo_fx, maximo_fx, minimo_cafe, maximo_cafe)
+    _mantener_escenario_en_rango(minimo_fx, maximo_fx, minimo_cafe, maximo_cafe)
 
     control_1, control_2 = st.columns(2)
     tasa_escenario = control_1.number_input(
@@ -706,8 +687,9 @@ def _simulador_proyeccion(
         key="sim_ny",
     )
     st.caption(
-        "Escriba los valores del día o haga clic en el mapa de sensibilidad para "
-        "fijar un escenario."
+        "Escriba los valores del escenario en estos dos campos. El mapa de "
+        "sensibilidad de abajo es para explorar: pase el mouse sobre cada celda "
+        "para ver el precio estimado."
     )
 
     st.session_state.setdefault("sim_costo", float(COSTO_PRODUCCION_REFERENCIA))
@@ -831,9 +813,6 @@ def _simulador_proyeccion(
             width="stretch",
             theme=None,
             config=CONFIG_GRAFICO,
-            on_select="rerun",
-            selection_mode="points",
-            key="sens_sel",
         )
 
     informe = generar_informe_simulador(
