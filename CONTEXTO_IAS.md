@@ -110,8 +110,11 @@ de clic, así que se superpone una rejilla fina e invisible (Scatter 50×50, cap
 hover funcionaba pero no seleccionaba); ahora la rejilla lleva su propio
 `hovertemplate` con el precio estimado de cada punto (z = `tasa×ny×coef×ajuste`),
 marcadores grandes (size 16) que cubren el área sin huecos, y el heatmap queda
-solo como color (`hoverinfo="skip"`). El parser descarta la curva del marcador del
-escenario (curva 2). La matriz coloreada se alinea al rango exacto de los
+solo como color (`hoverinfo="skip"`). **Clave (corregido 2026-06-25):** el parser
+del clic solo acepta la rejilla (curva 1); antes filtraba `curve_number != 2`, lo
+que dejaba pasar el clic del heatmap (curva 0), cuya coordenada Y llega pegada al
+tope → el eje Coffee C saltaba siempre al máximo aunque la X cayera bien. La matriz
+coloreada se alinea al rango exacto de los
 controles. Las métricas margen-por-carga y margen-total muestran su ratio dentro
 de la tarjeta con `delta` pero ocultan la flecha por CSS (contenedores
 `st.container(key="metrica_margen_carga"/"metrica_margen_total")` → clases
