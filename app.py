@@ -102,15 +102,16 @@ TEXTOS = {
     "introduccion": {
         "es": (
             "Explore series para análisis, informes y reuniones. El panorama "
-            "nacional permite leer conjuntamente precio interno FNC, Coffee C y "
-            "USD/COP, y el simulador estima precio interno y margen bajo "
-            "distintos supuestos."
+            "nacional permite leer conjuntamente el precio interno de la "
+            "Federación Nacional de Cafeteros (FNC), Coffee C y USD/COP, y el "
+            "simulador estima precio interno y margen bajo distintos supuestos."
         ),
         "en": (
             "Explore the series for analysis, reports and meetings. The "
-            "national overview reads the FNC internal price, Coffee C and "
-            "USD/COP together, and the simulator estimates the internal price "
-            "and margin under different assumptions."
+            "national overview reads the National Federation of Coffee Growers "
+            "(FNC) internal price, Coffee C and USD/COP together, and the "
+            "simulator estimates the internal price and margin under different "
+            "assumptions."
         ),
     },
     "filtros": {"es": "Filtros", "en": "Filters"},
@@ -223,8 +224,8 @@ TEXTOS = {
     },
     "unid_mil_sacos": {"es": "mil sacos de 60 kg", "en": "thousand 60 kg bags"},
     "help_prod": {
-        "es": "Producción registrada de café verde equivalente publicada por la FNC.",
-        "en": "Registered green-equivalent coffee production published by the FNC.",
+        "es": "Producción registrada de café verde equivalente publicada por la Federación Nacional de Cafeteros (FNC).",
+        "en": "Registered green-equivalent coffee production published by the National Federation of Coffee Growers (FNC).",
     },
     "metric_mes_dato": {"es": "Mes del dato", "en": "Data month"},
     "delta_vs_mes": {
@@ -235,7 +236,10 @@ TEXTOS = {
         "es": "**Cambio interanual:** ",
         "en": "**Year-on-year change:** ",
     },
-    "fuente_fnc": {"es": "**Fuente:** FNC", "en": "**Source:** FNC"},
+    "fuente_fnc": {
+        "es": "**Fuente:** Federación Nacional de Cafeteros",
+        "en": "**Source:** National Federation of Coffee Growers",
+    },
     "info_no_exp": {
         "es": "No hay exportaciones mensuales publicadas dentro del periodo elegido.",
         "en": "No monthly exports published within the selected period.",
@@ -286,12 +290,14 @@ TEXTOS = {
     # --- Pie de página ---
     "foot_fuentes": {
         "es": (
-            "Fuentes: FNC, Open-Meteo y Yahoo Finance vía yfinance. "
-            "Visualización exploratoria; no contiene score de oportunidad o riesgo."
+            "Fuentes: Federación Nacional de Cafeteros, Open-Meteo y Yahoo "
+            "Finance vía yfinance. Visualización exploratoria; no contiene score "
+            "de oportunidad o riesgo."
         ),
         "en": (
-            "Sources: FNC, Open-Meteo and Yahoo Finance via yfinance. "
-            "Exploratory visualization; it contains no opportunity or risk score."
+            "Sources: National Federation of Coffee Growers, Open-Meteo and "
+            "Yahoo Finance via yfinance. Exploratory visualization; it contains "
+            "no opportunity or risk score."
         ),
     },
     "foot_copyright": {
@@ -357,13 +363,13 @@ TEXTOS = {
     "cap_estimador": {
         "es": (
             "Ingrese supuestos de Coffee C y USD/COP para estimar el precio "
-            "interno FNC. El precio FNC observado ya no es una entrada ni "
-            "funciona como piso."
+            "interno de la Federación Nacional de Cafeteros (FNC). El precio FNC "
+            "observado ya no es una entrada ni funciona como piso."
         ),
         "en": (
-            "Enter Coffee C and USD/COP assumptions to estimate the FNC "
-            "internal price. The observed FNC price is no longer an input nor a "
-            "floor."
+            "Enter Coffee C and USD/COP assumptions to estimate the National "
+            "Federation of Coffee Growers (FNC) internal price. The observed FNC "
+            "price is no longer an input nor a floor."
         ),
     },
     "exp_calibracion": {
@@ -372,13 +378,15 @@ TEXTOS = {
     },
     "calib_oficial": {
         "es": (
-            "Calibración oficial FNC del {fecha}: precio interno, Coffee C y TRM "
+            "Calibración oficial de la Federación Nacional de Cafeteros (FNC) "
+            "del {fecha}: precio interno, Coffee C y TRM "
             "publicados juntos para evitar mezclar fuentes u horas de cierre. Si "
             "esa referencia falla, el respaldo estadístico tiene un error "
             "histórico medio de ${mae} por carga ({mape}%)."
         ),
         "en": (
-            "Official FNC calibration of {fecha}: internal price, Coffee C and "
+            "Official National Federation of Coffee Growers (FNC) calibration of "
+            "{fecha}: internal price, Coffee C and "
             "TRM published together to avoid mixing sources or closing times. If "
             "that reference fails, the statistical fallback has a mean historical "
             "error of ${mae} per load ({mape}%)."
@@ -403,15 +411,15 @@ TEXTOS = {
             "coeficiente se recalcula con los últimos datos diarios comparables y "
             "pondera más los recientes. Resume prima, conversiones y otros "
             "componentes que no se modelan por separado; no reproduce la fórmula "
-            "oficial de la FNC."
+            "oficial de la Federación Nacional de Cafeteros."
         ),
         "en": (
             "**Formula:** scenario USD/COP × scenario Coffee C × calibrated "
             "coefficient × (reference factor ÷ yield factor). The coefficient is "
             "recomputed with the latest comparable daily data and weights recent "
             "points more. It summarizes premium, conversions and other "
-            "components not modeled separately; it does not reproduce the FNC's "
-            "official formula."
+            "components not modeled separately; it does not reproduce the "
+            "official formula of the National Federation of Coffee Growers."
         ),
     },
     "ctrl_tasa": {
@@ -450,14 +458,15 @@ TEXTOS = {
     "help_factor": {
         "es": (
             "Kg de café pergamino seco por carga de excelso; 94 es la referencia "
-            "FNC. Un factor menor (mejor rendimiento) sube el precio recibido; "
-            "uno mayor lo baja. Ajuste aproximado, no la fórmula oficial."
+            "de la Federación Nacional de Cafeteros (FNC). Un factor menor "
+            "(mejor rendimiento) sube el precio recibido; uno mayor lo baja. "
+            "Ajuste aproximado, no la fórmula oficial."
         ),
         "en": (
-            "Kg of dry parchment coffee per load of excelso; 94 is the FNC "
-            "reference. A lower factor (better yield) raises the received price; "
-            "a higher one lowers it. Approximate adjustment, not the official "
-            "formula."
+            "Kg of dry parchment coffee per load of excelso; 94 is the National "
+            "Federation of Coffee Growers (FNC) reference. A lower factor "
+            "(better yield) raises the received price; a higher one lowers it. "
+            "Approximate adjustment, not the official formula."
         ),
     },
     "btn_restablecer": {

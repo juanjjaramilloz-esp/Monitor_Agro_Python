@@ -123,6 +123,13 @@ alimentan el PDF; se traducen solo en pantalla con `_variaciones_para_pantalla` 
 que son documentos descargables aparte; y los tres campos `st.number_input` del
 simulador (límite de Streamlit). Las fechas se mantienen en dd/mm/aaaa en ambos
 idiomas.
+**Sigla FNC.** En el texto con espacio (introducción, captions, ayudas, pie,
+metodología) se expande a "Federación Nacional de Cafeteros (FNC)" la primera vez
+y luego "FNC". Se **conserva la sigla** en los espacios estrechos para no romper
+el diseño: etiquetas de tarjetas (`Precio FNC estimado`, `Precio interno de
+referencia FNC`), título y eje del mapa de sensibilidad y la categoría `Último FNC
+observado`. La tabla de Fuentes ya mostraba el nombre completo. Verificado en
+Preview (snapshot ok, sin errores de consola, maquetación intacta).
 Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
 (`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
 mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =
