@@ -9,6 +9,7 @@ consultar y exportar la evidencia, generar un brief del periodo y simular el
 precio interno y el margen ante cambios de mercado. Conserva el histórico desde
 2023 para analizar tendencias antes de construir un score. El clima de los
 departamentos cafeteros sigue en el pipeline de datos, pero no en la interfaz.
+La interfaz está disponible en español e inglés.
 
 ## Stack
 
@@ -29,12 +30,15 @@ yfinance / Open-Meteo / GDELT (fuentes) · GitHub Actions (automatización).
   producción menos exportaciones para los meses con ambos datos.
 - Coherencia entre vistas: Panorama y Simulador usan el mismo último trío
   oficial FNC/Coffee C/TRM como referencia comercial actual.
-- Kit de consulta: filtros por periodo, descarga comercial en CSV y brief
+- Interfaz bilingüe español/inglés: un selector cambia todos los textos, los
+  números (1.624.000 / 277,5 en español; 1,624,000 / 277.5 en inglés) y las
+  gráficas.
+- Kit de consulta: filtros por periodo, descarga comercial en Excel y brief
   ejecutivo en PDF con las gráficas (matplotlib + reportlab).
-- Simulador de escenarios: controles para Coffee C, USD/COP, precio FNC base,
-  costo por carga, volumen y factor de rendimiento, con margen bruto, mapa de
-  sensibilidad clicable, botón para restablecer e informe del escenario
-  descargable en Markdown.
+- Simulador de escenarios: controles para Coffee C, USD/COP, costo por carga,
+  volumen y factor de rendimiento, con margen bruto, mapa de sensibilidad de
+  solo lectura, botón para restablecer e informe del escenario descargable en
+  Markdown.
 - Automatización: GitHub Actions cada 2 días (`.github/workflows/actualizar-datos.yml`)
   que refresca el histórico y hace commit/push; el push redespliega la app.
 - Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
@@ -106,11 +110,11 @@ es `Panorama nacional`):
 
 - `Panorama nacional`: café, USD/COP y precio interno en una escala base 100,
   producción y exportaciones mensuales, diferencia entre ambos flujos, descarga
-  de series en CSV y brief del periodo en PDF.
+  de series en Excel y brief del periodo en PDF.
 - `Simulador`: escenarios de precio interno y margen al modificar Coffee C,
   USD/COP, costo medio, número de cargas y factor de rendimiento; el escenario se
-  fija con los controles o clicando el mapa de sensibilidad, con botón de
-  restablecer e informe del escenario descargable.
+  fija con los controles y el mapa de sensibilidad es de solo lectura para
+  explorar, con botón de restablecer e informe del escenario descargable.
 Esta es una versión para feedback. El simulador no es un pronóstico y el
 tablero no contiene score ni semáforos de riesgo.
 

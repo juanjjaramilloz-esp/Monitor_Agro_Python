@@ -6,7 +6,9 @@ reuniones del sector cafetero: integra varias fuentes oficiales y públicas, las
 deja limpias y comparables, y permite consultarlas, graficarlas y exportarlas
 sin tener que buscarlas y depurarlas una por una.
 
-No necesita instalar nada. Todo funciona desde el navegador.
+No necesita instalar nada. Todo funciona desde el navegador. La página está
+disponible en **español e inglés**: un selector en la barra lateral cambia los
+textos, los números y las gráficas.
 
 ---
 
@@ -17,7 +19,7 @@ No necesita instalar nada. Todo funciona desde el navegador.
   referencia de la Federación Nacional de Cafeteros (FNC).
 - **Comparar producción y exportaciones mensuales** registradas por la FNC,
   incluida su diferencia para los meses con ambos datos.
-- **Descargar las series** del periodo que elija, en CSV, con fecha real del
+- **Descargar las series** del periodo que elija, en Excel, con fecha real del
   dato, unidad y fuente; y generar un **brief en PDF** con las gráficas, las
   variaciones y las fuentes, listo para un informe o una reunión.
 - **Explorar escenarios** de precio interno y margen con el simulador.
@@ -29,7 +31,7 @@ No necesita instalar nada. Todo funciona desde el navegador.
 1. **Panorama nacional** (la vista de entrada). Precio internacional del café,
    USD/COP y precio interno FNC en una escala base 100 para compararlos en un
    mismo gráfico, más producción, exportaciones y su diferencia mensual. Aquí
-   están las descargas por periodo: las series comerciales en CSV y un brief en
+   están las descargas por periodo: las series comerciales en Excel y un brief en
    PDF con las gráficas. La referencia comercial más reciente coincide con la
    usada por el simulador; el histórico permanece agregado por semanas cerradas.
 2. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
@@ -56,9 +58,11 @@ referencia nacional FEPCafé (1.624.000 COP por carga de 125 kg, dato de abril d
 de rendimiento** (94 de referencia) ajusta de forma aproximada el precio: un
 factor menor lo sube, uno mayor lo baja.
 
-Puede fijar el escenario moviendo los controles o **haciendo clic directamente
-en el mapa de sensibilidad**, y volver a los valores iniciales con el botón
-**Restablecer**. Cuando termine, puede **descargar un informe en Markdown** con
+El escenario se fija **moviendo los controles**, y puede volver a los valores
+iniciales con el botón **Restablecer**. El **mapa de sensibilidad** es de solo
+lectura: sirve para explorar, pasando el mouse sobre cada celda para ver el
+precio estimado de esa combinación. Cuando termine, puede **descargar un informe
+en Markdown** con
 los valores introducidos, los resultados, la metodología y las limitaciones,
 listo para anexar a un análisis o una presentación.
 

@@ -1,6 +1,6 @@
 # Briefing estratégico - Monitor Agro Colombia
 
-Vigencia del briefing: **25 de junio de 2026**.
+Vigencia del briefing: **26 de junio de 2026**.
 
 ## Cómo usar este archivo
 
@@ -102,16 +102,18 @@ Ya existe un MVP funcional con:
 - un dashboard publicado con dos vistas, en orden: panorama nacional (entrada)
   y simulador;
 - periodos predefinidos;
-- selector de fechas personalizadas, descarga CSV y brief en PDF por periodo,
-  con las gráficas, las variaciones y las fuentes incluidas;
+- selector de fechas personalizadas, descarga en Excel y brief en PDF por
+  periodo, con las gráficas, las variaciones y las fuentes incluidas;
 - estimador de supuestos para Coffee C, USD/COP, costo por carga y factor de
-  rendimiento, con precio FNC estimado, margen bruto, mapa de sensibilidad
-  clicable, botón de restablecer e informe del escenario descargable;
+  rendimiento, con precio FNC estimado, margen bruto, mapa de sensibilidad de
+  solo lectura, botón de restablecer e informe del escenario descargable;
 - calibración principal del estimador con el último trío coherente de precio
   interno, Coffee C y TRM publicado por la FNC para una misma fecha, y una
   calibración estadística reciente como respaldo si esa fuente falla;
 - actualización automatizada cada 2 días (GitHub Actions) que refresca los datos y
   redespliega la app sin intervención;
+- interfaz bilingüe español/inglés (textos, números y gráficas) con un selector
+  en la barra lateral;
 - tema visual claro.
 
 El dashboard actual es una herramienta para obtener feedback, no el producto
