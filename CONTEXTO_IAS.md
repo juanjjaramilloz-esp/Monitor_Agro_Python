@@ -68,7 +68,8 @@ del usuario, junto con el selector de departamento y las funciones
 (recuperables en git). El pipeline climático se conserva: `fuentes/clima.py`,
 `REGIONES_CAFE`, la agregación en `historico.py` y los datos siguen en el repo;
 el clima se sigue recolectando, solo no se muestra. El panorama permite descargar
-el periodo en CSV (fecha real, unidad, variaciones, fuente, alcance) y un brief
+el periodo en **Excel** (`.xlsx` vía `_a_excel`/`pd.ExcelWriter` con openpyxl;
+antes era CSV) con fecha real, unidad, variaciones, fuente y alcance, y un brief
 en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas comerciales,
 variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`).
 El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
@@ -102,12 +103,26 @@ Streamlit se valida con `"%...f" % n` y rechaza la coma, y el decimal siempre es
 punto—; se conservan así para no perder los botones +/− (decidido con el usuario).
 Por eso Coffee C se ve `277.5` en el campo aunque el resto de la página respete el
 idioma.
-**Idioma EN (paso 1 de 3, andamiaje):** selector `Idioma / Language` en la barra
-lateral, diccionario `TEXTOS`, variable global `IDIOMA` y función `_t()`. Solo se
-tradujeron los textos de cabecera (título, subtítulo, introducción, rótulo de
-filtros); el resto sigue en español. Paso 2 = navegación/estructura (pestañas,
-subtítulos, captions, filtros); paso 3 = simulador, metodología, tablas, ejes de
-gráficas y formato de fechas.
+**Idioma EN (completo).** Interfaz bilingüe español/inglés: selector `Idioma /
+Language` en la barra lateral fija `IDIOMA` ("es"/"en"); todo el texto visible
+sale de `TEXTOS` vía `_t()`. Cubre cabecera, barra lateral, pestañas, panorama,
+bloque producción/exportaciones, simulador completo, títulos/ejes/hover de las
+gráficas y encabezados de tablas. Las etiquetas de datos en español de
+`config.py` (indicadores, fuentes, alcance, cadencia, método) se traducen con
+mapas de presentación en `app.py` (`ETIQUETAS_VAR_EN`, `DESCRIPCIONES_VAR_EN`,
+`FUENTES_NOMBRE_EN`, `ALCANCE_EN`, `CADENCIA_EN`, `METODO_EN`, `PERIODOS_EN`) y
+helpers (`_etiqueta_var`, `_descripcion_var`, `_metodo`, `_indicador_en`,
+`_periodo_label`, `_carga_palabra`), **sin tocar el contrato ni los CSV**. Las
+opciones que son clave de lógica (periodo, Mensual/Semanal, tipo de rango)
+conservan su valor español y se muestran traducidas con `format_func`. Las tablas
+de variaciones y cobertura **siguen generándose en español** porque también
+alimentan el PDF; se traducen solo en pantalla con `_variaciones_para_pantalla` /
+`_cobertura_para_pantalla` (la primera además formatea los % con
+`_pct_con_signo`). **Quedan en español a propósito:** el brief PDF
+(`reporte/pdf.py`) y el informe Markdown del simulador (`generar_informe_simulador`),
+que son documentos descargables aparte; y los tres campos `st.number_input` del
+simulador (límite de Streamlit). Las fechas se mantienen en dd/mm/aaaa en ambos
+idiomas.
 Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
 (`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
 mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =
