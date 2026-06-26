@@ -290,13 +290,20 @@ def _cargar_calibracion_fnc() -> pd.DataFrame:
     return pd.read_csv(ruta, parse_dates=["fecha"])
 
 
-def _numero_es(valor: float, decimales: int) -> str:
+def _numero(valor: float, decimales: int) -> str:
+    """Número con separadores según el idioma activo.
+
+    Base (Python): miles con coma, decimal con punto → inglés directo. Para
+    español se intercambian a miles con punto y decimal con coma.
+    """
     texto = f"{valor:,.{decimales}f}"
+    if IDIOMA == "en":
+        return texto
     return texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def _valor_metrica(fila: pd.Series) -> str:
-    valor = _numero_es(float(fila["valor"]), int(fila["decimales"]))
+    valor = _numero(float(fila["valor"]), int(fila["decimales"]))
     return f"{valor} {_unidad_legible(fila['unidad'])}"
 
 
@@ -327,7 +334,7 @@ def _variacion_comparacion(serie: pd.DataFrame, modo: str) -> str | None:
     if base == 0:
         return None
     cambio = (actual / base - 1) * 100
-    return f"{_numero_es(cambio, 1)}% {etiqueta}"
+    return f"{_numero(cambio, 1)}% {etiqueta}"
 
 
 def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
@@ -352,9 +359,10 @@ def _layout(figura: go.Figure, altura: int = 400) -> go.Figure:
     colores = COLORES_INTERFAZ
     figura.update_layout(
         height=altura,
-        # Coma decimal y punto de miles en todo lo que Plotly formatea
-        # (hover, ejes, barra de color), igual que el resto de la interfaz.
-        separators=",.",
+        # Separadores según idioma en todo lo que Plotly formatea (hover, ejes,
+        # barra de color): el primer carácter es el decimal y el segundo el de
+        # miles. Español → ",." (decimal coma, miles punto); inglés → ".,".
+        separators=",." if IDIOMA == "es" else ".,",
         margin=dict(l=24, r=20, t=84, b=28),
         paper_bgcolor=colores["superficie"],
         plot_bgcolor=colores["superficie"],
@@ -515,7 +523,7 @@ def _grafico_resultado_escenario(
             y=etiquetas,
             orientation="h",
             marker_color=colores,
-            text=[f"${_numero_es(valor, 0)}" for valor in valores],
+            text=[f"${_numero(valor, 0)}" for valor in valores],
             textposition="outside",
             cliponaxis=False,
             hovertemplate="%{y}<br>$%{x:,.0f} COP/carga<extra></extra>",
@@ -614,7 +622,7 @@ def _resumen_cuenta(resultado: ResultadoEscenario, cargas: int) -> None:
             f"<span style='color:{colores['texto_secundario']};'>{etiqueta}</span>"
             f"<span style='color:{color};font-weight:600;"
             "font-variant-numeric:tabular-nums;white-space:nowrap;'>"
-            f"{signo}&#36;{_numero_es(valor, 0)}</span></div>"
+            f"{signo}&#36;{_numero(valor, 0)}</span></div>"
         )
 
     st.markdown(
@@ -700,8 +708,8 @@ def _simulador_proyeccion(
                 "precio interno, Coffee C y TRM publicados juntos para evitar mezclar "
                 "fuentes u horas de cierre. Si esa referencia falla, el respaldo "
                 f"estadístico tiene un error histórico medio de "
-                f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
-                f"({_numero_es(modelo.error_porcentual_medio, 2)}%)."
+                f"${_numero(modelo.error_absoluto_medio, 0)} por carga "
+                f"({_numero(modelo.error_porcentual_medio, 2)}%)."
             )
         else:
             st.caption(
@@ -709,8 +717,8 @@ def _simulador_proyeccion(
                 f"comparables, de {modelo.fecha_inicio_calibracion:%d/%m/%Y} a "
                 f"{modelo.fecha_fin_calibracion:%d/%m/%Y}. Validación caminando sobre "
                 f"{modelo.observaciones_validacion} observaciones: error absoluto medio "
-                f"${_numero_es(modelo.error_absoluto_medio, 0)} por carga "
-                f"({_numero_es(modelo.error_porcentual_medio, 2)}%)."
+                f"${_numero(modelo.error_absoluto_medio, 0)} por carga "
+                f"({_numero(modelo.error_porcentual_medio, 2)}%)."
             )
         st.markdown(
             "**Fórmula:** USD/COP escenario × Coffee C escenario × coeficiente "
@@ -810,9 +818,9 @@ def _simulador_proyeccion(
     metricas = st.columns(4)
     metricas[0].metric(
         "Precio FNC estimado",
-        f"${_numero_es(resultado.precio_fnc_estimado, 0)}",
+        f"${_numero(resultado.precio_fnc_estimado, 0)}",
         (
-            f"{_numero_es(resultado.diferencia_fnc_observado_pct, 1)}% frente al último observado"
+            f"{_numero(resultado.diferencia_fnc_observado_pct, 1)}% frente al último observado"
             if pd.notna(resultado.diferencia_fnc_observado_pct)
             else None
         ),
@@ -824,21 +832,21 @@ def _simulador_proyeccion(
     with metricas[1].container(key="metrica_margen_carga"):
         st.metric(
             "Margen bruto por carga",
-            f"${_numero_es(resultado.margen_por_carga, 0)}",
-            f"{_numero_es(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso",
+            f"${_numero(resultado.margen_por_carga, 0)}",
+            f"{_numero(resultado.margen_sobre_ingreso_pct, 1)}% del ingreso",
             delta_color="off",
         )
     metricas[2].metric(
         f"Ingreso por {cargas} carga{'s' if cargas != 1 else ''}",
-        f"${_numero_es(resultado.ingreso_total, 0)}",
+        f"${_numero(resultado.ingreso_total, 0)}",
         delta=None,
     )
     with metricas[3].container(key="metrica_margen_total"):
         st.metric(
             "Margen bruto total",
-            f"${_numero_es(resultado.margen_total, 0)}",
+            f"${_numero(resultado.margen_total, 0)}",
             (
-                f"{_numero_es(resultado.retorno_sobre_costo_pct, 1)}% sobre el costo"
+                f"{_numero(resultado.retorno_sobre_costo_pct, 1)}% sobre el costo"
                 if pd.notna(resultado.retorno_sobre_costo_pct)
                 else None
             ),
@@ -904,7 +912,7 @@ def _simulador_proyeccion(
     )
 
     st.info(
-        f"Costo medio inicial: ${_numero_es(COSTO_PRODUCCION_REFERENCIA, 0)} COP por carga, "
+        f"Costo medio inicial: ${_numero(COSTO_PRODUCCION_REFERENCIA, 0)} COP por carga, "
         f"referencia nacional con dato de {COSTO_PRODUCCION_FECHA:%m/%Y}. "
         "No representa necesariamente el costo de una finca particular."
     )
@@ -1020,7 +1028,7 @@ def _bloque_produccion_exportaciones(
     columnas = st.columns([1, 1, 2])
     columnas[0].metric(
         "Producción nacional · mensual",
-        f"{_numero_es(float(ultima_periodo['valor']), 1)} mil sacos de 60 kg",
+        f"{_numero(float(ultima_periodo['valor']), 1)} mil sacos de 60 kg",
         help="Producción registrada de café verde equivalente publicada por la FNC.",
     )
     cambio_mensual = ultima_completa["cambio_1m_pct"]
@@ -1029,7 +1037,7 @@ def _bloque_produccion_exportaciones(
         "Mes del dato",
         pd.Timestamp(ultima_periodo["fecha_dato"]).strftime("%m/%Y"),
         delta=(
-            f"{_numero_es(float(cambio_mensual), 1)}% frente al mes anterior"
+            f"{_numero(float(cambio_mensual), 1)}% frente al mes anterior"
             if pd.notna(cambio_mensual)
             else None
         ),
@@ -1037,7 +1045,7 @@ def _bloque_produccion_exportaciones(
     )
     columnas[2].markdown(
         f"**Cambio interanual:** "
-        f"{_numero_es(float(cambio_anual), 1) + '%' if pd.notna(cambio_anual) else 'Sin dato'}  \n"
+        f"{_numero(float(cambio_anual), 1) + '%' if pd.notna(cambio_anual) else 'Sin dato'}  \n"
         f"**Fuente:** FNC"
     )
     st.plotly_chart(
@@ -1072,7 +1080,7 @@ def _bloque_produccion_exportaciones(
     )
     st.metric(
         etiqueta,
-        f"{_numero_es(abs(diferencia), 1)} mil sacos de 60 kg",
+        f"{_numero(abs(diferencia), 1)} mil sacos de 60 kg",
         help=(
             "Diferencia descriptiva entre dos flujos mensuales. No equivale a "
             "inventario: puede incluir café producido en otros meses, rezagos "

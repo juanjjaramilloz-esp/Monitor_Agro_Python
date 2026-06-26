@@ -89,12 +89,19 @@ solo al mostrar (`UNIDADES_LEGIBLES`/`_unidad_legible`: `COP/carga_125kg`→
 el contrato y los CSV no cambian. Los `subheader` (h3) pasaron de 1rem a 1,18rem
 en negrita con más margen para marcar bloques. Para previsualizar local con el
 servidor gestionado existe `.claude/launch.json` (config `streamlit`).
-**Formato numérico unificado (coma decimal, punto de miles):** los textos de
-Python ya usaban `_numero_es`; lo que faltaba era Plotly. Se añadió
-`separators=",."` en `_layout` (cubre hover, ejes y barra de color de **todas**
-las gráficas, que pasan por ahí) y se pasaron a `_numero_es` los pocos strings
-preformateados que `separators` no toca (etiquetas de barra del gráfico de
-resultado, porcentajes de error de calibración, costo en el `st.info`).
+**Formato numérico según idioma.** `_numero(valor, decimales)` (antes
+`_numero_es`) formatea según `IDIOMA`: español = miles `.` / decimal `,`; inglés
+= miles `,` / decimal `.` (base de Python). En Plotly, `_layout` pone
+`separators=",."` (es) o `".,"` (en), que cubre hover, ejes y barra de color de
+**todas** las gráficas (pasan por `_layout`). Los strings preformateados que
+`separators` no toca (etiquetas de barra del gráfico de resultado, porcentajes de
+error de calibración, costo del `st.info`) usan `_numero`. **Límite asumido:** los
+campos editables del simulador (`st.number_input` de Tasa, Costo y Coffee C)
+**no** pueden mostrar separador de miles ni coma decimal —el `format` printf de
+Streamlit se valida con `"%...f" % n` y rechaza la coma, y el decimal siempre es
+punto—; se conservan así para no perder los botones +/− (decidido con el usuario).
+Por eso Coffee C se ve `277.5` en el campo aunque el resto de la página respete el
+idioma.
 **Idioma EN (paso 1 de 3, andamiaje):** selector `Idioma / Language` en la barra
 lateral, diccionario `TEXTOS`, variable global `IDIOMA` y función `_t()`. Solo se
 tradujeron los textos de cabecera (título, subtítulo, introducción, rótulo de
