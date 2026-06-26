@@ -476,9 +476,6 @@ def _grafico_sensibilidad(
     matriz: pd.DataFrame,
     tasa_escenario: float,
     precio_ny_escenario: float,
-    coeficiente: float,
-    factor_rendimiento: float,
-    factor_referencia: float,
 ) -> go.Figure:
     """Muestra cómo cambia el precio estimado para combinaciones Coffee C–FX."""
     pivote = matriz.pivot(
@@ -497,42 +494,16 @@ def _grafico_sensibilidad(
                 [1, "#176B4D"],
             ],
             colorbar=dict(title="COP/carga", tickformat=",.0f"),
-            # Solo color: el hover y el clic los maneja la rejilla de puntos.
-            hoverinfo="skip",
-        )
-    )
-    # Rejilla fina e invisible para capturar el clic con precisión: el Heatmap no
-    # emite eventos de clic, pero un Scatter sí. Cada punto lleva su precio
-    # estimado para mostrar el hover y permitir la selección. CLAVE: el hoverinfo
-    # no puede ser "skip" porque en Plotly "skip" también anula el clic; por eso
-    # se usa un hovertemplate. Los marcadores son grandes para cubrir el área sin
-    # huecos y que cualquier clic caiga sobre un punto.
-    ajuste = factor_referencia / factor_rendimiento
-    resolucion = 50
-    tasa_min, tasa_max = float(matriz["tasa_cambio"].min()), float(matriz["tasa_cambio"].max())
-    ny_min, ny_max = float(matriz["precio_ny"].min()), float(matriz["precio_ny"].max())
-    rejilla_x, rejilla_y, rejilla_precio = [], [], []
-    for indice_ny in range(resolucion):
-        ny = ny_min + indice_ny * (ny_max - ny_min) / (resolucion - 1)
-        for indice_tasa in range(resolucion):
-            tasa = tasa_min + indice_tasa * (tasa_max - tasa_min) / (resolucion - 1)
-            rejilla_x.append(tasa)
-            rejilla_y.append(ny)
-            rejilla_precio.append(tasa * ny * coeficiente * ajuste)
-    figura.add_trace(
-        go.Scatter(
-            x=rejilla_x,
-            y=rejilla_y,
-            mode="markers",
-            marker=dict(size=16, color="rgba(0,0,0,0)"),
-            customdata=rejilla_precio,
+            # El propio Heatmap captura el clic y mapea el píxel a su celda por
+            # geometría directa (X e Y correctas). Antes se superponía una
+            # rejilla de puntos invisible, pero Plotly resolvía el clic sobre esa
+            # malla densa siempre a la fila superior de la columna (X bien, Y al
+            # tope); el Heatmap no tiene ese problema.
             hovertemplate=(
                 "USD/COP: %{x:,.0f}<br>"
                 "Coffee C: %{y:.1f} US¢/lb<br>"
-                "Precio FNC estimado: $%{customdata:,.0f}<extra></extra>"
+                "Precio FNC estimado: $%{z:,.0f}<extra></extra>"
             ),
-            showlegend=False,
-            name="celdas",
         )
     )
     figura.add_trace(
@@ -624,12 +595,10 @@ def _aplicar_clic_sensibilidad(
     if estado is not None and hasattr(estado, "get"):
         seleccion = estado.get("selection") or {}
         puntos = seleccion.get("points", []) if hasattr(seleccion, "get") else []
-    # Solo acepta los puntos de la rejilla invisible (curva 1), que trae X e Y
-    # precisas. El mapa de calor (curva 0) también emite clic, pero reporta la
-    # coordenada Y pegada al tope: si se aceptaba, el eje Coffee C saltaba
-    # siempre al máximo aunque la X cayera bien. El marcador del escenario
-    # (curva 2) tampoco debe capturar el clic.
-    candidatos = [p for p in puntos if p.get("curve_number") == 1]
+    # El clic lo captura el mapa de calor (curva 0), que devuelve la celda
+    # exacta (X = tasa, Y = Coffee C). El marcador del escenario (curva 1) no
+    # debe fijar el escenario.
+    candidatos = [p for p in puntos if p.get("curve_number") == 0]
     if candidatos and candidatos[0].get("x") is not None:
         punto = candidatos[0]
         firma = (punto["x"], punto["y"])
@@ -858,9 +827,6 @@ def _simulador_proyeccion(
                 matriz,
                 tasa_escenario,
                 precio_ny_escenario,
-                modelo.coeficiente,
-                factor_rendimiento,
-                FACTOR_RENDIMIENTO_REFERENCIA,
             ),
             width="stretch",
             theme=None,
