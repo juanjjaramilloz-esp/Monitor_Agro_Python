@@ -1,52 +1,91 @@
 # Monitor Agro Colombia
 
-**App en vivo: [kitconsultayreporte.streamlit.app](https://kitconsultayreporte.streamlit.app/)**
+**Datos de mercado cafetero convertidos en evidencia lista para analizar,
+presentar y descargar.**
 
-Kit de consulta y reporte sobre las condiciones que afectan la agroexportación
-de café de Colombia: precio internacional del café (Coffee C), USD/COP, precio
-interno FNC y producción/exportaciones nacionales mensuales. La app deja
-consultar y exportar la evidencia, generar un brief del periodo y simular el
-precio interno y el margen ante cambios de mercado. Conserva el histórico desde
-2023 para analizar tendencias antes de construir un score. El clima de los
-departamentos cafeteros sigue en el pipeline de datos, pero no en la interfaz.
-La interfaz está disponible en español e inglés.
+[Abrir la aplicación](https://kitconsultayreporte.streamlit.app/) ·
+[Ver las decisiones de producto](#decisiones-de-producto-y-análisis) ·
+[Ejecutar localmente](#ejecución-local)
 
-## Stack
+## El problema
 
-Python · pandas · Plotly · Streamlit · matplotlib + reportlab (brief en PDF) ·
-yfinance / Open-Meteo / GDELT (fuentes) · GitHub Actions (automatización).
+Preparar un análisis del sector cafetero exige buscar series en varias fuentes,
+limpiarlas, comprobar fechas y unidades y volver a construir las gráficas para
+cada informe o reunión. Monitor Agro Colombia reduce ese trabajo al reunir el
+precio Coffee C, USD/COP, precio interno de referencia FNC, producción y
+exportaciones nacionales en una sola aplicación.
 
-## Estado actual
+El proyecto fue concebido por **Juan José Jaramillo**, estudiante de Negocios
+Internacionales y analista de datos autodidacta, como puente entre comercio
+internacional, análisis de datos y necesidades reales de investigación.
 
-- Fuentes activas: USD/COP, café arábica internacional, precio interno FNC,
-  producción y exportaciones nacionales mensuales, y clima de ocho departamentos.
-- Histórico diario: 33.450 observaciones desde 2023.
-- Histórico agregado: 180 semanas completas para mercado y clima, más 82
-  observaciones mensuales de producción y exportaciones.
-- Indicadores: cambios, promedios móviles, anomalías y comparación departamental.
-- Preparación visual: etiquetas humanas, categorías, colores e índice base 100.
-- Dashboard publicado: panorama comercial y simulador.
-- Comparación mensual: gráficas de producción, exportaciones y diferencia
-  producción menos exportaciones para los meses con ambos datos.
-- Coherencia entre vistas: Panorama y Simulador usan el mismo último trío
-  oficial FNC/Coffee C/TRM como referencia comercial actual.
-- Interfaz bilingüe español/inglés: un selector cambia todos los textos, los
-  números (1.624.000 / 277,5 en español; 1,624,000 / 277.5 en inglés) y las
-  gráficas.
-- Kit de consulta: filtros por periodo, descarga comercial en Excel y brief
-  ejecutivo en PDF con las gráficas (matplotlib + reportlab).
-- Simulador de escenarios: controles para Coffee C, USD/COP, costo por carga,
-  volumen y factor de rendimiento, con margen bruto, mapa de sensibilidad de
-  solo lectura, botón para restablecer e informe del escenario descargable en
-  Markdown.
-- Automatización: GitHub Actions cada 2 días (`.github/workflows/actualizar-datos.yml`)
-  que refresca el histórico y hace commit/push; el push redespliega la app.
-- Calidad: validaciones de fechas, nulos, duplicados, cobertura y semanas
-  incompletas.
-- Pendiente: validar el kit con una tarea real de CRECE y definir criterios
-  expertos antes de construir el score.
+## La solución
 
-## Cómo probarlo
+- Compara Coffee C, USD/COP y precio FNC en una escala base 100.
+- Conserva producción y exportaciones en su cadencia mensual real.
+- Descarga series filtradas en Excel y un brief ejecutivo en PDF.
+- Explora escenarios de precio interno y margen bruto mediante Coffee C,
+  USD/COP, costo, volumen y factor de rendimiento.
+- Funciona en español e inglés, incluidos textos, números y gráficas.
+
+El histórico comienza en enero de 2023. El pipeline conserva además lluvia y
+temperaturas de ocho departamentos cafeteros, aunque esa capa no se muestra en
+la interfaz actual para mantener el foco comercial.
+
+## Evidencia verificable
+
+| Señal | Resultado |
+|---|---:|
+| Observaciones diarias normalizadas | 33.450 |
+| Semanas completas de mercado y clima | 180 |
+| Observaciones mensuales de producción y exportaciones | 82 |
+| Pruebas unitarias sin internet | 55 |
+| Actualización automática | Cada 2 días |
+| Salidas reutilizables | Excel, PDF y Markdown |
+| Idiomas | Español e inglés |
+
+La automatización fue validada en un runner real de GitHub Actions: actualiza
+los datos, recalcula los derivados, crea un commit solo si hay cambios y activa
+el redespliegue en Streamlit Community Cloud.
+
+## Impacto y validación
+
+La herramienta está siendo probada con una directora de investigación del
+sector cafetero mediante una tarea real. Los resultados y la reseña se
+publicarán únicamente cuando termine la prueba y la participante apruebe de
+forma explícita el texto, su nombre, cargo y afiliación.
+
+La validación registra la tarea, el entregable, las partes utilizadas, el
+resultado reutilizado, el trabajo evitado y las mejoras solicitadas. No implica
+patrocinio, adopción ni aval institucional.
+
+## Decisiones de producto y análisis
+
+- **Cadencia honesta:** mercado y clima usan semanas cerradas; producción y
+  exportaciones aparecen solo en los meses publicados.
+- **Estimación, no pronóstico:** el simulador explora supuestos con el último
+  trío coherente FNC/Coffee C/TRM y una calibración de respaldo.
+- **Sin score prematuro:** no se califica oportunidad o riesgo sin calendario
+  productivo, costos y conocimiento experto suficientes.
+- **Trazabilidad visible:** las descargas conservan fecha, unidad, fuente,
+  alcance y limitaciones.
+- **Foco antes que funciones:** la vista climática salió de la interfaz tras el
+  feedback inicial; el pipeline permanece disponible.
+
+## Arquitectura y stack
+
+```text
+fuentes/  -> contratos estables por fuente
+procesar/ -> calidad, histórico, indicadores, visualización y escenarios
+reporte/  -> brief Markdown, informe del simulador y PDF ejecutivo
+datos/    -> histórico, indicadores, metadatos y snapshots
+app.py    -> interfaz Streamlit bilingüe
+```
+
+Python · pandas · Plotly · Streamlit · matplotlib · reportlab · yfinance ·
+Open-Meteo · GDELT · GitHub Actions.
+
+## Ejecución local
 
 Abre PowerShell en `E:\Monitor_Agro_Python` y ejecuta:
 
@@ -152,6 +191,13 @@ mínimo, máximo y promedio.
 Huila, Antioquia, Tolima, Cauca, Nariño, Caldas, Risaralda y Quindío. El clima
 de cada departamento usa por ahora una coordenada municipal representativa,
 definida en `config.py`; no representa toda la variación interna departamental.
+
+## Material de portafolio
+
+La [guía de validación y publicación](docs/portfolio/GUIA.md) contiene las
+preguntas para la prueba con usuarias, el guion de demostración y los borradores
+para la hoja de vida y LinkedIn. Los marcadores de resultado deben reemplazarse
+solo después de recibir evidencia y autorización explícita.
 
 ## Licencia
 

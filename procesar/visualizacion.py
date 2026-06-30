@@ -15,6 +15,7 @@ from config import (
     REGIONES_CAFE,
     UMBRAL_ANOMALIA_ALTA,
     UMBRAL_ANOMALIA_MODERADA,
+    VARIABLES_MENSUALES,
     VARIABLES_INDICE_BASE_100,
 )
 from procesar.calidad import COLUMNAS_VISUALIZACION, validar_visualizacion
@@ -25,6 +26,64 @@ RUTA_HISTORICO = DIR_HISTORICO / "historico_semanal.csv"
 RUTA_SERIES = DIR_VISUALIZACION / "series_visualizacion.csv"
 RUTA_RESUMEN = DIR_VISUALIZACION / "resumen_visual.csv"
 RUTA_CATALOGO = DIR_VISUALIZACION / "catalogo_variables.csv"
+
+
+def configuracion_eje_mensual(max_etiquetas: int = 12) -> dict[str, object]:
+    """Configura fechas mensuales legibles también en pantallas estrechas.
+
+    ``nticks`` funciona como máximo aproximado: Plotly conserva todos los datos
+    y elige automáticamente si etiqueta cada mes, trimestre u otro intervalo
+    según el rango y el ancho disponible.
+    """
+    if max_etiquetas < 2:
+        raise ValueError("max_etiquetas debe ser al menos 2")
+    return {
+        "showgrid": False,
+        "title": None,
+        "nticks": max_etiquetas,
+        "tickformat": "%b<br>%Y",
+        "tickangle": 0,
+        "ticklabelmode": "period",
+        "automargin": True,
+    }
+
+
+def filtrar_periodo_visualizacion(
+    tabla: pd.DataFrame,
+    semanas: int | None,
+) -> pd.DataFrame:
+    """Filtra cada cadencia sin recortar meses publicados por fechas semanales.
+
+    Las series semanales se anclan en el último cierre disponible. Para las
+    mensuales, el equivalente de 3/6/12/36 meses se calcula desde el último mes
+    publicado de cada variable, que puede tener rezago frente al mercado.
+    """
+    if semanas is None:
+        return tabla.copy()
+    if semanas < 1:
+        raise ValueError("semanas debe ser al menos 1")
+
+    resultado = tabla.copy()
+    fechas_cierre = pd.to_datetime(resultado["semana_fin"])
+    ultima = fechas_cierre.max()
+    inicio = ultima - pd.Timedelta(weeks=semanas - 1)
+    es_mensual = resultado["variable"].isin(VARIABLES_MENSUALES)
+    semanales = resultado[~es_mensual & (fechas_cierre >= inicio)]
+
+    cantidad_meses = max(1, round(semanas * 12 / 52))
+    grupos_mensuales = []
+    for _, grupo in resultado[es_mensual].groupby("variable", sort=False):
+        meses = pd.to_datetime(grupo["fecha_dato"]).dt.to_period("M")
+        ultimo_mes = meses.max()
+        primer_mes = ultimo_mes - (cantidad_meses - 1)
+        grupos_mensuales.append(grupo[meses >= primer_mes])
+
+    mensuales = (
+        pd.concat(grupos_mensuales, ignore_index=False)
+        if grupos_mensuales
+        else resultado.iloc[0:0]
+    )
+    return pd.concat([semanales, mensuales], ignore_index=False).sort_index().copy()
 
 
 def faltan_variables_historicas(

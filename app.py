@@ -24,6 +24,7 @@ from config import (
     PROYECCION_PUNTOS_MATRIZ,
     PROYECCION_RANGO_FACTOR_CAFE,
     PROYECCION_RANGO_FACTOR_FX,
+    VARIABLES_MENSUALES,
 )
 from procesar.proyeccion import (
     ResultadoEscenario,
@@ -37,7 +38,9 @@ from procesar.historico import RUTA_DIARIO
 from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 from procesar.visualizacion import (
     RUTA_SERIES,
+    configuracion_eje_mensual,
     ejecutar as preparar_visualizacion,
+    filtrar_periodo_visualizacion,
     incorporar_referencia_comercial_actual,
     preparar_descarga_comercial,
     series_necesitan_regenerarse,
@@ -868,11 +871,7 @@ def _variacion_comparacion(serie: pd.DataFrame, modo: str) -> str | None:
 
 
 def _filtrar_periodo(tabla: pd.DataFrame, semanas: int | None) -> pd.DataFrame:
-    if semanas is None:
-        return tabla.copy()
-    ultima = tabla["semana_fin"].max()
-    inicio = ultima - pd.Timedelta(weeks=semanas - 1)
-    return tabla[tabla["semana_fin"] >= inicio].copy()
+    return filtrar_periodo_visualizacion(tabla, semanas)
 
 
 def _filtrar_fechas(
@@ -958,12 +957,7 @@ def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
     )
     figura.update_layout(
         title=_t("chart_prod_titulo"),
-        xaxis=dict(
-            showgrid=False,
-            title=None,
-            dtick="M1",
-            tickformat="%b<br>%Y",
-        ),
+        xaxis=configuracion_eje_mensual(),
     )
     return _layout(figura, 350)
 
@@ -987,7 +981,7 @@ def _grafico_exportaciones(tabla: pd.DataFrame) -> go.Figure:
     )
     figura.update_layout(
         title=_t("chart_exp_titulo"),
-        xaxis=dict(showgrid=False, title=None, dtick="M1", tickformat="%b<br>%Y"),
+        xaxis=configuracion_eje_mensual(),
     )
     return _layout(figura, 350)
 
@@ -1035,7 +1029,7 @@ def _grafico_diferencia_mensual(tabla: pd.DataFrame) -> go.Figure:
     figura.add_hline(y=0, line_color=COLORES_INTERFAZ["comparacion"], line_width=1)
     figura.update_layout(
         title=_t("chart_dif_titulo"),
-        xaxis=dict(showgrid=False, title=None, dtick="M1", tickformat="%b<br>%Y"),
+        xaxis=configuracion_eje_mensual(),
         yaxis_title=_t("yaxis_miles_sacos"),
         showlegend=False,
     )
@@ -1679,10 +1673,20 @@ def _a_excel(tabla: pd.DataFrame) -> bytes:
 
 
 @st.cache_data(show_spinner="Preparando el brief en PDF…")
-def _brief_pdf(inicio: pd.Timestamp, fin: pd.Timestamp, marca_datos: float) -> bytes:
+def _brief_pdf(
+    inicio: pd.Timestamp,
+    fin: pd.Timestamp,
+    marca_datos: float,
+    periodo_predefinido: bool,
+    semanas: int | None,
+) -> bytes:
     """Genera el PDF del periodo; la caché solo se invalida si cambian los datos."""
     del marca_datos
-    periodo = _filtrar_fechas(datos, inicio, fin)
+    periodo = (
+        _filtrar_periodo(datos, semanas)
+        if periodo_predefinido
+        else _filtrar_fechas(datos, inicio, fin)
+    )
     return generar_pdf_brief(
         inicio=inicio,
         fin=fin,
@@ -1747,6 +1751,7 @@ tipo_periodo = st.sidebar.radio(
     ),
 )
 if tipo_periodo == "Periodo predefinido":
+    periodo_predefinido_activo = True
     periodo = st.sidebar.segmented_control(
         _t("periodo"),
         options=list(PERIODOS_VISUALIZACION),
@@ -1757,6 +1762,8 @@ if tipo_periodo == "Periodo predefinido":
     semanas = PERIODOS_VISUALIZACION[periodo or "1 año"]
     filtrados = _filtrar_periodo(datos, semanas)
 else:
+    periodo_predefinido_activo = False
+    semanas = None
     fecha_minima = datos["semana_fin"].min().date()
     fecha_maxima = datos["semana_fin"].max().date()
     rango = st.sidebar.date_input(
@@ -1809,8 +1816,12 @@ with tab_panorama:
         f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
         f"{filtrados['semana_fin'].max():%Y%m%d}.xlsx"
     )
-    inicio_brief = pd.Timestamp(filtrados["semana_fin"].min())
-    fin_brief = pd.Timestamp(filtrados["semana_fin"].max())
+    filas_semanales = filtrados[
+        ~filtrados["variable"].isin(VARIABLES_MENSUALES)
+    ]
+    referencia_rango = filas_semanales if not filas_semanales.empty else filtrados
+    inicio_brief = pd.Timestamp(referencia_rango["semana_fin"].min())
+    fin_brief = pd.Timestamp(referencia_rango["semana_fin"].max())
     clave_pdf = f"{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}"
     col_csv, col_brief = st.columns(2)
     col_csv.download_button(
@@ -1823,7 +1834,13 @@ with tab_panorama:
     )
     col_brief.download_button(
         _t("btn_pdf"),
-        data=_brief_pdf(inicio_brief, fin_brief, Path(RUTA_SERIES).stat().st_mtime),
+        data=_brief_pdf(
+            inicio_brief,
+            fin_brief,
+            Path(RUTA_SERIES).stat().st_mtime,
+            periodo_predefinido_activo,
+            semanas,
+        ),
         file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
         mime="application/pdf",
         width="stretch",

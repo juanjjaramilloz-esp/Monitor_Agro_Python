@@ -35,8 +35,12 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   redespliegue. `.github/workflows/actualizar-datos.yml` corre cada 2 días (10:00
   UTC). Aún falta producir un snapshot semanal en CI.
 - Próximo: validar kit, brief y simulador con una tarea real de CRECE; preparar
-  el repo para LinkedIn (captura/GIF en README, link a la app arriba, relato del
-  README alineado al producto actual).
+  el resultado y la reseña autorizada para el portafolio. El README ya presenta
+  problema, solución, evidencia, decisiones e impacto pendiente; la guía
+  `docs/portfolio/GUIA.md` contiene entrevista, autorización, textos para CV y
+  LinkedIn y guion audiovisual. Siguen pendientes las capturas y el video/GIF:
+  Edge headless no esperó el render interactivo de Streamlit, por lo que se
+  descartaron las capturas de carga y deben grabarse con un navegador normal.
 
 ## Estado verificable
 
@@ -90,6 +94,16 @@ solo al mostrar (`UNIDADES_LEGIBLES`/`_unidad_legible`: `COP/carga_125kg`→
 el contrato y los CSV no cambian. Los `subheader` (h3) pasaron de 1rem a 1,18rem
 en negrita con más margen para marcar bloques. Para previsualizar local con el
 servidor gestionado existe `.claude/launch.json` (config `streamlit`).
+**Ejes mensuales adaptables (2026-06-30):** producción, exportaciones y su
+diferencia ya no fuerzan una etiqueta por mes (`dtick="M1"`). Comparten
+`configuracion_eje_mensual`, que limita a unas 12 marcas, deja que Plotly elija
+el intervalo según rango y ancho y mantiene las etiquetas horizontales. Corrige
+la superposición observada en laptops a zoom 100 % sin ocultar barras ni datos.
+Los periodos predefinidos filtran por cadencia: mercado conserva 13/26/52/156
+semanas y cada serie mensual toma sus últimos 3/6/12/36 meses publicados desde
+su propia fecha más reciente. Esto evita que el rezago mensual deje solo una o
+cuatro barras. Las fechas personalizadas siguen siendo límites literales; Excel
+y PDF reciben el mismo conjunto mixto mostrado en pantalla.
 **Formato numérico según idioma.** `_numero(valor, decimales)` (antes
 `_numero_es`) formatea según `IDIOMA`: español = miles `.` / decimal `,`; inglés
 = miles `,` / decimal `.` (base de Python). En Plotly, `_layout` pone
@@ -175,7 +189,7 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** 51 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 55 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con

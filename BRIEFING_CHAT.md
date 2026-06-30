@@ -1,6 +1,6 @@
 # Briefing estratégico - Monitor Agro Colombia
 
-Vigencia del briefing: **26 de junio de 2026**.
+Vigencia del briefing: **30 de junio de 2026**.
 
 ## Cómo usar este archivo
 
@@ -235,8 +235,9 @@ No son compromisos automáticos; deben priorizarse con feedback:
   etapa del cultivo.
 - **Señales de roya y broca:** solo si son defendibles con los datos y útiles
   para las beneficiarias.
-- **Brief semanal exportable:** una página útil para informes, reuniones o
-  contenidos de formación.
+- **Brief por periodo exportable:** implementado en PDF con gráficas, tablas,
+  variaciones y fuentes para informes, reuniones o contenidos de formación;
+  queda validar su utilidad en una tarea real de CRECE.
 - **Capa metodológica:** diccionario de datos, fuentes, fecha de actualización,
   cobertura y explicación del futuro score.
 - **Descarga para análisis:** series filtradas y tablas comerciales listas para
@@ -244,8 +245,10 @@ No son compromisos automáticos; deben priorizarse con feedback:
 - **Producción y productividad territorial:** ampliación a evaluar más adelante.
   La cobertura actual incluye producción y exportaciones nacionales mensuales;
   el nivel departamental o municipal queda fuera de alcance.
-- **Automatización cada 2 días:** ya implementada con GitHub Actions; queda
-  validar su primera corrida real y, opcionalmente, archivar snapshots.
+- **Automatización cada 2 días:** implementada y validada en un runner real de
+  GitHub Actions el 25 de junio de 2026. La ejecución refrescó los datos, creó
+  el commit automático y activó el redespliegue; aún falta producir un snapshot
+  semanal desde CI.
 
 ---
 
@@ -272,8 +275,8 @@ No son compromisos automáticos; deben priorizarse con feedback:
   una diferencia de 1.264 COP (0,06%), sin fijar manualmente el resultado.
 - El código está respaldado en GitHub y la aplicación está publicada y funcional
   en Streamlit Community Cloud, verificada por el usuario. La actualización
-  automática de datos ya está implementada (GitHub Actions semanal); falta
-  validar su primera corrida real en el runner.
+  automática corre cada 2 días y fue validada en un runner real de GitHub
+  Actions el 25 de junio de 2026; aún falta producir un snapshot semanal en CI.
 - El repositorio es público solo para portafolio, con licencia propietaria
   ("Todos los derechos reservados"): el código no puede reutilizarse sin permiso.
 

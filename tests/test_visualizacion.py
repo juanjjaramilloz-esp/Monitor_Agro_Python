@@ -6,8 +6,10 @@ import pandas as pd
 from procesar.calidad import COLUMNAS_HISTORICO_SEMANAL
 from procesar.visualizacion import (
     _estado_anomalia,
+    configuracion_eje_mensual,
     crear_resumen_visual,
     faltan_variables_historicas,
+    filtrar_periodo_visualizacion,
     incorporar_referencia_comercial_actual,
     preparar,
     preparar_descarga_comercial,
@@ -113,6 +115,63 @@ class PreparacionVisualTests(unittest.TestCase):
         self.assertEqual(actual["valor"], 4300.0)
         self.assertEqual(actual["fecha_dato"], pd.Timestamp("2026-02-05"))
         self.assertEqual(actual["fuente"], "FNC")
+
+    def test_eje_mensual_limita_etiquetas_sin_forzar_cada_mes(self) -> None:
+        configuracion = configuracion_eje_mensual()
+
+        self.assertEqual(configuracion["nticks"], 12)
+        self.assertEqual(configuracion["tickangle"], 0)
+        self.assertNotIn("dtick", configuracion)
+
+    def test_eje_mensual_rechaza_un_maximo_inutilizable(self) -> None:
+        with self.assertRaisesRegex(ValueError, "al menos 2"):
+            configuracion_eje_mensual(1)
+
+    def test_periodo_predefinido_conserva_ultimos_meses_publicados(self) -> None:
+        filas = []
+        for fecha in pd.date_range("2025-12-01", "2026-05-01", freq="MS"):
+            for variable in ["produccion_nacional", "exportaciones_cafe"]:
+                filas.append(
+                    {
+                        "semana_fin": fecha,
+                        "fecha_dato": fecha,
+                        "variable": variable,
+                        "valor": 1.0,
+                    }
+                )
+        filas.extend(
+            {
+                "semana_fin": fecha,
+                "fecha_dato": fecha,
+                "variable": "fx_usd_local",
+                "valor": 1.0,
+            }
+            for fecha in pd.date_range("2026-01-04", "2026-06-28", freq="W-SUN")
+        )
+        tabla = pd.DataFrame(filas)
+
+        tres_meses = filtrar_periodo_visualizacion(tabla, 13)
+        seis_meses = filtrar_periodo_visualizacion(tabla, 26)
+
+        for variable in ["produccion_nacional", "exportaciones_cafe"]:
+            self.assertEqual(len(tres_meses[tres_meses["variable"].eq(variable)]), 3)
+            self.assertEqual(len(seis_meses[seis_meses["variable"].eq(variable)]), 6)
+
+    def test_periodo_predefinido_mantiene_corte_semanal(self) -> None:
+        fechas = pd.date_range("2026-01-04", "2026-06-28", freq="W-SUN")
+        tabla = pd.DataFrame(
+            {
+                "semana_fin": fechas,
+                "fecha_dato": fechas,
+                "variable": "fx_usd_local",
+                "valor": 1.0,
+            }
+        )
+
+        resultado = filtrar_periodo_visualizacion(tabla, 13)
+
+        self.assertEqual(len(resultado), 13)
+        self.assertEqual(resultado["semana_fin"].max(), pd.Timestamp("2026-06-28"))
 
 
 if __name__ == "__main__":
