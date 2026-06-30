@@ -122,6 +122,7 @@ class PreparacionVisualTests(unittest.TestCase):
         self.assertEqual(configuracion["nticks"], 12)
         self.assertEqual(configuracion["tickangle"], 0)
         self.assertNotIn("dtick", configuracion)
+        self.assertNotIn("ticklabelmode", configuracion)
 
     def test_eje_mensual_rechaza_un_maximo_inutilizable(self) -> None:
         with self.assertRaisesRegex(ValueError, "al menos 2"):

@@ -97,8 +97,9 @@ servidor gestionado existe `.claude/launch.json` (config `streamlit`).
 **Ejes mensuales adaptables (2026-06-30):** producción, exportaciones y su
 diferencia ya no fuerzan una etiqueta por mes (`dtick="M1"`). Comparten
 `configuracion_eje_mensual`, que limita a unas 12 marcas, deja que Plotly elija
-el intervalo según rango y ancho y mantiene las etiquetas horizontales. Corrige
-la superposición observada en laptops a zoom 100 % sin ocultar barras ni datos.
+el intervalo según rango y ancho, mantiene las etiquetas horizontales y las
+ancla a la fecha de cada barra (sin `ticklabelmode="period"`). Corrige la
+superposición observada en laptops a zoom 100 % sin ocultar barras ni datos.
 Los periodos predefinidos filtran por cadencia: mercado conserva 13/26/52/156
 semanas y cada serie mensual toma sus últimos 3/6/12/36 meses publicados desde
 su propia fecha más reciente. Esto evita que el rezago mensual deje solo una o

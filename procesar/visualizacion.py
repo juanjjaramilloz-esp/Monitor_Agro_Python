@@ -43,7 +43,6 @@ def configuracion_eje_mensual(max_etiquetas: int = 12) -> dict[str, object]:
         "nticks": max_etiquetas,
         "tickformat": "%b<br>%Y",
         "tickangle": 0,
-        "ticklabelmode": "period",
         "automargin": True,
     }
 
