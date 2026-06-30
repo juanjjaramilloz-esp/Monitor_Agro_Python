@@ -46,6 +46,7 @@ from procesar.visualizacion import (
     series_necesitan_regenerarse,
 )
 from reporte.generar import generar_informe_simulador
+from reporte.excel import generar_excel_comercial
 from reporte.pdf import generar_pdf_brief
 
 
@@ -67,6 +68,7 @@ PASO_CAFE = 2.5
 UNIDADES_LEGIBLES = {
     "COP/carga_125kg": "COP/carga",
     "USc/lb": "US¢/lb",
+    "miles_sacos_60kg": "miles de sacos de 60 kg",
 }
 
 
@@ -1664,12 +1666,17 @@ def _cobertura_para_pantalla(cobertura: pd.DataFrame) -> pd.DataFrame:
 
 
 def _a_excel(tabla: pd.DataFrame) -> bytes:
-    """Serializa la tabla comercial a un archivo Excel (.xlsx) en memoria."""
-    hoja = "Commercial series" if IDIOMA == "en" else "Series comerciales"
-    buffer = BytesIO()
-    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        tabla.to_excel(writer, index=False, sheet_name=hoja)
-    return buffer.getvalue()
+    """Genera un libro analítico con resumen, series y diccionario."""
+    salida = tabla.copy()
+    salida["unidad"] = salida["unidad"].map(_unidad_legible)
+    if IDIOMA == "en":
+        salida["indicador"] = salida["variable"].map(_etiqueta_var)
+        salida["fuente"] = salida["fuente"].map(lambda v: FUENTES_NOMBRE_EN.get(v, v))
+        salida["cadencia"] = salida["cadencia"].map(lambda v: CADENCIA_EN.get(v, v))
+        salida["alcance_geografico"] = salida["alcance_geografico"].map(
+            lambda v: ALCANCE_EN.get(v.title(), v)
+        )
+    return generar_excel_comercial(salida, IDIOMA)
 
 
 @st.cache_data(show_spinner="Preparando el brief en PDF…")

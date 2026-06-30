@@ -91,7 +91,7 @@ Python · pandas · Streamlit · Plotly · GitHub Actions
 - Desarrollé una aplicación bilingüe que integra Coffee C, USD/COP, precio FNC,
   producción y exportaciones de café desde 2023 para consulta y análisis.
 - Automaticé la validación, actualización y publicación cada dos días;
-  implementé 56 pruebas y entregables en Excel, PDF y Markdown.
+  implementé 59 pruebas y entregables en Excel, PDF y Markdown.
 - Diseñé la herramienta con enfoque de investigación del sector cafetero y la
   estoy validando mediante una tarea real con una directora de investigación
   para evaluar su utilidad en consultas, informes y escenarios.
@@ -111,7 +111,7 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 > brief en PDF y explorar escenarios de precio y margen.
 >
 > El proyecto une mi formación en Negocios Internacionales con el análisis de
-> datos: Python, pandas, Streamlit, automatización con GitHub Actions y 56
+> datos: Python, pandas, Streamlit, automatización con GitHub Actions y 59
 > pruebas unitarias. La decisión más importante fue no fabricar un score sin
 > conocimiento experto suficiente; prioricé trazabilidad, cadencias honestas y
 > utilidad real.

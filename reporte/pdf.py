@@ -7,6 +7,7 @@ las tablas ya calculadas; no consulta fuentes ni calcula indicadores.
 
 from datetime import date
 from io import BytesIO
+from math import ceil
 
 import matplotlib
 
@@ -22,6 +23,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import (
     Image,
+    PageBreak,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
@@ -126,6 +128,91 @@ def _png_produccion(periodo: pd.DataFrame) -> bytes:
     return _fig_a_png(figura)
 
 
+def _flujos_mensuales(periodo: pd.DataFrame) -> pd.DataFrame:
+    """Empareja producción y exportaciones sin interpretar la diferencia."""
+    datos = periodo[
+        periodo["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
+    ][["fecha_dato", "variable", "valor"]].copy()
+    if datos.empty:
+        return pd.DataFrame()
+    datos["mes"] = pd.to_datetime(datos["fecha_dato"]).dt.to_period("M")
+    flujos = datos.pivot_table(
+        index="mes", columns="variable", values="valor", aggfunc="last"
+    ).reset_index()
+    flujos["fecha"] = flujos["mes"].dt.to_timestamp()
+    if {"produccion_nacional", "exportaciones_cafe"}.issubset(flujos.columns):
+        flujos["diferencia"] = (
+            flujos["produccion_nacional"] - flujos["exportaciones_cafe"]
+        )
+    return flujos.sort_values("fecha").reset_index(drop=True)
+
+
+def _png_flujos_mensuales(periodo: pd.DataFrame) -> bytes:
+    """Compara producción, exportaciones y su diferencia en una sola pieza."""
+    flujos = _flujos_mensuales(periodo)
+    figura, (ax_superior, ax_inferior) = plt.subplots(
+        2,
+        1,
+        figsize=(9.2, 5.5),
+        sharex=True,
+        gridspec_kw={"height_ratios": [2, 1], "hspace": 0.18},
+    )
+    if "produccion_nacional" in flujos:
+        ax_superior.plot(
+            flujos["fecha"],
+            flujos["produccion_nacional"],
+            label="Producción",
+            color=CATALOGO_VARIABLES["produccion_nacional"]["color"],
+            linewidth=2,
+            marker="o",
+            markersize=3,
+        )
+    if "exportaciones_cafe" in flujos:
+        ax_superior.plot(
+            flujos["fecha"],
+            flujos["exportaciones_cafe"],
+            label="Exportaciones",
+            color=CATALOGO_VARIABLES["exportaciones_cafe"]["color"],
+            linewidth=2,
+            marker="o",
+            markersize=3,
+        )
+    ax_superior.set_title(
+        "Producción y exportaciones mensuales · miles de sacos de 60 kg",
+        color=_TEXTO_HEX,
+        fontsize=11,
+        loc="left",
+        pad=8,
+    )
+    ax_superior.legend(loc="upper left", fontsize=8, frameon=False, ncol=2)
+    _ejes_limpios(ax_superior)
+
+    if "diferencia" in flujos:
+        colores_barras = [
+            _ACENTO_HEX if valor >= 0 else "#B45309"
+            for valor in flujos["diferencia"].fillna(0)
+        ]
+        ax_inferior.bar(
+            flujos["fecha"],
+            flujos["diferencia"],
+            width=18,
+            color=colores_barras,
+        )
+    ax_inferior.axhline(0, color=_SECUNDARIO_HEX, linewidth=0.8)
+    ax_inferior.set_title(
+        "Diferencia descriptiva · producción menos exportaciones",
+        color=_TEXTO_HEX,
+        fontsize=9,
+        loc="left",
+        pad=5,
+    )
+    intervalo = max(1, ceil(max(len(flujos), 1) / 10))
+    ax_inferior.xaxis.set_major_locator(mdates.MonthLocator(interval=intervalo))
+    ax_inferior.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    _ejes_limpios(ax_inferior)
+    return _fig_a_png(figura)
+
+
 def _estilos() -> dict[str, ParagraphStyle]:
     base = getSampleStyleSheet()
     return {
@@ -170,16 +257,28 @@ def _estilos() -> dict[str, ParagraphStyle]:
             fontSize=8.5,
             leading=12,
         ),
+        "tabla": ParagraphStyle(
+            "MonitorTabla",
+            parent=base["Normal"],
+            textColor=_TEXTO,
+            fontSize=8.2,
+            leading=10.5,
+        ),
     }
 
 
-def _tabla(df: pd.DataFrame, estilos: dict[str, ParagraphStyle]) -> Table:
+def _tabla(
+    df: pd.DataFrame,
+    estilos: dict[str, ParagraphStyle],
+    anchos: list[float] | None = None,
+) -> Table:
     """Convierte un DataFrame en una tabla con la identidad visual del tablero."""
-    encabezado = [Paragraph(f"<b>{col}</b>", estilos["cuerpo"]) for col in df.columns]
+    encabezado = [Paragraph(f"<b>{col}</b>", estilos["tabla"]) for col in df.columns]
     filas = [encabezado]
     for _, fila in df.iterrows():
-        filas.append([Paragraph(str(valor), estilos["cuerpo"]) for valor in fila])
-    tabla = Table(filas, repeatRows=1, hAlign="LEFT")
+        filas.append([Paragraph(str(valor), estilos["tabla"]) for valor in fila])
+    col_widths = [ancho * cm for ancho in anchos] if anchos else None
+    tabla = Table(filas, repeatRows=1, hAlign="LEFT", colWidths=col_widths)
     tabla.setStyle(
         TableStyle(
             [
@@ -196,6 +295,38 @@ def _tabla(df: pd.DataFrame, estilos: dict[str, ParagraphStyle]) -> Table:
         )
     )
     return tabla
+
+
+def _resumen_ultimo_mes(periodo: pd.DataFrame) -> pd.DataFrame:
+    flujos = _flujos_mensuales(periodo).dropna(
+        subset=["produccion_nacional", "exportaciones_cafe"], how="any"
+    )
+    if flujos.empty:
+        return pd.DataFrame()
+    ultimo = flujos.iloc[-1]
+    return pd.DataFrame(
+        [
+            {
+                "Mes comparable": pd.Timestamp(ultimo["fecha"]).strftime("%m/%Y"),
+                "Producción": _numero(float(ultimo["produccion_nacional"]), 1),
+                "Exportaciones": _numero(float(ultimo["exportaciones_cafe"]), 1),
+                "Diferencia": _numero(float(ultimo["diferencia"]), 1),
+            }
+        ]
+    )
+
+
+def _pie_pagina(canvas, documento) -> None:
+    """Añade autor, página y una línea discreta en todas las páginas."""
+    canvas.saveState()
+    ancho, _ = A4
+    canvas.setStrokeColor(_BORDE)
+    canvas.line(2 * cm, 1.25 * cm, ancho - 2 * cm, 1.25 * cm)
+    canvas.setFillColor(_SECUNDARIO)
+    canvas.setFont("Helvetica", 7.5)
+    canvas.drawString(2 * cm, 0.85 * cm, "Juan José Jaramillo · Monitor Agro Colombia")
+    canvas.drawRightString(ancho - 2 * cm, 0.85 * cm, f"Página {documento.page}")
+    canvas.restoreState()
 
 
 def _imagen(png: bytes, ancho_cm: float = 16.5) -> Image:
@@ -253,7 +384,9 @@ def generar_pdf_brief(
     fin_ts = pd.Timestamp(fin)
     estilos = _estilos()
 
-    produccion = periodo[periodo["variable"].eq("produccion_nacional")]
+    flujos = periodo[
+        periodo["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
+    ]
 
     historia = BytesIO()
     documento = SimpleDocTemplate(
@@ -262,7 +395,7 @@ def generar_pdf_brief(
         leftMargin=2 * cm,
         rightMargin=2 * cm,
         topMargin=1.8 * cm,
-        bottomMargin=1.8 * cm,
+        bottomMargin=1.7 * cm,
         title="Brief del periodo — Herramienta Consultas y Reportes",
         author="Herramienta Consultas y Reportes",
     )
@@ -290,27 +423,34 @@ def generar_pdf_brief(
         ),
         Spacer(1, 0.3 * cm),
         Paragraph("Variaciones por indicador", estilos["seccion"]),
-        _tabla(_variaciones_formateadas(variaciones), estilos),
+        _tabla(_variaciones_formateadas(variaciones), estilos, [5.2, 3.4, 3.4, 3.4]),
         Spacer(1, 0.3 * cm),
     ]
 
     for lectura in _lectura_neutral(variaciones):
         elementos.append(Paragraph(f"• {lectura}", estilos["cuerpo"]))
 
-    elementos.append(Paragraph("Producción nacional mensual", estilos["seccion"]))
-    if not produccion.empty:
-        elementos.append(_imagen(_png_produccion(periodo)))
+    elementos.append(PageBreak())
+    elementos.append(Paragraph("Producción y exportaciones mensuales", estilos["seccion"]))
+    if not flujos.empty:
+        elementos.append(_imagen(_png_flujos_mensuales(periodo)))
+        resumen_mes = _resumen_ultimo_mes(periodo)
+        if not resumen_mes.empty:
+            elementos.append(
+                _tabla(resumen_mes, estilos, [3.6, 4.0, 4.0, 4.0])
+            )
         elementos.append(
             Paragraph(
-                "La producción se publica por mes y no se rellena como dato "
-                "semanal.",
+                "Ambas series se conservan en los meses publicados. La diferencia "
+                "compara flujos del mismo mes y no equivale a inventarios, reservas "
+                "ni consumo interno.",
                 estilos["nota"],
             )
         )
     else:
         elementos.append(
             Paragraph(
-                "No hay un dato mensual de producción publicado dentro del "
+                "No hay producción o exportaciones mensuales publicadas dentro del "
                 "periodo elegido.",
                 estilos["cuerpo"],
             )
@@ -318,16 +458,17 @@ def generar_pdf_brief(
 
     elementos.extend(
         [
+            PageBreak(),
             Paragraph("Cobertura y fuentes", estilos["seccion"]),
-            _tabla(cobertura, estilos),
+            _tabla(cobertura, estilos, [3.0, 2.2, 2.5, 3.3, 1.8, 3.7]),
             Paragraph("Alcance y limitaciones", estilos["seccion"]),
         ]
     )
     limitaciones = [
-        "La producción nacional se publica mensualmente y no se rellena como "
-        "dato semanal.",
-        "El clima usa una coordenada municipal de referencia y no representa "
-        "toda la variación departamental.",
+        "Producción y exportaciones se publican mensualmente y no se rellenan "
+        "como datos semanales.",
+        "La diferencia mensual entre ambos flujos no mide inventarios, reservas "
+        "ni consumo interno.",
         "Algunas series dependen de scraping o archivos descargables que pueden "
         "cambiar de estructura.",
         "El brief describe movimientos estadísticos; no asigna oportunidad, "
@@ -340,12 +481,13 @@ def generar_pdf_brief(
         [
             Spacer(1, 0.4 * cm),
             Paragraph(
-                "Fuentes: FNC, Open-Meteo y Yahoo Finance vía yfinance. "
+                "Fuentes: Federación Nacional de Cafeteros (FNC) y Yahoo Finance "
+                "vía yfinance. "
                 "Documento exploratorio; no contiene score de oportunidad o riesgo.",
                 estilos["nota"],
             ),
         ]
     )
 
-    documento.build(elementos)
+    documento.build(elementos, onFirstPage=_pie_pagina, onLaterPages=_pie_pagina)
     return historia.getvalue()

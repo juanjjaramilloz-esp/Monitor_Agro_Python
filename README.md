@@ -23,7 +23,8 @@ internacional, análisis de datos y necesidades reales de investigación.
 
 - Compara Coffee C, USD/COP y precio FNC en una escala base 100.
 - Conserva producción y exportaciones en su cadencia mensual real.
-- Descarga series filtradas en Excel y un brief ejecutivo en PDF.
+- Descarga un libro Excel con resumen, tabla filtrable y diccionario, además de
+  un brief ejecutivo en PDF de tres páginas.
 - Explora escenarios de precio interno y margen bruto mediante Coffee C,
   USD/COP, costo, volumen y factor de rendimiento.
 - Funciona en español e inglés, incluidos textos, números y gráficas.
@@ -39,7 +40,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.450 |
 | Semanas completas de mercado y clima | 180 |
 | Observaciones mensuales de producción y exportaciones | 82 |
-| Pruebas unitarias sin internet | 56 |
+| Pruebas unitarias sin internet | 59 |
 | Actualización automática | Cada 2 días |
 | Salidas reutilizables | Excel, PDF y Markdown |
 | Idiomas | Español e inglés |

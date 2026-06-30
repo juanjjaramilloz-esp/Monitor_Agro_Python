@@ -72,10 +72,13 @@ del usuario, junto con el selector de departamento y las funciones
 (recuperables en git). El pipeline climático se conserva: `fuentes/clima.py`,
 `REGIONES_CAFE`, la agregación en `historico.py` y los datos siguen en el repo;
 el clima se sigue recolectando, solo no se muestra. El panorama permite descargar
-el periodo en **Excel** (`.xlsx` vía `_a_excel`/`pd.ExcelWriter` con openpyxl;
-antes era CSV) con fecha real, unidad, variaciones, fuente y alcance, y un brief
-en PDF (`reporte/pdf.py`, `generar_pdf_brief`: dos gráficas comerciales,
-variaciones, cobertura, limitaciones; gráficas con matplotlib, `st.cache_data`).
+el periodo en **Excel** (`reporte/excel.py`) con hojas de resumen, series
+filtrables y diccionario; incluye formatos semánticos, panel congelado, tabla y
+una gráfica de producción/exportaciones. El brief en PDF (`reporte/pdf.py`,
+`generar_pdf_brief`) tiene tres páginas intencionales: panorama y variaciones;
+producción/exportaciones/diferencia; cobertura, limitaciones y fuentes. Incluye
+pie con autor y número de página; las gráficas usan matplotlib y la generación
+mantiene `st.cache_data`.
 El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
 Producción y exportaciones forman un bloque mensual aparte (fecha real, barras
 de ancho fijo, sin relleno semanal), con una tercera gráfica de producción menos
@@ -191,7 +194,7 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** 56 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 59 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
