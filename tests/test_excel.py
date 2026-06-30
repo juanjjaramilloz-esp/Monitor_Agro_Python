@@ -43,6 +43,8 @@ class ExcelComercialTests(unittest.TestCase):
         series = libro["Series comerciales"]
         self.assertEqual(series.freeze_panes, "A2")
         self.assertIn("CommercialSeries", series.tables)
+        self.assertIsNone(series.auto_filter.ref)
+        self.assertEqual(series.tables["CommercialSeries"].autoFilter.ref, "A1:N9")
         self.assertEqual(series["A2"].number_format, "dd/mm/yyyy")
         self.assertIn('%', series["J2"].number_format)
         self.assertFalse(series.sheet_view.showGridLines)

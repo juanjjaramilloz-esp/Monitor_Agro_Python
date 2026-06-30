@@ -79,6 +79,11 @@ una gráfica de producción/exportaciones. El brief en PDF (`reporte/pdf.py`,
 producción/exportaciones/diferencia; cobertura, limitaciones y fuentes. Incluye
 pie con autor y número de página; las gráficas usan matplotlib y la generación
 mantiene `st.cache_data`.
+**Compatibilidad Excel (2026-06-30):** la tabla `CommercialSeries` conserva su
+autofiltro propio; no se añade además `ws.auto_filter` sobre el mismo rango.
+Duplicar ambos filtros hacía que Excel reparara el archivo y eliminara
+`table1.xml`. El libro corregido se abrió con Excel de escritorio en modo lectura
+sin reparación y conservó sus tres hojas y la tabla.
 El brief Markdown (`reporte.generar.generar`) se conserva como pieza testeada.
 Producción y exportaciones forman un bloque mensual aparte (fecha real, barras
 de ancho fijo, sin relleno semanal), con una tercera gráfica de producción menos

@@ -259,7 +259,9 @@ def generar_excel_comercial(tabla: pd.DataFrame, idioma: str = "es") -> bytes:
         ws = writer.book[hoja_series]
         ws.sheet_view.showGridLines = False
         ws.freeze_panes = "A2"
-        ws.auto_filter.ref = ws.dimensions
+        # La tabla ya crea su propio autofiltro. Añadir también el filtro de la
+        # hoja genera dos definiciones sobre el mismo rango y Excel repara el
+        # archivo eliminando table1.xml.
         tabla_excel = Table(displayName="CommercialSeries", ref=ws.dimensions)
         tabla_excel.tableStyleInfo = TableStyleInfo(
             name="TableStyleMedium4",
