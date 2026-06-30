@@ -957,7 +957,7 @@ def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
     )
     figura.update_layout(
         title=_t("chart_prod_titulo"),
-        xaxis=configuracion_eje_mensual(),
+        xaxis=configuracion_eje_mensual(datos["fecha_dato"]),
     )
     return _layout(figura, 350)
 
@@ -981,7 +981,7 @@ def _grafico_exportaciones(tabla: pd.DataFrame) -> go.Figure:
     )
     figura.update_layout(
         title=_t("chart_exp_titulo"),
-        xaxis=configuracion_eje_mensual(),
+        xaxis=configuracion_eje_mensual(datos["fecha_dato"]),
     )
     return _layout(figura, 350)
 
@@ -1029,7 +1029,7 @@ def _grafico_diferencia_mensual(tabla: pd.DataFrame) -> go.Figure:
     figura.add_hline(y=0, line_color=COLORES_INTERFAZ["comparacion"], line_width=1)
     figura.update_layout(
         title=_t("chart_dif_titulo"),
-        xaxis=configuracion_eje_mensual(),
+        xaxis=configuracion_eje_mensual(comparacion["fecha"]),
         yaxis_title=_t("yaxis_miles_sacos"),
         showlegend=False,
     )

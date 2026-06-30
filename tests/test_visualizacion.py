@@ -117,16 +117,28 @@ class PreparacionVisualTests(unittest.TestCase):
         self.assertEqual(actual["fuente"], "FNC")
 
     def test_eje_mensual_limita_etiquetas_sin_forzar_cada_mes(self) -> None:
-        configuracion = configuracion_eje_mensual()
+        fechas = pd.Series(pd.date_range("2023-01-01", periods=41, freq="MS"))
+        configuracion = configuracion_eje_mensual(fechas)
 
-        self.assertEqual(configuracion["nticks"], 12)
+        self.assertEqual(configuracion["tickmode"], "array")
+        self.assertEqual(len(configuracion["tickvals"]), 12)
+        self.assertEqual(configuracion["tickvals"][0], fechas.iloc[0])
+        self.assertEqual(configuracion["tickvals"][-1], fechas.iloc[-1])
         self.assertEqual(configuracion["tickangle"], 0)
         self.assertNotIn("dtick", configuracion)
+        self.assertNotIn("nticks", configuracion)
         self.assertNotIn("ticklabelmode", configuracion)
 
     def test_eje_mensual_rechaza_un_maximo_inutilizable(self) -> None:
         with self.assertRaisesRegex(ValueError, "al menos 2"):
-            configuracion_eje_mensual(1)
+            configuracion_eje_mensual(pd.Series(dtype="datetime64[ns]"), 1)
+
+    def test_eje_mensual_usa_una_etiqueta_por_barra_en_periodos_cortos(self) -> None:
+        fechas = pd.Series(pd.date_range("2025-12-01", periods=6, freq="MS"))
+
+        configuracion = configuracion_eje_mensual(fechas)
+
+        self.assertEqual(list(configuracion["tickvals"]), list(fechas))
 
     def test_periodo_predefinido_conserva_ultimos_meses_publicados(self) -> None:
         filas = []

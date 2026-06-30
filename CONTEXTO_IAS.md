@@ -96,9 +96,10 @@ en negrita con más margen para marcar bloques. Para previsualizar local con el
 servidor gestionado existe `.claude/launch.json` (config `streamlit`).
 **Ejes mensuales adaptables (2026-06-30):** producción, exportaciones y su
 diferencia ya no fuerzan una etiqueta por mes (`dtick="M1"`). Comparten
-`configuracion_eje_mensual`, que limita a unas 12 marcas, deja que Plotly elija
-el intervalo según rango y ancho, mantiene las etiquetas horizontales y las
-ancla a la fecha de cada barra (sin `ticklabelmode="period"`). Corrige la
+`configuracion_eje_mensual`, que limita a unas 12 marcas mediante una muestra
+uniforme de fechas reales, mantiene las etiquetas horizontales y las ancla a
+cada barra. Usa `tickmode="array"` para impedir marcas intermedias
+que, al ocultar el día, duplicaban visualmente algunos meses. Corrige la
 superposición observada en laptops a zoom 100 % sin ocultar barras ni datos.
 Los periodos predefinidos filtran por cadencia: mercado conserva 13/26/52/156
 semanas y cada serie mensual toma sus últimos 3/6/12/36 meses publicados desde
@@ -190,7 +191,7 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** 55 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 56 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con

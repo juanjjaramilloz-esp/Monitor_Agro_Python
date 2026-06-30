@@ -39,7 +39,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.450 |
 | Semanas completas de mercado y clima | 180 |
 | Observaciones mensuales de producción y exportaciones | 82 |
-| Pruebas unitarias sin internet | 55 |
+| Pruebas unitarias sin internet | 56 |
 | Actualización automática | Cada 2 días |
 | Salidas reutilizables | Excel, PDF y Markdown |
 | Idiomas | Español e inglés |

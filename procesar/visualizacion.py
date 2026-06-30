@@ -28,19 +28,27 @@ RUTA_RESUMEN = DIR_VISUALIZACION / "resumen_visual.csv"
 RUTA_CATALOGO = DIR_VISUALIZACION / "catalogo_variables.csv"
 
 
-def configuracion_eje_mensual(max_etiquetas: int = 12) -> dict[str, object]:
-    """Configura fechas mensuales legibles también en pantallas estrechas.
-
-    ``nticks`` funciona como máximo aproximado: Plotly conserva todos los datos
-    y elige automáticamente si etiqueta cada mes, trimestre u otro intervalo
-    según el rango y el ancho disponible.
-    """
+def configuracion_eje_mensual(
+    fechas: pd.Series,
+    max_etiquetas: int = 12,
+) -> dict[str, object]:
+    """Etiqueta solo fechas con barras y reduce la densidad si hace falta."""
     if max_etiquetas < 2:
         raise ValueError("max_etiquetas debe ser al menos 2")
+    fechas_unicas = sorted(pd.to_datetime(fechas).dropna().unique())
+    if len(fechas_unicas) > max_etiquetas:
+        ultimo = len(fechas_unicas) - 1
+        indices = sorted(
+            {round(indice * ultimo / (max_etiquetas - 1)) for indice in range(max_etiquetas)}
+        )
+        fechas_etiquetadas = [fechas_unicas[indice] for indice in indices]
+    else:
+        fechas_etiquetadas = fechas_unicas
     return {
         "showgrid": False,
         "title": None,
-        "nticks": max_etiquetas,
+        "tickmode": "array",
+        "tickvals": fechas_etiquetadas,
         "tickformat": "%b<br>%Y",
         "tickangle": 0,
         "automargin": True,
