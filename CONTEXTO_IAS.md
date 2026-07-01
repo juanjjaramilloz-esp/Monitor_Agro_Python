@@ -47,6 +47,16 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   ejes sin etiquetas duplicadas y descargables Excel/PDF. No describir como
   vigentes la portada compacta, la gráfica mensual integrada ni los supuestos
   avanzados plegables del experimento revertido.
+- **Auditoría y pulido visual (2026-06-30, post-revert).** Mejoras solo-CSS en
+  `_estilos()` (`app.py`), sin tocar imports, `procesar/*` ni el contrato de
+  datos, para no repetir el fallo de importación del rediseño revertido: h1
+  con más peso y `letter-spacing`; breakpoint intermedio (1024px) entre el
+  ancho fijo del `block-container` y el móvil (768px); tabs con borde inferior
+  de acento en la pestaña activa y hover en las inactivas; `st.info`/alertas y
+  `st.dataframe` estilizados con el mismo lenguaje visual de tarjeta (borde,
+  radio, acento) que las métricas y gráficas; hover de acento en los títulos
+  de `st.expander`. Verificado con `python -c "import app"` (sin excepciones)
+  y las 59 pruebas unitarias (OK).
 
 ## Estado verificable
 

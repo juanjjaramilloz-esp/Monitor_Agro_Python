@@ -687,7 +687,13 @@ def _estilos() -> None:
         [data-testid="stHeader"] {{ background: var(--monitor-fondo); }}
         .block-container {{ max-width: 1440px; padding-top: 1.5rem; padding-bottom: 3rem; }}
         h1, h2, h3, p, label {{ color: var(--monitor-texto); letter-spacing: 0; }}
-        h1 {{ font-size: 2rem; margin-bottom: 0.25rem; }}
+        h1 {{
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.15rem;
+        }}
+        h1 + div[data-testid="stCaptionContainer"] {{ margin-bottom: 0.6rem; }}
         h2 {{ font-size: 1.35rem; margin-top: 1rem; }}
         h3 {{
             font-size: 1.18rem;
@@ -737,6 +743,25 @@ def _estilos() -> None:
             border-radius: 10px;
             background: var(--monitor-superficie);
         }}
+        [data-testid="stExpander"] summary {{ transition: color 120ms ease; }}
+        [data-testid="stExpander"] summary:hover {{ color: var(--monitor-acento) !important; }}
+        [data-testid="stAlert"] {{
+            background: var(--monitor-superficie);
+            border: 1px solid var(--monitor-borde);
+            border-left: 4px solid var(--monitor-acento);
+            border-radius: 10px;
+        }}
+        [data-testid="stDataFrame"] {{
+            border: 1px solid var(--monitor-borde);
+            border-radius: 10px;
+            overflow: hidden;
+        }}
+        [data-testid="stDataFrame"] [data-testid="stDataFrameResizable"] {{
+            border-radius: 10px;
+        }}
+        [data-testid="stDataFrame"] thead tr th {{
+            background: var(--monitor-sidebar) !important;
+        }}
         [data-testid="stDownloadButton"] button {{
             border: 1px solid var(--monitor-acento);
             border-radius: 8px;
@@ -757,10 +782,21 @@ def _estilos() -> None:
             color: var(--monitor-secundario) !important;
             padding-left: 0;
             padding-right: 0;
+            padding-bottom: 0.5rem;
             font-size: 1.02rem;
+            border-bottom: 3px solid transparent;
+            transition: color 120ms ease, border-color 120ms ease;
         }}
         .stTabs [data-baseweb="tab"] p {{ color: inherit !important; font-weight: 500; }}
-        .stTabs [aria-selected="true"] {{ color: var(--monitor-acento) !important; }}
+        .stTabs [data-baseweb="tab"]:hover {{ color: var(--monitor-acento) !important; }}
+        .stTabs [aria-selected="true"] {{
+            color: var(--monitor-acento) !important;
+            border-bottom-color: var(--monitor-acento);
+        }}
+        @media (max-width: 1024px) {{
+            .block-container {{ padding: 1.2rem 1rem 2.5rem; }}
+            [data-testid="stMetric"] {{ min-height: 120px; }}
+        }}
         @media (max-width: 768px) {{
             .block-container {{ padding: 1rem 0.8rem 2rem; }}
             h1 {{ font-size: 1.65rem; }}
