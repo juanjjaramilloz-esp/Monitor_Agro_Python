@@ -102,6 +102,15 @@ solo al mostrar (`UNIDADES_LEGIBLES`/`_unidad_legible`: `COP/carga_125kg`→
 el contrato y los CSV no cambian. Los `subheader` (h3) pasaron de 1rem a 1,18rem
 en negrita con más margen para marcar bloques. Para previsualizar local con el
 servidor gestionado existe `.claude/launch.json` (config `streamlit`).
+**Rediseño visual moderado (2026-06-30):** portada compacta con identidad de
+Monitor Agro Colombia, propuesta de valor y badges de cobertura/actualización;
+entregables Excel/PDF visibles al inicio del panorama; variaciones completas en
+expander; comparación mensual integrada de producción, exportaciones y
+diferencia en una figura de dos niveles. El simulador deja Coffee C y USD/COP
+visibles, agrupa costo/volumen/rendimiento en supuestos avanzados y muestra el
+mapa de sensibilidad a ancho completo. CSS con breakpoints 1200/900/768 px,
+sidebar automática y tarjetas más compactas. Revisado a zoom 100 % en
+1920×1080, 1366×768, 1024×768 y 390×844; ambos idiomas sin excepciones.
 **Ejes mensuales adaptables (2026-06-30):** producción, exportaciones y su
 diferencia ya no fuerzan una etiqueta por mes (`dtick="M1"`). Comparten
 `configuracion_eje_mensual`, que limita a unas 12 marcas mediante una muestra
@@ -199,7 +208,7 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** 59 pruebas unitarias; Streamlit headless con salud `ok`
+**Validación última.** 61 pruebas unitarias; Streamlit headless con salud `ok`
 sin excepciones; PDF e informe generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con

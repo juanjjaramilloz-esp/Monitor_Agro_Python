@@ -13,6 +13,7 @@ from procesar.visualizacion import (
     incorporar_referencia_comercial_actual,
     preparar,
     preparar_descarga_comercial,
+    preparar_flujos_mensuales,
 )
 
 
@@ -185,6 +186,34 @@ class PreparacionVisualTests(unittest.TestCase):
 
         self.assertEqual(len(resultado), 13)
         self.assertEqual(resultado["semana_fin"].max(), pd.Timestamp("2026-06-28"))
+
+    def test_flujos_mensuales_alinea_series_y_calcula_diferencia(self) -> None:
+        tabla = pd.DataFrame(
+            [
+                {"fecha_dato": "2026-04-01", "variable": "produccion_nacional", "valor": 900.0},
+                {"fecha_dato": "2026-04-01", "variable": "exportaciones_cafe", "valor": 850.0},
+                {"fecha_dato": "2026-05-01", "variable": "produccion_nacional", "valor": 1000.0},
+                {"fecha_dato": "2026-05-01", "variable": "exportaciones_cafe", "valor": 1100.0},
+            ]
+        )
+
+        resultado = preparar_flujos_mensuales(tabla)
+
+        self.assertEqual(resultado["diferencia"].tolist(), [50.0, -100.0])
+        self.assertEqual(resultado["fecha"].dt.strftime("%Y-%m").tolist(), ["2026-04", "2026-05"])
+
+    def test_flujos_mensuales_conserva_mes_sin_par_comparable(self) -> None:
+        tabla = pd.DataFrame(
+            [
+                {"fecha_dato": "2026-05-01", "variable": "produccion_nacional", "valor": 1000.0},
+                {"fecha_dato": "2026-04-01", "variable": "exportaciones_cafe", "valor": 850.0},
+            ]
+        )
+
+        resultado = preparar_flujos_mensuales(tabla)
+
+        self.assertEqual(len(resultado), 2)
+        self.assertTrue(resultado["diferencia"].isna().all())
 
 
 if __name__ == "__main__":

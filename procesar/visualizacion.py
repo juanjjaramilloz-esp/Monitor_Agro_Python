@@ -93,6 +93,46 @@ def filtrar_periodo_visualizacion(
     return pd.concat([semanales, mensuales], ignore_index=False).sort_index().copy()
 
 
+def preparar_flujos_mensuales(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Alinea producción y exportaciones por mes y calcula su diferencia."""
+    mensuales = tabla[
+        tabla["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
+    ][["fecha_dato", "variable", "valor"]].copy()
+    if mensuales.empty:
+        return pd.DataFrame(
+            columns=[
+                "mes",
+                "fecha",
+                "produccion_nacional",
+                "exportaciones_cafe",
+                "diferencia",
+            ]
+        )
+    mensuales["mes"] = pd.to_datetime(mensuales["fecha_dato"]).dt.to_period("M")
+    flujos = mensuales.pivot_table(
+        index="mes",
+        columns="variable",
+        values="valor",
+        aggfunc="last",
+    ).reset_index()
+    for variable in ("produccion_nacional", "exportaciones_cafe"):
+        if variable not in flujos:
+            flujos[variable] = pd.NA
+    flujos["fecha"] = flujos["mes"].dt.to_timestamp()
+    flujos["diferencia"] = (
+        flujos["produccion_nacional"] - flujos["exportaciones_cafe"]
+    )
+    return flujos[
+        [
+            "mes",
+            "fecha",
+            "produccion_nacional",
+            "exportaciones_cafe",
+            "diferencia",
+        ]
+    ].sort_values("fecha").reset_index(drop=True)
+
+
 def faltan_variables_historicas(
     variables_historico: set[str],
     variables_series: set[str],
