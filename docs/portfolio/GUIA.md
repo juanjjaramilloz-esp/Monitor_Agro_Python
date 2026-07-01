@@ -69,6 +69,8 @@ inventar una cifra.
   sensibilidad.
 
 Antes de publicarlas, comprobar que fecha y cifras coincidan con la app en vivo.
+La composición debe tomarse de la interfaz estable restaurada el 30 de junio;
+no usar capturas del rediseño experimental que fue revertido.
 
 ### Guion de video o GIF (30–45 segundos)
 

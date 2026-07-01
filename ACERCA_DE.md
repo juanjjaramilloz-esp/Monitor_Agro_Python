@@ -1,7 +1,7 @@
 # Acerca de Monitor Agro Colombia
 
-Esta página reúne, en un solo lugar, las **condiciones de mercado y clima que
-afectan al café colombiano**. Está pensada para apoyar análisis, informes y
+Esta página reúne, en un solo lugar, **información comercial del café
+colombiano**. Está pensada para apoyar análisis, informes y
 reuniones del sector cafetero: integra varias fuentes oficiales y públicas, las
 deja limpias y comparables, y permite consultarlas, graficarlas y exportarlas
 sin tener que buscarlas y depurarlas una por una.
@@ -89,9 +89,12 @@ listo para anexar a un análisis o una presentación.
 | Costo de producción de referencia | FEPCafé | Mensual |
 
 El histórico arranca en enero de 2023. Cada serie conserva su **cadencia
-honesta**: precio, dólar y clima se muestran por semana; producción y
-exportaciones solo aparecen en los meses efectivamente publicados, sin rellenar
-las semanas intermedias.
+honesta**: precio y dólar se muestran por semana; producción y exportaciones
+solo aparecen en los meses efectivamente publicados, sin rellenar las semanas
+intermedias. El clima también se procesa semanalmente en el pipeline.
+
+La información climática continúa recolectándose en el pipeline, pero no se
+muestra en las dos vistas actuales para mantener el foco comercial.
 
 **Departamentos cubiertos:** Huila, Antioquia, Tolima, Cauca, Nariño, Caldas,
 Risaralda y Quindío.

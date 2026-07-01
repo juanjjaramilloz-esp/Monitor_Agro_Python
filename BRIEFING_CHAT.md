@@ -18,10 +18,10 @@ el repositorio.
 
 ---
 
-## La creadora y lo que busca
+## El creador y lo que busca
 
-La creadora es estudiante de Negocios Internacionales, próxima a graduarse,
-autodidacta en análisis de datos y radicada en Manizales, Colombia. Quiere
+El creador es estudiante de Negocios Internacionales, próximo a graduarse,
+autodidacta en análisis de datos y radicado en Manizales, Colombia. Quiere
 orientarse hacia roles de análisis de negocios/datos que conecten comercio,
 economía y geopolítica.
 
@@ -91,7 +91,7 @@ Una mejora gana valor cuando fortalece ambos objetivos.
 
 Ya existe un MVP funcional con:
 
-- histórico semanal desde enero de 2023, con 180 semanas completas;
+- histórico semanal desde enero de 2023, con 181 semanas completas;
 - tres variables comerciales nacionales/globales;
 - producción nacional mensual desde enero de 2023;
 - exportaciones nacionales mensuales desde enero de 2023 y comparación con la
@@ -115,6 +115,12 @@ Ya existe un MVP funcional con:
 - interfaz bilingüe español/inglés (textos, números y gráficas) con un selector
   en la barra lateral;
 - tema visual claro.
+
+El 30 de junio se descartó un rediseño visual integral y se restauró la
+interfaz anterior. Permanecen las mejoras funcionales ya validadas: periodos
+mensuales completos, etiquetas adaptables sin duplicados y descargables Excel
+y PDF. El siguiente ajuste visual debe partir de esta versión estable y
+validarse incrementalmente en Streamlit Cloud.
 
 El dashboard actual es una herramienta para obtener feedback, no el producto
 final. Todavía no contiene un score de oportunidad/riesgo ni interpreta que un

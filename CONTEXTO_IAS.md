@@ -8,7 +8,7 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 `git log --oneline -8`; verificar con código/pruebas cualquier dato operativo.
 `BRIEFING_CHAT.md` solo si la tarea depende de audiencia o producto.
 
-## Punto de control (2026-06-25)
+## Punto de control (2026-06-30)
 
 - MVP descriptivo completo: fuentes, calidad, histórico desde 2023, indicadores
   neutrales, preparación visual, dashboard y brief del periodo en PDF con gráficas.
@@ -41,6 +41,12 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   LinkedIn y guion audiovisual. Siguen pendientes las capturas y el video/GIF:
   Edge headless no esperó el render interactivo de Streamlit, por lo que se
   descartaron las capturas de carga y deben grabarse con un navegador normal.
+- El rediseño visual integral probado el 30/06 fue revertido por solicitud del
+  usuario tras un fallo de importación en Streamlit Cloud. La app conserva la
+  interfaz anterior y todas las mejoras funcionales previas: filtros mensuales,
+  ejes sin etiquetas duplicadas y descargables Excel/PDF. No describir como
+  vigentes la portada compacta, la gráfica mensual integrada ni los supuestos
+  avanzados plegables del experimento revertido.
 
 ## Estado verificable
 
@@ -51,15 +57,17 @@ clima). La unión conserva `fecha_snapshot` y `fecha_dato`. El snapshot inicial
 evidencia y las corridas nuevas bloquean esa inconsistencia.
 
 **Histórico (`procesar/historico.py`).** Acepta rangos, excluye semanas
-parciales, idempotente. Validado `2023-01-08`→`2026-06-14`: 180 semanas, 33.450
-observaciones de fuente y 6.382 filas agregadas (41 meses de producción y 41 de
+parciales, idempotente. Estado al 30/06: mercado y clima llegan de
+`2023-01-08`→`2026-06-21` (181 semanas cerradas), con 33.610 observaciones de
+fuente y 6.409 filas agregadas (41 meses de producción y 41 de
 exportaciones, 2023-01..2026-05, sin repetir en semanas). Mercado y FNC usan el
 último dato semanal; las series mensuales conservan el mes publicado; clima suma
 lluvia y agrega min/max/promedio.
 
 **Indicadores/visual.** Ranking 1 = mayor valor numérico (no mejor/oportunidad/
-menor riesgo). Derivados: 45.084 filas, rankings 1-8, sin duplicados. Visual:
-6.382 filas para gráficos, 35 de resumen reciente, catálogo de 9 variables.
+menor riesgo). Indicadores versionados: 45.084 filas, rankings 1-8, sin
+duplicados. Visual regenerado desde el histórico: 6.409 filas para gráficos,
+27 de resumen reciente y catálogo de 9 variables.
 
 **App.** Título visible = "Herramienta Consultas y Reportes" (page_title,
 `st.title` y los entregables PDF/brief/informe). Internamente el proyecto/repo
@@ -199,8 +207,10 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** 59 pruebas unitarias; Streamlit headless con salud `ok`
-sin excepciones; PDF e informe generados y revisados; factor de rendimiento
+**Validación última.** Tras revertir el rediseño: 59 pruebas unitarias y la
+importación completa de `app.py` pasan; el endpoint público responde HTTP 200.
+La versión restaurada ya había pasado Streamlit headless con salud `ok` sin
+excepciones; PDF e informe fueron generados y revisados; factor de rendimiento
 verificado (94 neutro, 90 → +4,4%, 100 → −6%); revisión de seguridad sin
 hallazgos (sin eval/exec/subprocess/pickle; `unsafe_allow_html` solo con
 contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:

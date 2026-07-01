@@ -37,8 +37,8 @@ la interfaz actual para mantener el foco comercial.
 
 | Señal | Resultado |
 |---|---:|
-| Observaciones diarias normalizadas | 33.450 |
-| Semanas completas de mercado y clima | 180 |
+| Observaciones diarias normalizadas | 33.610 |
+| Semanas completas de mercado y clima | 181 |
 | Observaciones mensuales de producción y exportaciones | 82 |
 | Pruebas unitarias sin internet | 59 |
 | Actualización automática | Cada 2 días |
@@ -176,7 +176,7 @@ datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 - `datos/indicadores/indicadores_semanales.csv`: capa derivada completa.
 - `datos/indicadores/resumen_ultima_semana.csv`: vista compacta de la última
   semana disponible.
-- `datos/visualizacion/series_visualizacion.csv`: 6.382 filas listas para
+- `datos/visualizacion/series_visualizacion.csv`: 6.409 filas listas para
   gráficos; es derivado y se regenera con el comando anterior.
 - `datos/visualizacion/resumen_visual.csv`: última semana con metadatos.
 - `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
