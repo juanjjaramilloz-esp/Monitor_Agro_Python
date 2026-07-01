@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import streamlit as st
 
 from config import (
@@ -44,7 +43,6 @@ from procesar.visualizacion import (
     filtrar_periodo_visualizacion,
     incorporar_referencia_comercial_actual,
     preparar_descarga_comercial,
-    preparar_flujos_mensuales,
     series_necesitan_regenerarse,
 )
 from reporte.generar import generar_informe_simulador
@@ -91,8 +89,8 @@ IDIOMA = "es"
 
 TEXTOS = {
     "titulo": {
-        "es": "Monitor Agro Colombia",
-        "en": "Monitor Agro Colombia",
+        "es": "Herramienta Consultas y Reportes",
+        "en": "Consultation and Reporting Tool",
     },
     "subtitulo": {
         "es": (
@@ -108,21 +106,19 @@ TEXTOS = {
     },
     "introduccion": {
         "es": (
-            "Integra señales de mercado, volúmenes nacionales y escenarios "
-            "para convertir datos cafeteros en evidencia reutilizable."
+            "Explore series para análisis, informes y reuniones. El panorama "
+            "nacional permite leer conjuntamente el precio interno de la "
+            "Federación Nacional de Cafeteros (FNC), Coffee C y USD/COP, y el "
+            "simulador estima precio interno y margen bajo distintos supuestos."
         ),
         "en": (
-            "Bring together market signals, national volumes and scenarios to "
-            "turn coffee data into reusable evidence."
+            "Explore the series for analysis, reports and meetings. The "
+            "national overview reads the National Federation of Coffee Growers "
+            "(FNC) internal price, Coffee C and USD/COP together, and the "
+            "simulator estimates the internal price and margin under different "
+            "assumptions."
         ),
     },
-    "hero_etiqueta": {
-        "es": "ANÁLISIS COMERCIAL DEL CAFÉ COLOMBIANO",
-        "en": "COLOMBIAN COFFEE MARKET ANALYSIS",
-    },
-    "hero_semanas": {"es": "{semanas} semanas cerradas", "en": "{semanas} closed weeks"},
-    "hero_ultimo": {"es": "Histórico al {fecha}", "en": "History through {fecha}"},
-    "hero_referencia": {"es": "Referencia al {fecha}", "en": "Reference as of {fecha}"},
     "filtros": {"es": "Filtros", "en": "Filters"},
     # --- Barra lateral ---
     "rango_analisis": {"es": "Rango de análisis", "en": "Analysis range"},
@@ -159,18 +155,13 @@ TEXTOS = {
         ),
     },
     "md_variaciones": {"es": "**Variaciones por indicador**", "en": "**Changes by indicator**"},
-    "exp_variaciones": {"es": "Ver variaciones completas", "en": "View complete changes"},
     "sub_prodexp": {
         "es": "Producción y exportaciones mensuales",
         "en": "Monthly production and exports",
     },
     "sub_exportar": {
-        "es": "Entregables del periodo",
-        "en": "Period deliverables",
-    },
-    "cap_exportar": {
-        "es": "Descargue los datos para análisis o el brief listo para compartir.",
-        "en": "Download the data for analysis or the share-ready brief.",
+        "es": "Exportar para informes y reuniones",
+        "en": "Export for reports and meetings",
     },
     "btn_excel": {
         "es": "Descargar series comerciales (Excel)",
@@ -235,12 +226,6 @@ TEXTOS = {
     "metric_prod": {
         "es": "Producción nacional · mensual",
         "en": "National production · monthly",
-    },
-    "metric_exp": {"es": "Exportaciones · mensual", "en": "Exports · monthly"},
-    "metric_diferencia_mes": {"es": "Diferencia del mes", "en": "Monthly difference"},
-    "delta_mes_comparable": {
-        "es": "Mes comparable: {mes}",
-        "en": "Comparable month: {mes}",
     },
     "unid_mil_sacos": {"es": "mil sacos de 60 kg", "en": "thousand 60 kg bags"},
     "help_prod": {
@@ -345,10 +330,6 @@ TEXTOS = {
         "es": "Diferencia mensual · producción menos exportaciones",
         "en": "Monthly difference · production minus exports",
     },
-    "chart_flujos_titulo": {
-        "es": "Producción y exportaciones · comparación mensual",
-        "en": "Production and exports · monthly comparison",
-    },
     "hov_produccion": {"es": "Producción", "en": "Production"},
     "hov_exportaciones": {"es": "Exportaciones", "en": "Exports"},
     "hov_diferencia": {"es": "Diferencia", "en": "Difference"},
@@ -396,16 +377,6 @@ TEXTOS = {
             "price is no longer an input nor a floor."
         ),
     },
-    "exp_supuestos_avanzados": {
-        "es": "Supuestos avanzados: costo, volumen y rendimiento",
-        "en": "Advanced assumptions: cost, volume and yield",
-    },
-    "cap_supuestos_avanzados": {
-        "es": "Ajuste estos valores solo para representar una operación distinta a la referencia.",
-        "en": "Adjust these values only to represent an operation different from the reference.",
-    },
-    "sub_resultados_escenario": {"es": "Resultado del escenario", "en": "Scenario result"},
-    "sub_sensibilidad": {"es": "Explorar sensibilidad", "en": "Explore sensitivity"},
     "exp_calibracion": {
         "es": "Calibración y metodología",
         "en": "Calibration and methodology",
@@ -691,10 +662,10 @@ def _metodo(codigo: str) -> str:
 
 
 st.set_page_config(
-    page_title="Monitor Agro Colombia",
+    page_title="Herramienta Consultas y Reportes",
     page_icon="☕",
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="expanded",
 )
 
 
@@ -714,7 +685,7 @@ def _estilos() -> None:
         }}
         .stApp {{ background: var(--monitor-fondo); color: var(--monitor-texto); }}
         [data-testid="stHeader"] {{ background: var(--monitor-fondo); }}
-        .block-container {{ max-width: 1320px; padding-top: 1.25rem; padding-bottom: 3rem; }}
+        .block-container {{ max-width: 1440px; padding-top: 1.5rem; padding-bottom: 3rem; }}
         h1, h2, h3, p, label {{ color: var(--monitor-texto); letter-spacing: 0; }}
         h1 {{ font-size: 2rem; margin-bottom: 0.25rem; }}
         h2 {{ font-size: 1.35rem; margin-top: 1rem; }}
@@ -739,7 +710,7 @@ def _estilos() -> None:
             border-left: 4px solid var(--monitor-acento);
             border-radius: 10px;
             padding: 0.9rem 1rem;
-            min-height: 116px;
+            min-height: 128px;
             box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
         }}
         [data-testid="stMetricLabel"] {{ color: var(--monitor-secundario) !important; }}
@@ -751,16 +722,14 @@ def _estilos() -> None:
         /* Margen por carga y total: ocultar la flecha (es un ratio, no una
            variación) pero conservar el texto dentro de la tarjeta. */
         .st-key-metrica_margen_carga [data-testid="stMetricDelta"] svg,
-        .st-key-metrica_margen_total [data-testid="stMetricDelta"] svg,
-        .st-key-metrica_diferencia_mes [data-testid="stMetricDelta"] svg {{ display: none; }}
+        .st-key-metrica_margen_total [data-testid="stMetricDelta"] svg {{ display: none; }}
         .st-key-metrica_margen_carga [data-testid="stMetricDelta"],
-        .st-key-metrica_margen_total [data-testid="stMetricDelta"],
-        .st-key-metrica_diferencia_mes [data-testid="stMetricDelta"] {{ padding-left: 0; }}
+        .st-key-metrica_margen_total [data-testid="stMetricDelta"] {{ padding-left: 0; }}
         [data-testid="stPlotlyChart"] {{
             background: var(--monitor-superficie);
             border: 1px solid var(--monitor-borde);
             border-radius: 10px;
-            padding: 0.2rem;
+            padding: 0.25rem;
             box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
         }}
         [data-testid="stExpander"] details {{
@@ -792,76 +761,10 @@ def _estilos() -> None:
         }}
         .stTabs [data-baseweb="tab"] p {{ color: inherit !important; font-weight: 500; }}
         .stTabs [aria-selected="true"] {{ color: var(--monitor-acento) !important; }}
-        .monitor-hero {{
-            background: linear-gradient(135deg, #FFFFFF 0%, var(--monitor-sidebar) 100%);
-            border: 1px solid var(--monitor-borde);
-            border-radius: 16px;
-            padding: 1.25rem 1.4rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(23, 33, 27, 0.05);
-        }}
-        .monitor-eyebrow {{
-            color: var(--monitor-acento);
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.35rem;
-            line-height: 1.25;
-            padding-top: 0.2rem;
-        }}
-        .monitor-hero h1 {{
-            color: var(--monitor-texto);
-            font-size: 2rem;
-            line-height: 1.1;
-            margin: 0 0 0.45rem;
-        }}
-        .monitor-hero-copy {{
-            color: var(--monitor-secundario);
-            font-size: 0.98rem;
-            line-height: 1.5;
-            margin: 0;
-            max-width: 850px;
-        }}
-        .monitor-badges {{ display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.8rem; }}
-        .monitor-badge {{
-            background: #FFFFFF;
-            border: 1px solid var(--monitor-borde);
-            border-radius: 999px;
-            color: var(--monitor-secundario);
-            font-size: 0.78rem;
-            padding: 0.28rem 0.62rem;
-            white-space: nowrap;
-        }}
-        [data-testid="stDownloadButton"] button {{ min-height: 2.65rem; }}
-        [data-testid="stDownloadButton"] [data-testid="stBaseButton-primary"] {{
-            background: var(--monitor-acento);
-            border-color: var(--monitor-acento);
-            color: #FFFFFF;
-        }}
-        [data-testid="stDownloadButton"] [data-testid="stBaseButton-primary"] p {{
-            color: #FFFFFF !important;
-        }}
-        [data-testid="stDownloadButton"] [data-testid="stBaseButton-primary"]:hover {{
-            background: #11583F;
-            color: #FFFFFF;
-        }}
-        @media (max-width: 1200px) {{
-            .block-container {{ max-width: 100%; padding: 1rem 1rem 2.5rem; }}
-            [data-testid="stMetric"] {{ min-height: 104px; padding: 0.75rem 0.8rem; }}
-            [data-testid="stMetricValue"] {{ font-size: 1.35rem; }}
-            h3 {{ margin-top: 1.35rem; }}
-        }}
-        @media (max-width: 900px) {{
-            .monitor-hero {{ padding: 1rem; }}
-            .monitor-hero h1 {{ font-size: 1.7rem; }}
-            .stTabs [data-baseweb="tab-list"] {{ gap: 1rem; }}
-        }}
         @media (max-width: 768px) {{
             .block-container {{ padding: 1rem 0.8rem 2rem; }}
             h1 {{ font-size: 1.65rem; }}
-            [data-testid="stMetric"] {{ min-height: auto; }}
-            .monitor-badge {{ white-space: normal; }}
-            .monitor-eyebrow {{ display: none; }}
+            [data-testid="stMetric"] {{ min-height: 112px; }}
         }}
         </style>
         """,
@@ -1037,49 +940,85 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
     return _layout(figura, 430)
 
 
-def _grafico_flujos_mensuales(tabla: pd.DataFrame) -> go.Figure:
-    """Integra los dos flujos y su diferencia en una figura compartida."""
-    flujos = preparar_flujos_mensuales(tabla)
-    comparables = flujos.dropna(subset=["diferencia"])
-    figura = make_subplots(
-        rows=2,
-        cols=1,
-        shared_xaxes=True,
-        vertical_spacing=0.16,
-        row_heights=[0.64, 0.36],
-    )
-    for variable, nombre in [
-        ("produccion_nacional", _t("name_prod")),
-        ("exportaciones_cafe", _t("name_exp")),
-    ]:
-        figura.add_trace(
-            go.Scatter(
-                x=flujos["fecha"],
-                y=flujos[variable],
-                mode="lines+markers",
-                name=nombre,
-                line=dict(color=CATALOGO_VARIABLES[variable]["color"], width=2.4),
-                marker=dict(size=6),
-                hovertemplate=(
-                    "%{x|%b %Y}<br>%{y:,.1f} "
-                    + _t("yaxis_miles_sacos").lower()
-                    + "<extra></extra>"
-                ),
+def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
+    datos = tabla[tabla["variable"].eq("produccion_nacional")]
+    ancho_barra_ms = 14 * 24 * 60 * 60 * 1000
+    figura = go.Figure(
+        go.Bar(
+            x=datos["fecha_dato"],
+            y=datos["valor"],
+            width=ancho_barra_ms,
+            marker_color=CATALOGO_VARIABLES["produccion_nacional"]["color"],
+            marker_line=dict(color="#5B21B6", width=1),
+            name=_t("name_prod"),
+            hovertemplate=(
+                "%{x|%b %Y}<br>%{y:,.1f} " + _t("yaxis_miles_sacos").lower()
+                + "<extra></extra>"
             ),
-            row=1,
-            col=1,
         )
-    colores = comparables["diferencia"].map(
+    )
+    figura.update_layout(
+        title=_t("chart_prod_titulo"),
+        xaxis=configuracion_eje_mensual(datos["fecha_dato"]),
+    )
+    return _layout(figura, 350)
+
+
+def _grafico_exportaciones(tabla: pd.DataFrame) -> go.Figure:
+    datos = tabla[tabla["variable"].eq("exportaciones_cafe")]
+    ancho_barra_ms = 14 * 24 * 60 * 60 * 1000
+    figura = go.Figure(
+        go.Bar(
+            x=datos["fecha_dato"],
+            y=datos["valor"],
+            width=ancho_barra_ms,
+            marker_color=CATALOGO_VARIABLES["exportaciones_cafe"]["color"],
+            marker_line=dict(color="#155E75", width=1),
+            name=_t("name_exp"),
+            hovertemplate=(
+                "%{x|%b %Y}<br>%{y:,.1f} " + _t("yaxis_miles_sacos").lower()
+                + "<extra></extra>"
+            ),
+        )
+    )
+    figura.update_layout(
+        title=_t("chart_exp_titulo"),
+        xaxis=configuracion_eje_mensual(datos["fecha_dato"]),
+    )
+    return _layout(figura, 350)
+
+
+def _comparar_produccion_exportaciones(tabla: pd.DataFrame) -> pd.DataFrame:
+    """Empareja producción y exportaciones únicamente cuando comparten mes."""
+    mensuales = tabla[
+        tabla["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
+    ][["fecha_dato", "variable", "valor"]].copy()
+    mensuales["mes"] = pd.to_datetime(mensuales["fecha_dato"]).dt.to_period("M")
+    ancho = mensuales.pivot_table(
+        index="mes",
+        columns="variable",
+        values="valor",
+        aggfunc="last",
+    ).dropna(subset=["produccion_nacional", "exportaciones_cafe"])
+    ancho = ancho.reset_index()
+    ancho["fecha"] = ancho["mes"].dt.to_timestamp()
+    ancho["diferencia"] = (
+        ancho["produccion_nacional"] - ancho["exportaciones_cafe"]
+    )
+    return ancho.sort_values("fecha").reset_index(drop=True)
+
+
+def _grafico_diferencia_mensual(tabla: pd.DataFrame) -> go.Figure:
+    comparacion = _comparar_produccion_exportaciones(tabla)
+    colores = comparacion["diferencia"].map(
         lambda valor: COLORES_INTERFAZ["acento"] if valor >= 0 else "#B45309"
     )
-    figura.add_trace(
+    figura = go.Figure(
         go.Bar(
-            x=comparables["fecha"],
-            y=comparables["diferencia"],
+            x=comparacion["fecha"],
+            y=comparacion["diferencia"],
             marker_color=colores,
-            customdata=comparables[["produccion_nacional", "exportaciones_cafe"]],
-            name=_t("hov_diferencia"),
-            showlegend=False,
+            customdata=comparacion[["produccion_nacional", "exportaciones_cafe"]],
             hovertemplate=(
                 "%{x|%b %Y}<br>"
                 + _t("hov_produccion") + ": %{customdata[0]:,.1f}<br>"
@@ -1087,36 +1026,16 @@ def _grafico_flujos_mensuales(tabla: pd.DataFrame) -> go.Figure:
                 + _t("hov_diferencia") + ": %{y:,.1f} " + _t("hov_mil_sacos")
                 + "<extra></extra>"
             ),
-        ),
-        row=2,
-        col=1,
+        )
     )
-    figura.add_hline(
-        y=0,
-        line_color=COLORES_INTERFAZ["comparacion"],
-        line_width=1,
-        row=2,
-        col=1,
-    )
+    figura.add_hline(y=0, line_color=COLORES_INTERFAZ["comparacion"], line_width=1)
     figura.update_layout(
-        title=_t("chart_flujos_titulo"),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        title=_t("chart_dif_titulo"),
+        xaxis=configuracion_eje_mensual(comparacion["fecha"]),
+        yaxis_title=_t("yaxis_miles_sacos"),
+        showlegend=False,
     )
-    figura.update_xaxes(showticklabels=False, row=1, col=1)
-    figura.update_xaxes(
-        **configuracion_eje_mensual(flujos["fecha"]),
-        row=2,
-        col=1,
-    )
-    figura.update_yaxes(title_text=_t("yaxis_miles_sacos"), row=1, col=1)
-    figura.update_yaxes(title_text=_t("hov_diferencia"), row=2, col=1)
-    figura = _layout(figura, 560)
-    figura.update_yaxes(
-        gridcolor=COLORES_INTERFAZ["rejilla"],
-        zeroline=False,
-        automargin=True,
-    )
-    return figura
+    return _layout(figura, 370)
 
 
 def _grafico_resultado_escenario(
@@ -1366,38 +1285,37 @@ def _simulador_proyeccion(
     st.session_state.setdefault("sim_cargas", int(PROYECCION_CARGAS_PREDETERMINADAS))
     st.session_state.setdefault("sim_factor", float(FACTOR_RENDIMIENTO_REFERENCIA))
 
-    with st.expander(_t("exp_supuestos_avanzados"), expanded=False):
-        st.caption(_t("cap_supuestos_avanzados"))
-        control_3, control_4, control_5 = st.columns(3)
-        costo_produccion = control_3.number_input(
-            _t("ctrl_costo"),
-            min_value=0.0,
-            step=10_000.0,
-            format="%.0f",
-            help=_t("help_costo"),
-            key="sim_costo",
-        )
-        cargas = control_4.slider(
-            _t("ctrl_volumen"),
-            min_value=1,
-            max_value=PROYECCION_CARGAS_MAXIMAS,
-            step=1,
-            key="sim_cargas",
-        )
-        factor_rendimiento = control_5.number_input(
-            _t("ctrl_factor"),
-            min_value=FACTOR_RENDIMIENTO_RANGO[0],
-            max_value=FACTOR_RENDIMIENTO_RANGO[1],
-            step=1.0,
-            format="%.0f",
-            help=_t("help_factor"),
-            key="sim_factor",
-        )
-        st.button(
-            _t("btn_restablecer"),
-            on_click=_restablecer_simulador,
-            help=_t("help_restablecer"),
-        )
+    control_3, control_4, control_5 = st.columns(3)
+    costo_produccion = control_3.number_input(
+        _t("ctrl_costo"),
+        min_value=0.0,
+        step=10_000.0,
+        format="%.0f",
+        help=_t("help_costo"),
+        key="sim_costo",
+    )
+    cargas = control_4.slider(
+        _t("ctrl_volumen"),
+        min_value=1,
+        max_value=PROYECCION_CARGAS_MAXIMAS,
+        step=1,
+        key="sim_cargas",
+    )
+    factor_rendimiento = control_5.number_input(
+        _t("ctrl_factor"),
+        min_value=FACTOR_RENDIMIENTO_RANGO[0],
+        max_value=FACTOR_RENDIMIENTO_RANGO[1],
+        step=1.0,
+        format="%.0f",
+        help=_t("help_factor"),
+        key="sim_factor",
+    )
+
+    st.button(
+        _t("btn_restablecer"),
+        on_click=_restablecer_simulador,
+        help=_t("help_restablecer"),
+    )
 
     resultado = calcular_escenario(
         modelo,
@@ -1410,8 +1328,7 @@ def _simulador_proyeccion(
         FACTOR_RENDIMIENTO_REFERENCIA,
     )
 
-    st.subheader(_t("sub_resultados_escenario"))
-    metricas = st.columns(3)
+    metricas = st.columns(4)
     metricas[0].metric(
         _t("metric_precio_estimado"),
         f"${_numero(resultado.precio_fnc_estimado, 0)}",
@@ -1436,7 +1353,12 @@ def _simulador_proyeccion(
             ),
             delta_color="off",
         )
-    with metricas[2].container(key="metrica_margen_total"):
+    metricas[2].metric(
+        _t("ingreso_por").format(n=cargas, unidad=_carga_palabra(cargas)),
+        f"${_numero(resultado.ingreso_total, 0)}",
+        delta=None,
+    )
+    with metricas[3].container(key="metrica_margen_total"):
         st.metric(
             _t("metric_margen_total"),
             f"${_numero(resultado.margen_total, 0)}",
@@ -1450,7 +1372,7 @@ def _simulador_proyeccion(
             delta_color="off",
         )
 
-    grafico_1, resumen_escenario = st.columns([1, 1])
+    grafico_1, grafico_2 = st.columns([0.85, 1.15])
     with grafico_1:
         st.plotly_chart(
             _grafico_resultado_escenario(
@@ -1462,29 +1384,27 @@ def _simulador_proyeccion(
             theme=None,
             config=CONFIG_GRAFICO,
         )
-    with resumen_escenario:
         _resumen_cuenta(resultado, cargas)
-
-    st.subheader(_t("sub_sensibilidad"))
-    tasas = _puntos_lineales(minimo_fx, maximo_fx)
-    precios_ny = _puntos_lineales(minimo_cafe, maximo_cafe)
-    matriz = crear_matriz_sensibilidad(
-        modelo,
-        tasas,
-        precios_ny,
-        factor_rendimiento,
-        FACTOR_RENDIMIENTO_REFERENCIA,
-    )
-    st.plotly_chart(
-        _grafico_sensibilidad(
-            matriz,
-            tasa_escenario,
-            precio_ny_escenario,
-        ),
-        width="stretch",
-        theme=None,
-        config=CONFIG_GRAFICO,
-    )
+    with grafico_2:
+        tasas = _puntos_lineales(minimo_fx, maximo_fx)
+        precios_ny = _puntos_lineales(minimo_cafe, maximo_cafe)
+        matriz = crear_matriz_sensibilidad(
+            modelo,
+            tasas,
+            precios_ny,
+            factor_rendimiento,
+            FACTOR_RENDIMIENTO_REFERENCIA,
+        )
+        st.plotly_chart(
+            _grafico_sensibilidad(
+                matriz,
+                tasa_escenario,
+                precio_ny_escenario,
+            ),
+            width="stretch",
+            theme=None,
+            config=CONFIG_GRAFICO,
+        )
 
     informe = generar_informe_simulador(
         modelo=modelo,
@@ -1611,63 +1531,73 @@ def _bloque_produccion_exportaciones(
     tabla_completa: pd.DataFrame,
 ) -> None:
     """Compara los dos flujos mensuales sin inferir cambios de inventarios."""
-    flujos = preparar_flujos_mensuales(tabla_filtrada)
-    if flujos["produccion_nacional"].dropna().empty:
+    periodo = tabla_filtrada[tabla_filtrada["variable"].eq("produccion_nacional")]
+    if periodo.empty:
         st.info(_t("info_no_prod"))
         return
-    if flujos["exportaciones_cafe"].dropna().empty:
+
+    serie = tabla_completa[
+        tabla_completa["variable"].eq("produccion_nacional")
+    ].sort_values("fecha_dato")
+    ultima_periodo = periodo.sort_values("fecha_dato").iloc[-1]
+    ultima_completa = serie[serie["fecha_dato"].eq(ultima_periodo["fecha_dato"])].iloc[-1]
+    columnas = st.columns([1, 1, 2])
+    columnas[0].metric(
+        _t("metric_prod"),
+        f"{_numero(float(ultima_periodo['valor']), 1)} {_t('unid_mil_sacos')}",
+        help=_t("help_prod"),
+    )
+    cambio_mensual = ultima_completa["cambio_1m_pct"]
+    cambio_anual = ultima_completa["cambio_12m_pct"]
+    columnas[1].metric(
+        _t("metric_mes_dato"),
+        pd.Timestamp(ultima_periodo["fecha_dato"]).strftime("%m/%Y"),
+        delta=(
+            _t("delta_vs_mes").format(cambio=_numero(float(cambio_mensual), 1))
+            if pd.notna(cambio_mensual)
+            else None
+        ),
+        delta_color="off",
+    )
+    columnas[2].markdown(
+        _t("cambio_interanual")
+        + (f"{_numero(float(cambio_anual), 1)}%" if pd.notna(cambio_anual) else _t("sin_dato"))
+        + "  \n"
+        + _t("fuente_fnc")
+    )
+    st.plotly_chart(
+        _grafico_produccion(periodo),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
+    )
+    exportaciones_periodo = tabla_filtrada[
+        tabla_filtrada["variable"].eq("exportaciones_cafe")
+    ]
+    if exportaciones_periodo.empty:
         st.info(_t("info_no_exp"))
         return
-    comparacion = flujos.dropna(
-        subset=["produccion_nacional", "exportaciones_cafe"]
+    st.plotly_chart(
+        _grafico_exportaciones(exportaciones_periodo),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
     )
+
+    comparacion = _comparar_produccion_exportaciones(tabla_filtrada)
     if comparacion.empty:
-        st.plotly_chart(
-            _grafico_flujos_mensuales(tabla_filtrada),
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
         st.info(_t("info_no_meses"))
         return
     ultima = comparacion.iloc[-1]
-    mes = pd.Timestamp(ultima["fecha"]).strftime("%m/%Y")
-
-    def cambio_mensual(variable: str) -> str | None:
-        serie = tabla_completa[
-            tabla_completa["variable"].eq(variable)
-            & pd.to_datetime(tabla_completa["fecha_dato"]).dt.to_period("M").eq(ultima["mes"])
-        ]
-        if serie.empty or pd.isna(serie.iloc[-1]["cambio_1m_pct"]):
-            return None
-        return _t("delta_vs_mes").format(
-            cambio=_numero(float(serie.iloc[-1]["cambio_1m_pct"]), 1)
-        )
-
-    columnas = st.columns(3)
-    columnas[0].metric(
-        _t("metric_prod"),
-        f"{_numero(float(ultima['produccion_nacional']), 1)} {_t('hov_mil_sacos')}",
-        delta=cambio_mensual("produccion_nacional"),
-        delta_color="off",
-        help=_t("help_prod"),
+    diferencia = float(ultima["diferencia"])
+    etiqueta = _t("prod_no_exportada") if diferencia >= 0 else _t("exp_sobre_prod")
+    st.metric(
+        etiqueta,
+        f"{_numero(abs(diferencia), 1)} {_t('unid_mil_sacos')}",
+        help=_t("help_diferencia"),
     )
-    columnas[1].metric(
-        _t("metric_exp"),
-        f"{_numero(float(ultima['exportaciones_cafe']), 1)} {_t('hov_mil_sacos')}",
-        delta=cambio_mensual("exportaciones_cafe"),
-        delta_color="off",
-    )
-    with columnas[2].container(key="metrica_diferencia_mes"):
-        st.metric(
-            _t("metric_diferencia_mes"),
-            f"{_numero(float(ultima['diferencia']), 1)} {_t('hov_mil_sacos')}",
-            delta=_t("delta_mes_comparable").format(mes=mes),
-            delta_color="off",
-            help=_t("help_diferencia"),
-        )
     st.plotly_chart(
-        _grafico_flujos_mensuales(tabla_filtrada),
+        _grafico_diferencia_mensual(tabla_filtrada),
         width="stretch",
         theme=None,
         config=CONFIG_GRAFICO,
@@ -1806,32 +1736,16 @@ semanas_disponibles_total = datos_semanales["semana_fin"].nunique()
 IDIOMA = IDIOMAS[
     st.sidebar.selectbox("Idioma / Language", list(IDIOMAS), index=0)
 ]
-st.sidebar.divider()
 
-st.markdown(
-    """
-    <section class="monitor-hero">
-        <div class="monitor-eyebrow">{etiqueta}</div>
-        <h1>{titulo}</h1>
-        <p class="monitor-hero-copy">{descripcion}</p>
-        <div class="monitor-badges">
-            <span class="monitor-badge">{semanas}</span>
-            <span class="monitor-badge">{ultimo}</span>
-            <span class="monitor-badge">{referencia}</span>
-        </div>
-    </section>
-    """.format(
-        etiqueta=_t("hero_etiqueta"),
-        titulo=_t("titulo"),
-        descripcion=_t("introduccion"),
-        semanas=_t("hero_semanas").format(semanas=semanas_disponibles_total),
-        ultimo=_t("hero_ultimo").format(fecha=f"{ultima_semana:%d/%m/%Y}"),
-        referencia=_t("hero_referencia").format(
-            fecha=f"{ultima_referencia:%d/%m/%Y}"
-        ),
-    ),
-    unsafe_allow_html=True,
+st.title(_t("titulo"))
+st.caption(
+    _t("subtitulo").format(
+        semanas=semanas_disponibles_total,
+        ultima=f"{ultima_semana:%d/%m/%Y}",
+        referencia=f"{ultima_referencia:%d/%m/%Y}",
+    )
 )
+st.markdown(_t("introduccion"))
 
 st.sidebar.header(_t("filtros"))
 tipo_periodo = st.sidebar.radio(
@@ -1884,6 +1798,26 @@ tab_panorama, tab_proyeccion = st.tabs(
 )
 
 with tab_panorama:
+    st.subheader(_t("sub_lectura"))
+    st.caption(_t("cap_lectura"))
+    _metricas_mercado(filtrados)
+    st.plotly_chart(
+        _grafico_mercado(filtrados),
+        width="stretch",
+        theme=None,
+        config=CONFIG_GRAFICO,
+    )
+    st.caption(_t("cap_base100"))
+    st.markdown(_t("md_variaciones"))
+    st.dataframe(
+        _variaciones_para_pantalla(_variaciones_mercado(datos_semanales)),
+        hide_index=True,
+        width="stretch",
+    )
+    st.subheader(_t("sub_prodexp"))
+    _bloque_produccion_exportaciones(filtrados, datos)
+
+    st.subheader(_t("sub_exportar"))
     descarga = preparar_descarga_comercial(filtrados)
     nombre_archivo = (
         f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
@@ -1896,54 +1830,29 @@ with tab_panorama:
     inicio_brief = pd.Timestamp(referencia_rango["semana_fin"].min())
     fin_brief = pd.Timestamp(referencia_rango["semana_fin"].max())
     clave_pdf = f"{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}"
-    with st.container(border=True):
-        st.subheader(_t("sub_exportar"))
-        st.caption(_t("cap_exportar"))
-        col_excel, col_brief = st.columns(2)
-        col_excel.download_button(
-            _t("btn_excel"),
-            data=_a_excel(descarga),
-            file_name=nombre_archivo,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            width="stretch",
-            help=_t("help_excel"),
-        )
-        col_brief.download_button(
-            _t("btn_pdf"),
-            data=_brief_pdf(
-                inicio_brief,
-                fin_brief,
-                Path(RUTA_SERIES).stat().st_mtime,
-                periodo_predefinido_activo,
-                semanas,
-            ),
-            file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
-            mime="application/pdf",
-            width="stretch",
-            help=_t("help_pdf"),
-            type="primary",
-        )
-
-    st.subheader(_t("sub_lectura"))
-    st.caption(_t("cap_lectura"))
-    _metricas_mercado(filtrados)
-    st.plotly_chart(
-        _grafico_mercado(filtrados),
+    col_csv, col_brief = st.columns(2)
+    col_csv.download_button(
+        _t("btn_excel"),
+        data=_a_excel(descarga),
+        file_name=nombre_archivo,
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         width="stretch",
-        theme=None,
-        config=CONFIG_GRAFICO,
+        help=_t("help_excel"),
     )
-    st.caption(_t("cap_base100"))
-    with st.expander(_t("exp_variaciones"), expanded=False):
-        st.markdown(_t("md_variaciones"))
-        st.dataframe(
-            _variaciones_para_pantalla(_variaciones_mercado(datos_semanales)),
-            hide_index=True,
-            width="stretch",
-        )
-    st.subheader(_t("sub_prodexp"))
-    _bloque_produccion_exportaciones(filtrados, datos)
-
+    col_brief.download_button(
+        _t("btn_pdf"),
+        data=_brief_pdf(
+            inicio_brief,
+            fin_brief,
+            Path(RUTA_SERIES).stat().st_mtime,
+            periodo_predefinido_activo,
+            semanas,
+        ),
+        file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
+        mime="application/pdf",
+        width="stretch",
+        help=_t("help_pdf"),
+    )
     with st.expander(_t("exp_cobertura")):
         st.markdown(_t("md_cobertura"))
         st.dataframe(
