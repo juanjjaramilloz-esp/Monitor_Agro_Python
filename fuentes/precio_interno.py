@@ -30,7 +30,6 @@ from io import BytesIO
 from urllib.parse import urljoin
 
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
 
 from config import (
@@ -42,11 +41,9 @@ from config import (
     GEOGRAFIA_PAIS,
     URL_PRECIO_INTERNO_FNC,
 )
+from fuentes import _fnc_comun
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-
-# Cabecera de navegador: algunos WAF rechazan el User-Agent por defecto de requests.
-_CABECERAS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
 # Banda de plausibilidad para el precio (COP/carga). Defiende contra el bug
 # clásico de leer "$2.110.000" como 2.11: ese valor caería fuera de la banda.
@@ -140,9 +137,7 @@ def _obtener_historico(
         print("  AVISO: no se encontró el Excel histórico de precios FNC.")
         return pd.DataFrame(columns=COLUMNAS)
 
-    respuesta = requests.get(url_historico, headers=_CABECERAS, timeout=60)
-    respuesta.raise_for_status()
-    archivo = BytesIO(respuesta.content)
+    archivo = BytesIO(_fnc_comun.descargar_binario(url_historico))
     excel = pd.ExcelFile(archivo)
     hoja = next(
         (
@@ -177,10 +172,8 @@ def obtener(
         raise ValueError("precio_interno: desde no puede ser posterior a hasta")
 
     try:
-        respuesta = requests.get(URL_PRECIO_INTERNO_FNC, headers=_CABECERAS, timeout=30)
-        respuesta.raise_for_status()
-
-        sopa = BeautifulSoup(respuesta.text, "html.parser")
+        html = _fnc_comun.descargar_texto(URL_PRECIO_INTERNO_FNC)
+        sopa = BeautifulSoup(html, "html.parser")
         if desde is not None and hasta is not None:
             return _obtener_historico(sopa, desde, hasta)
 

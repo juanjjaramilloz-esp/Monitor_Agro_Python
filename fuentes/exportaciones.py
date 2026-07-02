@@ -10,7 +10,6 @@ from io import BytesIO
 from urllib.parse import urljoin
 
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
 
 from config import (
@@ -22,10 +21,10 @@ from config import (
     GEOGRAFIA_PAIS,
     URL_PRECIO_INTERNO_FNC,
 )
+from fuentes import _fnc_comun
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-_CABECERAS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
 
 def _buscar_url_excel(sopa: BeautifulSoup) -> str | None:
@@ -92,22 +91,13 @@ def obtener(
         raise ValueError("exportaciones: desde no puede ser posterior a hasta")
 
     try:
-        respuesta_pagina = requests.get(
-            URL_PRECIO_INTERNO_FNC,
-            headers=_CABECERAS,
-            timeout=30,
-        )
-        respuesta_pagina.raise_for_status()
-        url_excel = _buscar_url_excel(
-            BeautifulSoup(respuesta_pagina.text, "html.parser")
-        )
+        html = _fnc_comun.descargar_texto(URL_PRECIO_INTERNO_FNC)
+        url_excel = _buscar_url_excel(BeautifulSoup(html, "html.parser"))
         if url_excel is None:
             print("  AVISO: no se encontró el Excel de exportaciones FNC.")
             return pd.DataFrame(columns=COLUMNAS)
 
-        respuesta_excel = requests.get(url_excel, headers=_CABECERAS, timeout=60)
-        respuesta_excel.raise_for_status()
-        archivo = BytesIO(respuesta_excel.content)
+        archivo = BytesIO(_fnc_comun.descargar_binario(url_excel))
         excel = pd.ExcelFile(archivo)
         hoja = next(
             (

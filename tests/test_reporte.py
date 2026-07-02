@@ -77,7 +77,7 @@ class BriefEjecutivoTests(unittest.TestCase):
 
         self.assertIn("Sin dato publicado dentro del periodo seleccionado", texto)
 
-    def test_pdf_separa_tres_paginas_utiles_e_incluye_ambos_flujos(self) -> None:
+    def _insumos_pdf(self) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         datos = self._datos().copy()
         datos["categoria"] = datos["variable"].map(
             lambda variable: "Mercado" if variable.startswith(("precio_", "fx_")) else "Producción"
@@ -106,6 +106,10 @@ class BriefEjecutivoTests(unittest.TestCase):
                 }
             ]
         )
+        return datos, variaciones, cobertura
+
+    def test_pdf_separa_tres_paginas_utiles_e_incluye_ambos_flujos(self) -> None:
+        datos, variaciones, cobertura = self._insumos_pdf()
 
         contenido = generar_pdf_brief(
             inicio=date(2025, 1, 1),
@@ -127,6 +131,25 @@ class BriefEjecutivoTests(unittest.TestCase):
             flujos.iloc[-1]["diferencia"],
             flujos.iloc[-1]["produccion_nacional"]
             - flujos.iloc[-1]["exportaciones_cafe"],
+        )
+
+    def test_pdf_en_ingles_conserva_tres_paginas(self) -> None:
+        datos, variaciones, cobertura = self._insumos_pdf()
+
+        contenido = generar_pdf_brief(
+            inicio=date(2025, 1, 1),
+            fin=date(2026, 1, 31),
+            periodo=datos,
+            variaciones=variaciones,
+            cobertura=cobertura,
+            fecha_generacion=date(2026, 6, 30),
+            idioma="en",
+        )
+
+        self.assertTrue(contenido.startswith(b"%PDF"))
+        self.assertEqual(
+            contenido.count(b"/Type /Page") - contenido.count(b"/Type /Pages"),
+            3,
         )
 
 

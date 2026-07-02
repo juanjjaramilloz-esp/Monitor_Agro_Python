@@ -11,14 +11,13 @@ import re
 from datetime import date
 
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
 
 from config import GEOGRAFIA_PAIS, URL_PRECIO_INTERNO_FNC
+from fuentes import _fnc_comun
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-_CABECERAS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
 # Bandas de plausibilidad por variable (mismo criterio que precio_interno):
 # si el parseo devuelve un valor fuera de rango (por ejemplo, un cambio de
@@ -87,9 +86,8 @@ def _parsear(texto: str) -> pd.DataFrame:
 def obtener() -> pd.DataFrame:
     """Devuelve las tres referencias del día publicadas conjuntamente por la FNC."""
     try:
-        respuesta = requests.get(URL_PRECIO_INTERNO_FNC, headers=_CABECERAS, timeout=30)
-        respuesta.raise_for_status()
-        sopa = BeautifulSoup(respuesta.text, "html.parser")
+        html = _fnc_comun.descargar_texto(URL_PRECIO_INTERNO_FNC)
+        sopa = BeautifulSoup(html, "html.parser")
         return _parsear(sopa.get_text(separator=" "))
     except Exception as error:
         print(f"  AVISO: referencia de mercado FNC no disponible: {error}")

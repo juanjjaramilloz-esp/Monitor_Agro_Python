@@ -5,10 +5,15 @@ from unittest.mock import Mock, patch
 
 import pandas as pd
 
+from fuentes import _fnc_comun
 from fuentes.produccion import COLUMNAS, _normalizar, obtener
 
 
 class ProduccionFncTests(unittest.TestCase):
+    def setUp(self) -> None:
+        # La descarga FNC se cachea por proceso; cada prueba parte limpia.
+        _fnc_comun.limpiar_cache()
+
     def test_normaliza_meses_sin_rellenar_fechas(self) -> None:
         tabla = pd.DataFrame(
             {"Mes": ["2026-01-01", "2026-03-01"], "Producción": [900.0, 1100.0]}
@@ -24,7 +29,7 @@ class ProduccionFncTests(unittest.TestCase):
         )
         self.assertEqual(set(resultado["unidad"]), {"miles_sacos_60kg"})
 
-    @patch("fuentes.produccion.requests.get")
+    @patch("fuentes._fnc_comun.requests.get")
     def test_obtener_descubre_excel_y_devuelve_ultimo_mes(self, descargar: Mock) -> None:
         archivo = BytesIO()
         tabla = pd.DataFrame(

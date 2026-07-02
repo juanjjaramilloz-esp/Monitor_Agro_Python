@@ -46,8 +46,212 @@ _BORDE = colors.HexColor(COLORES_INTERFAZ["borde"])
 _CABECERA_TABLA = colors.HexColor(COLORES_INTERFAZ["sidebar"])
 
 
-def _numero(valor: float, decimales: int = 1) -> str:
+# Textos del brief en ambos idiomas. Las traducciones coinciden con las de la
+# interfaz (TEXTOS y mapas de presentación en app.py) para que pantalla y PDF
+# cuenten lo mismo; esta capa no importa app.py para no depender de Streamlit.
+_TEXTOS = {
+    "titulo": {
+        "es": "Herramienta Consultas y Reportes",
+        "en": "Consultation and Reporting Tool",
+    },
+    "titulo_documento": {
+        "es": "Brief del periodo — Herramienta Consultas y Reportes",
+        "en": "Period brief — Consultation and Reporting Tool",
+    },
+    "subtitulo": {
+        "es": "Brief del periodo · {inicio} a {fin} · generado el {generado}",
+        "en": "Period brief · {inicio} to {fin} · generated on {generado}",
+    },
+    "introduccion": {
+        "es": (
+            "Lectura descriptiva del precio interno FNC, el café internacional "
+            "(ICE Coffee C) y la tasa de cambio USD/COP. Los movimientos no "
+            "implican causalidad ni califican el resultado como favorable o "
+            "desfavorable."
+        ),
+        "en": (
+            "Descriptive reading of the FNC internal price, international "
+            "coffee (ICE Coffee C) and the USD/COP exchange rate. Movements do "
+            "not imply causality nor qualify the outcome as favorable or "
+            "unfavorable."
+        ),
+    },
+    "sec_panorama": {"es": "Panorama comercial", "en": "Commercial overview"},
+    "nota_base100": {
+        "es": (
+            "Índice base 100 desde enero de 2023: compara dirección y magnitud "
+            "relativa entre series con unidades distintas."
+        ),
+        "en": (
+            "Index based at 100 since January 2023: compares direction and "
+            "relative magnitude across series with different units."
+        ),
+    },
+    "sec_variaciones": {
+        "es": "Variaciones por indicador",
+        "en": "Changes by indicator",
+    },
+    "sec_flujos": {
+        "es": "Producción y exportaciones mensuales",
+        "en": "Monthly production and exports",
+    },
+    "nota_flujos": {
+        "es": (
+            "Ambas series se conservan en los meses publicados. La diferencia "
+            "compara flujos del mismo mes y no equivale a inventarios, reservas "
+            "ni consumo interno."
+        ),
+        "en": (
+            "Both series keep their published months. The difference compares "
+            "flows of the same month and does not equal inventories, reserves "
+            "or domestic consumption."
+        ),
+    },
+    "sin_flujos": {
+        "es": (
+            "No hay producción o exportaciones mensuales publicadas dentro del "
+            "periodo elegido."
+        ),
+        "en": (
+            "No monthly production or exports were published within the "
+            "selected period."
+        ),
+    },
+    "sec_cobertura": {"es": "Cobertura y fuentes", "en": "Coverage and sources"},
+    "sec_limitaciones": {
+        "es": "Alcance y limitaciones",
+        "en": "Scope and limitations",
+    },
+    "fuentes_final": {
+        "es": (
+            "Fuentes: Federación Nacional de Cafeteros (FNC) y Yahoo Finance "
+            "vía yfinance. "
+            "Documento exploratorio; no contiene score de oportunidad o riesgo."
+        ),
+        "en": (
+            "Sources: National Federation of Coffee Growers (FNC) and Yahoo "
+            "Finance via yfinance. "
+            "Exploratory document; it contains no opportunity or risk score."
+        ),
+    },
+    "pagina": {"es": "Página", "en": "Page"},
+    "sin_dato": {"es": "Sin dato", "en": "No data"},
+    "titulo_mercado": {
+        "es": "Evolución comercial comparable · base 100",
+        "en": "Comparable commercial evolution · base 100",
+    },
+    "titulo_flujos": {
+        "es": "Producción y exportaciones mensuales · miles de sacos de 60 kg",
+        "en": "Monthly production and exports · thousand 60-kg bags",
+    },
+    "titulo_diferencia": {
+        "es": "Diferencia descriptiva · producción menos exportaciones",
+        "en": "Descriptive difference · production minus exports",
+    },
+    "leyenda_produccion": {"es": "Producción", "en": "Production"},
+    "leyenda_exportaciones": {"es": "Exportaciones", "en": "Exports"},
+    "col_mes": {"es": "Mes comparable", "en": "Comparable month"},
+    "col_produccion": {"es": "Producción", "en": "Production"},
+    "col_exportaciones": {"es": "Exportaciones", "en": "Exports"},
+    "col_diferencia": {"es": "Diferencia", "en": "Difference"},
+    "lectura_sin_dato": {
+        "es": "{indicador}: sin variación semanal comparable.",
+        "en": "{indicador}: no comparable weekly change.",
+    },
+    "lectura_cambio": {
+        "es": "{indicador}: {direccion} {magnitud}% en la última semana.",
+        "en": "{indicador}: {direccion} {magnitud}% over the last week.",
+    },
+    "subio": {"es": "subió", "en": "rose"},
+    "bajo": {"es": "bajó", "en": "fell"},
+    "sin_cambio": {"es": "no cambió", "en": "did not change"},
+}
+
+_LIMITACIONES = {
+    "es": [
+        "Producción y exportaciones se publican mensualmente y no se rellenan "
+        "como datos semanales.",
+        "La diferencia mensual entre ambos flujos no mide inventarios, reservas "
+        "ni consumo interno.",
+        "Algunas series dependen de scraping o archivos descargables que pueden "
+        "cambiar de estructura.",
+        "El brief describe movimientos estadísticos; no asigna oportunidad, "
+        "riesgo ni causalidad.",
+    ],
+    "en": [
+        "Production and exports are published monthly and are not filled in as "
+        "weekly data.",
+        "The monthly difference between both flows does not measure "
+        "inventories, reserves or domestic consumption.",
+        "Some series depend on scraping or downloadable files whose structure "
+        "may change.",
+        "The brief describes statistical movements; it assigns no opportunity, "
+        "risk or causality.",
+    ],
+}
+
+# Traducciones de las etiquetas de datos (mismos textos que la interfaz).
+_ETIQUETAS_VAR_EN = {
+    "fx_usd_local": "USD/COP exchange rate",
+    "precio_cafe_arabica": "International arabica coffee price",
+    "precio_interno_referencia": "FNC reference internal price",
+    "produccion_nacional": "National coffee production",
+    "exportaciones_cafe": "Colombian coffee exports",
+}
+_ETIQUETA_ES_A_EN = {
+    CATALOGO_VARIABLES[variable]["etiqueta"]: etiqueta_en
+    for variable, etiqueta_en in _ETIQUETAS_VAR_EN.items()
+    if variable in CATALOGO_VARIABLES
+}
+_COLUMNAS_VARIACIONES_EN = {
+    "Indicador": "Indicator",
+    "Semanal": "Weekly",
+    "Mensual (4 sem.)": "Monthly (4 wks)",
+    "Anual (52 sem.)": "Yearly (52 wks)",
+}
+_COLUMNAS_COBERTURA_EN = {
+    "Indicador": "Indicator",
+    "Último dato": "Latest data",
+    "Unidad": "Unit",
+    "Fuente": "Source",
+    "Alcance": "Scope",
+    "Cadencia": "Cadence",
+}
+_FUENTES_EN = {
+    "Federación Nacional de Cafeteros (FNC)": (
+        "National Federation of Coffee Growers (FNC)"
+    ),
+    "Yahoo Finance / futuro ICE Coffee C": "Yahoo Finance / ICE Coffee C future",
+    "Yahoo Finance / USD-COP": "Yahoo Finance / USD-COP",
+}
+_CADENCIA_EN = {
+    "Mensual": "Monthly",
+    "Semanal": "Weekly",
+    "Semanal (último cierre disponible)": "Weekly (last available close)",
+    "Semanal (último dato disponible)": "Weekly (last available datum)",
+}
+_UNIDADES_EN = {
+    "COP/carga": "COP/load",
+    "miles de sacos de 60 kg": "thousand 60-kg bags",
+}
+
+
+def _tr(clave: str, idioma: str) -> str:
+    """Texto del brief en el idioma pedido, con respaldo en español."""
+    textos = _TEXTOS[clave]
+    return textos.get(idioma, textos["es"])
+
+
+def _etiqueta_indicador(etiqueta_es: str, idioma: str) -> str:
+    if idioma == "en":
+        return _ETIQUETA_ES_A_EN.get(etiqueta_es, etiqueta_es)
+    return etiqueta_es
+
+
+def _numero(valor: float, decimales: int = 1, idioma: str = "es") -> str:
     texto = f"{valor:,.{decimales}f}"
+    if idioma == "en":
+        return texto
     return texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
@@ -70,7 +274,7 @@ def _ejes_limpios(ax) -> None:
     ax.set_axisbelow(True)
 
 
-def _png_mercado(periodo: pd.DataFrame) -> bytes:
+def _png_mercado(periodo: pd.DataFrame, idioma: str = "es") -> bytes:
     """Dibuja las tres series comerciales en índice base 100."""
     mercado = periodo[periodo["categoria"].eq("Mercado")]
     figura, ax = plt.subplots(figsize=(9.2, 3.5))
@@ -80,13 +284,13 @@ def _png_mercado(periodo: pd.DataFrame) -> bytes:
         ax.plot(
             serie["semana_fin"],
             serie["indice_base_100"],
-            label=metadatos["etiqueta"],
+            label=_etiqueta_indicador(metadatos["etiqueta"], idioma),
             color=metadatos["color"],
             linewidth=2.0,
         )
     ax.axhline(100, color="#9CA39D", linestyle=":", linewidth=1)
     ax.set_title(
-        "Evolución comercial comparable · base 100",
+        _tr("titulo_mercado", idioma),
         color=_TEXTO_HEX,
         fontsize=11,
         loc="left",
@@ -147,7 +351,7 @@ def _flujos_mensuales(periodo: pd.DataFrame) -> pd.DataFrame:
     return flujos.sort_values("fecha").reset_index(drop=True)
 
 
-def _png_flujos_mensuales(periodo: pd.DataFrame) -> bytes:
+def _png_flujos_mensuales(periodo: pd.DataFrame, idioma: str = "es") -> bytes:
     """Compara producción, exportaciones y su diferencia en una sola pieza."""
     flujos = _flujos_mensuales(periodo)
     figura, (ax_superior, ax_inferior) = plt.subplots(
@@ -161,7 +365,7 @@ def _png_flujos_mensuales(periodo: pd.DataFrame) -> bytes:
         ax_superior.plot(
             flujos["fecha"],
             flujos["produccion_nacional"],
-            label="Producción",
+            label=_tr("leyenda_produccion", idioma),
             color=CATALOGO_VARIABLES["produccion_nacional"]["color"],
             linewidth=2,
             marker="o",
@@ -171,14 +375,14 @@ def _png_flujos_mensuales(periodo: pd.DataFrame) -> bytes:
         ax_superior.plot(
             flujos["fecha"],
             flujos["exportaciones_cafe"],
-            label="Exportaciones",
+            label=_tr("leyenda_exportaciones", idioma),
             color=CATALOGO_VARIABLES["exportaciones_cafe"]["color"],
             linewidth=2,
             marker="o",
             markersize=3,
         )
     ax_superior.set_title(
-        "Producción y exportaciones mensuales · miles de sacos de 60 kg",
+        _tr("titulo_flujos", idioma),
         color=_TEXTO_HEX,
         fontsize=11,
         loc="left",
@@ -200,7 +404,7 @@ def _png_flujos_mensuales(periodo: pd.DataFrame) -> bytes:
         )
     ax_inferior.axhline(0, color=_SECUNDARIO_HEX, linewidth=0.8)
     ax_inferior.set_title(
-        "Diferencia descriptiva · producción menos exportaciones",
+        _tr("titulo_diferencia", idioma),
         color=_TEXTO_HEX,
         fontsize=9,
         loc="left",
@@ -297,7 +501,7 @@ def _tabla(
     return tabla
 
 
-def _resumen_ultimo_mes(periodo: pd.DataFrame) -> pd.DataFrame:
+def _resumen_ultimo_mes(periodo: pd.DataFrame, idioma: str = "es") -> pd.DataFrame:
     flujos = _flujos_mensuales(periodo).dropna(
         subset=["produccion_nacional", "exportaciones_cafe"], how="any"
     )
@@ -307,16 +511,24 @@ def _resumen_ultimo_mes(periodo: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(
         [
             {
-                "Mes comparable": pd.Timestamp(ultimo["fecha"]).strftime("%m/%Y"),
-                "Producción": _numero(float(ultimo["produccion_nacional"]), 1),
-                "Exportaciones": _numero(float(ultimo["exportaciones_cafe"]), 1),
-                "Diferencia": _numero(float(ultimo["diferencia"]), 1),
+                _tr("col_mes", idioma): pd.Timestamp(ultimo["fecha"]).strftime(
+                    "%m/%Y"
+                ),
+                _tr("col_produccion", idioma): _numero(
+                    float(ultimo["produccion_nacional"]), 1, idioma
+                ),
+                _tr("col_exportaciones", idioma): _numero(
+                    float(ultimo["exportaciones_cafe"]), 1, idioma
+                ),
+                _tr("col_diferencia", idioma): _numero(
+                    float(ultimo["diferencia"]), 1, idioma
+                ),
             }
         ]
     )
 
 
-def _pie_pagina(canvas, documento) -> None:
+def _pie_pagina(canvas, documento, idioma: str = "es") -> None:
     """Añade autor, página y una línea discreta en todas las páginas."""
     canvas.saveState()
     ancho, _ = A4
@@ -325,7 +537,9 @@ def _pie_pagina(canvas, documento) -> None:
     canvas.setFillColor(_SECUNDARIO)
     canvas.setFont("Helvetica", 7.5)
     canvas.drawString(2 * cm, 0.85 * cm, "Juan José Jaramillo · Monitor Agro Colombia")
-    canvas.drawRightString(ancho - 2 * cm, 0.85 * cm, f"Página {documento.page}")
+    canvas.drawRightString(
+        ancho - 2 * cm, 0.85 * cm, f"{_tr('pagina', idioma)} {documento.page}"
+    )
     canvas.restoreState()
 
 
@@ -339,31 +553,65 @@ def _imagen(png: bytes, ancho_cm: float = 16.5) -> Image:
     return imagen
 
 
-def _variaciones_formateadas(variaciones: pd.DataFrame) -> pd.DataFrame:
-    """Formatea los porcentajes de la tabla de variaciones para el PDF."""
+def _variaciones_formateadas(
+    variaciones: pd.DataFrame, idioma: str = "es"
+) -> pd.DataFrame:
+    """Formatea porcentajes y traduce encabezados e indicadores para el PDF."""
     salida = variaciones.copy()
     for columna in ["Semanal", "Mensual (4 sem.)", "Anual (52 sem.)"]:
         if columna in salida.columns:
             salida[columna] = salida[columna].map(
-                lambda valor: f"{_numero(float(valor), 1)}%"
+                lambda valor: f"{_numero(float(valor), 1, idioma)}%"
                 if pd.notna(valor)
-                else "Sin dato"
+                else _tr("sin_dato", idioma)
             )
+    if idioma == "en":
+        if "Indicador" in salida.columns:
+            salida["Indicador"] = salida["Indicador"].map(
+                lambda etiqueta: _etiqueta_indicador(etiqueta, idioma)
+            )
+        salida = salida.rename(columns=_COLUMNAS_VARIACIONES_EN)
     return salida
 
 
-def _lectura_neutral(variaciones: pd.DataFrame) -> list[str]:
+def _cobertura_traducida(cobertura: pd.DataFrame, idioma: str) -> pd.DataFrame:
+    """Traduce valores y encabezados de la tabla de cobertura para el PDF."""
+    if idioma != "en":
+        return cobertura
+    vista = cobertura.copy()
+    traducciones = {
+        "Indicador": lambda v: _etiqueta_indicador(v, idioma),
+        "Fuente": lambda v: _FUENTES_EN.get(v, v),
+        "Cadencia": lambda v: _CADENCIA_EN.get(v, v),
+        "Unidad": lambda v: _UNIDADES_EN.get(v, v),
+    }
+    for columna, traducir in traducciones.items():
+        if columna in vista.columns:
+            vista[columna] = vista[columna].map(traducir)
+    return vista.rename(columns=_COLUMNAS_COBERTURA_EN)
+
+
+def _lectura_neutral(variaciones: pd.DataFrame, idioma: str = "es") -> list[str]:
     """Resume la dirección semanal de cada indicador sin afirmar causalidad."""
     lecturas = []
     for _, fila in variaciones.iterrows():
+        indicador = _etiqueta_indicador(str(fila["Indicador"]), idioma)
         cambio = fila.get("Semanal")
         if pd.isna(cambio):
-            lecturas.append(f"{fila['Indicador']}: sin variación semanal comparable.")
+            lecturas.append(
+                _tr("lectura_sin_dato", idioma).format(indicador=indicador)
+            )
             continue
-        direccion = "subió" if cambio > 0 else "bajó" if cambio < 0 else "no cambió"
+        direccion = _tr(
+            "subio" if cambio > 0 else "bajo" if cambio < 0 else "sin_cambio",
+            idioma,
+        )
         lecturas.append(
-            f"{fila['Indicador']}: {direccion} {_numero(abs(float(cambio)), 1)}% "
-            "en la última semana."
+            _tr("lectura_cambio", idioma).format(
+                indicador=indicador,
+                direccion=direccion,
+                magnitud=_numero(abs(float(cambio)), 1, idioma),
+            )
         )
     return lecturas
 
@@ -376,8 +624,13 @@ def generar_pdf_brief(
     variaciones: pd.DataFrame,
     cobertura: pd.DataFrame,
     fecha_generacion: date | None = None,
+    idioma: str = "es",
 ) -> bytes:
-    """Construye el PDF del brief y devuelve sus bytes listos para descargar."""
+    """Construye el PDF del brief (español o inglés) y devuelve sus bytes.
+
+    `variaciones` y `cobertura` llegan en español (como las genera app.py);
+    esta capa las traduce cuando `idioma="en"`.
+    """
     if fecha_generacion is None:
         fecha_generacion = date.today()
     inicio_ts = pd.Timestamp(inicio)
@@ -396,98 +649,74 @@ def generar_pdf_brief(
         rightMargin=2 * cm,
         topMargin=1.8 * cm,
         bottomMargin=1.7 * cm,
-        title="Brief del periodo — Herramienta Consultas y Reportes",
-        author="Herramienta Consultas y Reportes",
+        title=_tr("titulo_documento", idioma),
+        author=_tr("titulo", idioma),
     )
 
     elementos = [
-        Paragraph("Herramienta Consultas y Reportes", estilos["titulo"]),
+        Paragraph(_tr("titulo", idioma), estilos["titulo"]),
         Paragraph(
-            f"Brief del periodo · {inicio_ts:%d/%m/%Y} a {fin_ts:%d/%m/%Y} · "
-            f"generado el {fecha_generacion:%d/%m/%Y}",
+            _tr("subtitulo", idioma).format(
+                inicio=f"{inicio_ts:%d/%m/%Y}",
+                fin=f"{fin_ts:%d/%m/%Y}",
+                generado=f"{fecha_generacion:%d/%m/%Y}",
+            ),
             estilos["subtitulo"],
         ),
-        Paragraph(
-            "Lectura descriptiva del precio interno FNC, el café internacional "
-            "(ICE Coffee C) y la tasa de cambio USD/COP. Los movimientos no "
-            "implican causalidad ni califican el resultado como favorable o "
-            "desfavorable.",
-            estilos["cuerpo"],
-        ),
-        Paragraph("Panorama comercial", estilos["seccion"]),
-        _imagen(_png_mercado(periodo)),
-        Paragraph(
-            "Índice base 100 desde enero de 2023: compara dirección y magnitud "
-            "relativa entre series con unidades distintas.",
-            estilos["nota"],
-        ),
+        Paragraph(_tr("introduccion", idioma), estilos["cuerpo"]),
+        Paragraph(_tr("sec_panorama", idioma), estilos["seccion"]),
+        _imagen(_png_mercado(periodo, idioma)),
+        Paragraph(_tr("nota_base100", idioma), estilos["nota"]),
         Spacer(1, 0.3 * cm),
-        Paragraph("Variaciones por indicador", estilos["seccion"]),
-        _tabla(_variaciones_formateadas(variaciones), estilos, [5.2, 3.4, 3.4, 3.4]),
+        Paragraph(_tr("sec_variaciones", idioma), estilos["seccion"]),
+        _tabla(
+            _variaciones_formateadas(variaciones, idioma),
+            estilos,
+            [5.2, 3.4, 3.4, 3.4],
+        ),
         Spacer(1, 0.3 * cm),
     ]
 
-    for lectura in _lectura_neutral(variaciones):
+    for lectura in _lectura_neutral(variaciones, idioma):
         elementos.append(Paragraph(f"• {lectura}", estilos["cuerpo"]))
 
     elementos.append(PageBreak())
-    elementos.append(Paragraph("Producción y exportaciones mensuales", estilos["seccion"]))
+    elementos.append(Paragraph(_tr("sec_flujos", idioma), estilos["seccion"]))
     if not flujos.empty:
-        elementos.append(_imagen(_png_flujos_mensuales(periodo)))
-        resumen_mes = _resumen_ultimo_mes(periodo)
+        elementos.append(_imagen(_png_flujos_mensuales(periodo, idioma)))
+        resumen_mes = _resumen_ultimo_mes(periodo, idioma)
         if not resumen_mes.empty:
             elementos.append(
                 _tabla(resumen_mes, estilos, [3.6, 4.0, 4.0, 4.0])
             )
-        elementos.append(
-            Paragraph(
-                "Ambas series se conservan en los meses publicados. La diferencia "
-                "compara flujos del mismo mes y no equivale a inventarios, reservas "
-                "ni consumo interno.",
-                estilos["nota"],
-            )
-        )
+        elementos.append(Paragraph(_tr("nota_flujos", idioma), estilos["nota"]))
     else:
-        elementos.append(
-            Paragraph(
-                "No hay producción o exportaciones mensuales publicadas dentro del "
-                "periodo elegido.",
-                estilos["cuerpo"],
-            )
-        )
+        elementos.append(Paragraph(_tr("sin_flujos", idioma), estilos["cuerpo"]))
 
     elementos.extend(
         [
             PageBreak(),
-            Paragraph("Cobertura y fuentes", estilos["seccion"]),
-            _tabla(cobertura, estilos, [3.0, 2.2, 2.5, 3.3, 1.8, 3.7]),
-            Paragraph("Alcance y limitaciones", estilos["seccion"]),
+            Paragraph(_tr("sec_cobertura", idioma), estilos["seccion"]),
+            _tabla(
+                _cobertura_traducida(cobertura, idioma),
+                estilos,
+                [3.0, 2.2, 2.5, 3.3, 1.8, 3.7],
+            ),
+            Paragraph(_tr("sec_limitaciones", idioma), estilos["seccion"]),
         ]
     )
-    limitaciones = [
-        "Producción y exportaciones se publican mensualmente y no se rellenan "
-        "como datos semanales.",
-        "La diferencia mensual entre ambos flujos no mide inventarios, reservas "
-        "ni consumo interno.",
-        "Algunas series dependen de scraping o archivos descargables que pueden "
-        "cambiar de estructura.",
-        "El brief describe movimientos estadísticos; no asigna oportunidad, "
-        "riesgo ni causalidad.",
-    ]
-    for limitacion in limitaciones:
+    for limitacion in _LIMITACIONES.get(idioma, _LIMITACIONES["es"]):
         elementos.append(Paragraph(f"• {limitacion}", estilos["cuerpo"]))
 
     elementos.extend(
         [
             Spacer(1, 0.4 * cm),
-            Paragraph(
-                "Fuentes: Federación Nacional de Cafeteros (FNC) y Yahoo Finance "
-                "vía yfinance. "
-                "Documento exploratorio; no contiene score de oportunidad o riesgo.",
-                estilos["nota"],
-            ),
+            Paragraph(_tr("fuentes_final", idioma), estilos["nota"]),
         ]
     )
 
-    documento.build(elementos, onFirstPage=_pie_pagina, onLaterPages=_pie_pagina)
+    def _pie(canvas, doc) -> None:
+        _pie_pagina(canvas, doc, idioma)
+
+    documento.build(elementos, onFirstPage=_pie, onLaterPages=_pie)
     return historia.getvalue()

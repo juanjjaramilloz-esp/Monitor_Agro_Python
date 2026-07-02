@@ -1733,8 +1733,9 @@ def _brief_pdf(
     marca_datos: float,
     periodo_predefinido: bool,
     semanas: int | None,
+    idioma: str,
 ) -> bytes:
-    """Genera el PDF del periodo; la caché solo se invalida si cambian los datos."""
+    """Genera el PDF del periodo; la caché considera datos e idioma."""
     del marca_datos
     periodo = (
         _filtrar_periodo(datos, semanas)
@@ -1747,6 +1748,7 @@ def _brief_pdf(
         periodo=periodo,
         variaciones=_variaciones_mercado(datos_semanales),
         cobertura=_resumen_fuentes_comerciales(periodo),
+        idioma=idioma,
     )
 
 
@@ -1901,6 +1903,7 @@ with tab_panorama:
             ),
             periodo_predefinido_activo,
             semanas,
+            IDIOMA,
         ),
         file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
         mime="application/pdf",

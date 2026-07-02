@@ -68,10 +68,21 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   ausentes en CSV derivados de versiones anteriores; (4) la caché del brief
   PDF también se invalida al cambiar `calibracion_fnc.csv`; (5) el workflow
   tiene `timeout-minutes: 20` y hace `git pull --rebase` antes del push;
-  (6) `.gitignore` cubre `outputs/`. Quedan anotadas para después (no
-  urgentes): unificar helpers FNC duplicados entre fuentes, cachear la
-  descarga compartida de la página/Excel FNC por corrida, y traducir el brief
-  PDF al inglés cuando la interfaz está en EN.
+  (6) `.gitignore` cubre `outputs/`.
+- **Descarga FNC compartida (2026-07-02).** Nuevo `fuentes/_fnc_comun.py`:
+  caché por proceso de la página de estadísticas y de los Excel FNC
+  (`descargar_texto`/`descargar_binario`/`limpiar_cache`). Las cuatro fuentes
+  FNC (precio_interno, produccion, exportaciones, referencia_mercado_fnc) lo
+  usan; antes cada corrida pedía la misma página hasta 4 veces y el mismo
+  Excel 2 veces (riesgo de WAF). Las descargas fallidas no se cachean y el
+  contrato no cambió. Los tests que mockeaban `requests` por módulo ahora
+  parchean `fuentes._fnc_comun.requests.get` y limpian la caché en `setUp`.
+- **Brief PDF bilingüe (2026-07-02).** Ver bloque "Idioma EN". Prueba
+  unitaria nueva del PDF en inglés (61 pruebas en total). Verificado
+  extrayendo el texto de PDFs de muestra en ambos idiomas (títulos,
+  indicadores, fuentes, unidades y pie traducidos; el ES quedó idéntico).
+  Queda anotado para después: unificar los `_buscar_url_excel` duplicados
+  entre fuentes FNC (la descarga ya es compartida).
 
 ## Estado verificable
 
@@ -175,11 +186,16 @@ conservan su valor español y se muestran traducidas con `format_func`. Las tabl
 de variaciones y cobertura **siguen generándose en español** porque también
 alimentan el PDF; se traducen solo en pantalla con `_variaciones_para_pantalla` /
 `_cobertura_para_pantalla` (la primera además formatea los % con
-`_pct_con_signo`). **Quedan en español a propósito:** el brief PDF
-(`reporte/pdf.py`) y el informe Markdown del simulador (`generar_informe_simulador`),
-que son documentos descargables aparte; y los tres campos `st.number_input` del
-simulador (límite de Streamlit). Las fechas se mantienen en dd/mm/aaaa en ambos
-idiomas.
+`_pct_con_signo`). **El brief PDF es bilingüe desde 2026-07-02:**
+`generar_pdf_brief(..., idioma)` traduce títulos, secciones, gráficas, tablas,
+lecturas neutrales y pie con `_TEXTOS`/mapas propios de `reporte/pdf.py`
+(espejo de los de `app.py`; no importa `app.py` para no depender de
+Streamlit); las tablas de variaciones y cobertura le siguen llegando en
+español y el PDF las traduce él mismo. `_brief_pdf` recibe `IDIOMA` como
+argumento para que la caché distinga idiomas. **Quedan en español a
+propósito:** el informe Markdown del simulador (`generar_informe_simulador`)
+y los tres campos `st.number_input` del simulador (límite de Streamlit). Las
+fechas se mantienen en dd/mm/aaaa en ambos idiomas.
 **Sigla FNC.** En el texto con espacio (introducción, captions, ayudas, pie,
 metodología) se expande a "Federación Nacional de Cafeteros (FNC)" la primera vez
 y luego "FNC". Se **conserva la sigla** en los espacios estrechos para no romper
