@@ -21,6 +21,9 @@ concurrency:
 jobs:
   actualizar:
     runs-on: ubuntu-latest
+    # Si una fuente (FNC, yfinance) se cuelga, el job no debe consumir las
+    # 6 horas máximas del runner.
+    timeout-minutes: 20
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v4
@@ -61,5 +64,8 @@ jobs:
             echo "Sin cambios en datos; no se hace commit."
           else
             git commit -m "Datos: actualización automática cada 2 días ($(date -u +%Y-%m-%d))"
+            # Si el remoto avanzó entre el checkout y este push, rebasar
+            # primero evita que el job falle por un push rechazado.
+            git pull --rebase origin main
             git push
           fi

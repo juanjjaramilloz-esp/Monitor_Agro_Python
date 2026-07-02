@@ -828,6 +828,10 @@ def _leer_series(ruta: str, marca_tiempo: float) -> pd.DataFrame:
         "diferencia_mediana_departamentos",
     ]
     for columna in numericas:
+        # Un CSV derivado de una versión anterior puede carecer de columnas
+        # nuevas; se crean vacías para conservar el esquema esperado.
+        if columna not in tabla.columns:
+            tabla[columna] = pd.NA
         tabla[columna] = pd.to_numeric(tabla[columna], errors="coerce")
     return tabla
 
@@ -1496,7 +1500,14 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
     variables = ["fx_usd_local", "precio_cafe_arabica", "precio_interno_referencia"]
     for columna, variable in zip(columnas, variables):
         serie = tabla[tabla["variable"] == variable].sort_values("semana_fin")
-        fila = datos[datos["variable"] == variable].iloc[0]
+        seleccion = datos[datos["variable"] == variable]
+        if seleccion.empty:
+            # Con la calibración de respaldo cada serie lleva su propia fecha;
+            # no todas coinciden con la fecha máxima de la tabla.
+            seleccion = serie.tail(1)
+        if seleccion.empty:
+            continue
+        fila = seleccion.iloc[0]
         columna.metric(
             label=_etiqueta_var(variable),
             value=_valor_metrica(fila),
@@ -1880,7 +1891,14 @@ with tab_panorama:
         data=_brief_pdf(
             inicio_brief,
             fin_brief,
-            Path(RUTA_SERIES).stat().st_mtime,
+            # La referencia comercial actual viene de calibracion_fnc.csv;
+            # su cambio también debe invalidar la caché del brief.
+            max(
+                Path(RUTA_SERIES).stat().st_mtime,
+                Path(RUTA_CALIBRACION_FNC).stat().st_mtime
+                if Path(RUTA_CALIBRACION_FNC).exists()
+                else 0.0,
+            ),
             periodo_predefinido_activo,
             semanas,
         ),

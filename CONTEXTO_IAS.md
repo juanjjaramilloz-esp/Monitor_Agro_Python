@@ -57,6 +57,21 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   radio, acento) que las métricas y gráficas; hover de acento en los títulos
   de `st.expander`. Verificado con `python -c "import app"` (sin excepciones)
   y las 59 pruebas unitarias (OK).
+- **Robustez tras auditoría de código (2026-06-30).** Correcciones quirúrgicas,
+  sin dependencias nuevas ni cambios de contrato: (1) las tarjetas de mercado
+  ya no lanzan `IndexError` cuando la referencia viene del respaldo diario y
+  las series no comparten fecha máxima (caen a la última fila de cada serie);
+  (2) `referencia_mercado_fnc` valida bandas de plausibilidad por variable y
+  descarta el trío completo si un valor sale de rango (p. ej. un cambio a
+  formato numérico estadounidense en la página), con prueba unitaria nueva
+  (60 en total); (3) `_leer_series` crea vacías las columnas numéricas
+  ausentes en CSV derivados de versiones anteriores; (4) la caché del brief
+  PDF también se invalida al cambiar `calibracion_fnc.csv`; (5) el workflow
+  tiene `timeout-minutes: 20` y hace `git pull --rebase` antes del push;
+  (6) `.gitignore` cubre `outputs/`. Quedan anotadas para después (no
+  urgentes): unificar helpers FNC duplicados entre fuentes, cachear la
+  descarga compartida de la página/Excel FNC por corrida, y traducir el brief
+  PDF al inglés cuando la interfaz está en EN.
 
 ## Estado verificable
 

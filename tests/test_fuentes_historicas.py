@@ -127,6 +127,21 @@ class ReferenciaMercadoFncTests(unittest.TestCase):
         self.assertEqual(valores["precio_cafe_fnc_calculo"], 276.40)
         self.assertEqual(valores["fx_fnc_calculo"], 3_435.99)
 
+    def test_descarta_trio_con_valor_fuera_de_banda(self) -> None:
+        # "276.40" en formato estadounidense se parsearía como 27.640 USc/lb;
+        # la banda de plausibilidad debe descartar el trío completo.
+        texto = """
+        Precio interno de referencia: $2.160.000 Fecha: 2026-06-25
+        Bolsa de NY: $276.40
+        Tasa de cambio: 3.435,99
+        """
+        resultado = referencia_mercado_fnc._parsear(texto)
+
+        self.assertTrue(resultado.empty)
+        self.assertListEqual(
+            list(resultado.columns), referencia_mercado_fnc.COLUMNAS
+        )
+
     def test_prepara_coeficiente_implicito(self) -> None:
         tabla = referencia_mercado_fnc._parsear(
             "Precio interno de referencia: $2.160.000 Fecha: 2026-06-25 "

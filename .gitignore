@@ -27,5 +27,8 @@ streamlit.*.log
 .tmp_chrome/
 .tmp_screens/
 
+# Descargables generados localmente para revisión (Excel/PDF de prueba)
+outputs/
+
 # Nota: datos/snapshots/ SÍ se versiona a propósito: es el histórico semanal
 # y sirve como evidencia de que el monitor corre en el tiempo.
