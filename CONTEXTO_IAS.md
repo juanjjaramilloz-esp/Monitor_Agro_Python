@@ -203,6 +203,15 @@ el diseño: etiquetas de tarjetas (`Precio FNC estimado`, `Precio interno de
 referencia FNC`), título y eje del mapa de sensibilidad y la categoría `Último FNC
 observado`. La tabla de Fuentes ya mostraba el nombre completo. Verificado en
 Preview (snapshot ok, sin errores de consola, maquetación intacta).
+**Intradía informativo (2026-07-02).** Bajo las tres tarjetas de mercado hay
+un `st.caption` con el último precio intradía de Coffee C y USD/COP vía
+`yfinance` (~15 min de retraso, hora Colombia), obtenido por
+`_precios_intradia()` con `st.cache_data(ttl=900)`: máximo una consulta por
+ventana de 15 minutos, no por visita, y el fallo (red/Yahoo) se cachea y
+degrada a no mostrar nada. Es referencia informativa: **no alimenta el
+histórico, el snapshot ni el simulador** (la regla de no mezclar proveedores
+sigue intacta). Es la primera llamada de red en runtime de la app; si Yahoo
+limita desde Streamlit Cloud, se quita el caption sin tocar nada más.
 Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
 (`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
 mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =

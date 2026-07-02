@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+import yfinance as yf
 
 from config import (
     CATALOGO_VARIABLES,
@@ -24,6 +25,8 @@ from config import (
     PROYECCION_PUNTOS_MATRIZ,
     PROYECCION_RANGO_FACTOR_CAFE,
     PROYECCION_RANGO_FACTOR_FX,
+    TICKER_CAFE_ARABICA,
+    TICKER_FX,
     VARIABLES_MENSUALES,
 )
 from procesar.proyeccion import (
@@ -218,6 +221,18 @@ TEXTOS = {
     "col_mensual_4": {"es": "Mensual (4 sem.)", "en": "Monthly (4 wks)"},
     "col_anual_52": {"es": "Anual (52 sem.)", "en": "Yearly (52 wks)"},
     "sin_dato": {"es": "Sin dato", "en": "No data"},
+    "intradia": {
+        "es": (
+            "Intradía (Yahoo Finance, ~15 min de retraso, hora Colombia): "
+            "{detalle}. Referencia informativa; no alimenta el histórico ni "
+            "el simulador."
+        ),
+        "en": (
+            "Intraday (Yahoo Finance, ~15 min delay, Colombia time): "
+            "{detalle}. Informational reference; it does not feed the "
+            "history or the simulator."
+        ),
+    },
     # --- Producción y exportaciones ---
     "info_no_prod": {
         "es": "No hay un dato mensual de producción publicado dentro del periodo elegido.",
@@ -863,6 +878,30 @@ def _cargar_calibracion_fnc() -> pd.DataFrame:
     if not ruta.exists():
         return pd.DataFrame()
     return pd.read_csv(ruta, parse_dates=["fecha"])
+
+
+@st.cache_data(ttl=900, show_spinner=False)
+def _precios_intradia() -> dict[str, tuple[float, str]]:
+    """Último precio intradía de Yahoo (~15 min de retraso); vacío si falla.
+
+    Referencia informativa: no alimenta el histórico ni el simulador. El
+    resultado (incluido un fallo) se cachea 15 minutos para hacer como máximo
+    una consulta por ventana, no una por visita.
+    """
+    precios: dict[str, tuple[float, str]] = {}
+    for clave, ticker in (("cafe", TICKER_CAFE_ARABICA), ("fx", TICKER_FX)):
+        try:
+            historial = yf.Ticker(ticker).history(period="1d", interval="5m")
+            cierres = historial["Close"].dropna()
+            if cierres.empty:
+                continue
+            momento = cierres.index[-1]
+            if momento.tzinfo is not None:
+                momento = momento.tz_convert("America/Bogota")
+            precios[clave] = (float(cierres.iloc[-1]), f"{momento:%H:%M}")
+        except Exception:
+            continue
+    return precios
 
 
 def _numero(valor: float, decimales: int) -> str:
@@ -1517,6 +1556,17 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
             chart_type="line",
             help=_descripcion_var(variable),
         )
+
+    intradia = _precios_intradia()
+    if intradia:
+        partes = []
+        if "cafe" in intradia:
+            valor, hora = intradia["cafe"]
+            partes.append(f"Coffee C {_numero(valor, 1)} US¢/lb ({hora})")
+        if "fx" in intradia:
+            valor, hora = intradia["fx"]
+            partes.append(f"USD/COP {_numero(valor, 0)} COP ({hora})")
+        st.caption(_t("intradia").format(detalle=" · ".join(partes)))
 
 
 def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
