@@ -226,6 +226,13 @@ Huila, Antioquia, Tolima, Cauca, Nariño, Caldas, Risaralda y Quindío. El clima
 de cada departamento usa por ahora una coordenada municipal representativa,
 definida en `config.py`; no representa toda la variación interna departamental.
 
+## Autoría y créditos
+
+Diseñado y desarrollado por **Juan José Jaramillo**. El diseño del producto,
+las decisiones de análisis, la selección de fuentes y la validación son
+propios. Parte del desarrollo contó con asistencia de IA (Claude Code) para
+revisión de código, pruebas y documentación.
+
 ## Licencia
 
 © 2026 Juan José Jaramillo. **Todos los derechos reservados.**

@@ -9,8 +9,10 @@ __pycache__/
 # Secretos / variables de entorno (API keys)
 .env
 
-# Configuración local del editor
+# Configuración local del editor y de herramientas de desarrollo
 .vscode/
+.claude/
+CLAUDE.md
 
 # Sistema
 .DS_Store
