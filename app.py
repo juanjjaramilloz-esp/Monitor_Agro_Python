@@ -223,14 +223,18 @@ TEXTOS = {
     "sin_dato": {"es": "Sin dato", "en": "No data"},
     "intradia": {
         "es": (
-            "Intradía (Yahoo Finance, ~15 min de retraso, hora Colombia): "
-            "{detalle}. Referencia informativa; no alimenta el histórico ni "
-            "el simulador."
+            "Las tarjetas de USD/COP y Coffee C muestran el último precio de "
+            "mercado (Yahoo Finance, ~15 min de retraso; fecha y hora "
+            "Colombia): {detalle}. Fuera del horario bursátil corresponde al "
+            "cierre de la sesión. No alimenta el histórico; el precio FNC y "
+            "el simulador conservan la referencia oficial de la FNC."
         ),
         "en": (
-            "Intraday (Yahoo Finance, ~15 min delay, Colombia time): "
-            "{detalle}. Informational reference; it does not feed the "
-            "history or the simulator."
+            "The USD/COP and Coffee C cards show the latest market price "
+            "(Yahoo Finance, ~15 min delay; Colombia date and time): "
+            "{detalle}. Outside trading hours it corresponds to the session "
+            "close. It does not feed the history; the FNC price and the "
+            "simulator keep the official FNC reference."
         ),
     },
     # --- Producción y exportaciones ---
@@ -880,25 +884,27 @@ def _cargar_calibracion_fnc() -> pd.DataFrame:
     return pd.read_csv(ruta, parse_dates=["fecha"])
 
 
-@st.cache_data(ttl=900, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def _precios_intradia() -> dict[str, tuple[float, str]]:
-    """Último precio intradía de Yahoo (~15 min de retraso); vacío si falla.
+    """Último precio de cada mercado en Yahoo (~15 min de retraso); vacío si falla.
 
     Referencia informativa: no alimenta el histórico ni el simulador. El
-    resultado (incluido un fallo) se cachea 15 minutos para hacer como máximo
-    una consulta por ventana, no una por visita.
+    resultado (incluido un fallo) se cachea 5 minutos para hacer como máximo
+    una consulta por ventana, no una por visita. Se muestra fecha y hora del
+    dato porque fuera del horario de cada mercado (Coffee C cierra ~12:30
+    hora Colombia) el último precio disponible es el cierre de la sesión.
     """
     precios: dict[str, tuple[float, str]] = {}
     for clave, ticker in (("cafe", TICKER_CAFE_ARABICA), ("fx", TICKER_FX)):
         try:
-            historial = yf.Ticker(ticker).history(period="1d", interval="5m")
+            historial = yf.Ticker(ticker).history(period="1d", interval="1m")
             cierres = historial["Close"].dropna()
             if cierres.empty:
                 continue
             momento = cierres.index[-1]
             if momento.tzinfo is not None:
                 momento = momento.tz_convert("America/Bogota")
-            precios[clave] = (float(cierres.iloc[-1]), f"{momento:%H:%M}")
+            precios[clave] = (float(cierres.iloc[-1]), f"{momento:%d/%m %H:%M}")
         except Exception:
             continue
     return precios
@@ -1537,6 +1543,11 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
     datos = tabla[(tabla["semana_fin"] == ultima) & (tabla["categoria"] == "Mercado")]
     columnas = st.columns(3)
     variables = ["fx_usd_local", "precio_cafe_arabica", "precio_interno_referencia"]
+    # USD/COP y Coffee C muestran el último precio de mercado de Yahoo
+    # (~15 min de retraso) cuando está disponible; la tarjeta FNC y el
+    # simulador conservan el trío oficial publicado por la FNC.
+    intradia = _precios_intradia()
+    ticker_por_variable = {"fx_usd_local": "fx", "precio_cafe_arabica": "cafe"}
     for columna, variable in zip(columnas, variables):
         serie = tabla[tabla["variable"] == variable].sort_values("semana_fin")
         seleccion = datos[datos["variable"] == variable]
@@ -1547,6 +1558,15 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
         if seleccion.empty:
             continue
         fila = seleccion.iloc[0]
+        actual = intradia.get(ticker_por_variable.get(variable, ""))
+        if actual is not None and not serie.empty:
+            # Reemplaza el valor mostrado y el último punto de la serie para
+            # que valor, variación y minigráfico cuenten lo mismo.
+            valor_actual, _momento = actual
+            fila = fila.copy()
+            fila["valor"] = valor_actual
+            serie = serie.copy()
+            serie.iloc[-1, serie.columns.get_loc("valor")] = valor_actual
         columna.metric(
             label=_etiqueta_var(variable),
             value=_valor_metrica(fila),
@@ -1557,7 +1577,6 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
             help=_descripcion_var(variable),
         )
 
-    intradia = _precios_intradia()
     if intradia:
         partes = []
         if "cafe" in intradia:

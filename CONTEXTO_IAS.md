@@ -203,15 +203,22 @@ el diseño: etiquetas de tarjetas (`Precio FNC estimado`, `Precio interno de
 referencia FNC`), título y eje del mapa de sensibilidad y la categoría `Último FNC
 observado`. La tabla de Fuentes ya mostraba el nombre completo. Verificado en
 Preview (snapshot ok, sin errores de consola, maquetación intacta).
-**Intradía informativo (2026-07-02).** Bajo las tres tarjetas de mercado hay
-un `st.caption` con el último precio intradía de Coffee C y USD/COP vía
-`yfinance` (~15 min de retraso, hora Colombia), obtenido por
-`_precios_intradia()` con `st.cache_data(ttl=900)`: máximo una consulta por
-ventana de 15 minutos, no por visita, y el fallo (red/Yahoo) se cachea y
-degrada a no mostrar nada. Es referencia informativa: **no alimenta el
-histórico, el snapshot ni el simulador** (la regla de no mezclar proveedores
-sigue intacta). Es la primera llamada de red en runtime de la app; si Yahoo
-limita desde Streamlit Cloud, se quita el caption sin tocar nada más.
+**Precio de mercado actual en tarjetas (2026-07-02, pedido del usuario).**
+Las tarjetas de USD/COP y Coffee C muestran el último precio de mercado de
+Yahoo (~15 min de retraso) cuando `_precios_intradia()` lo consigue
+(`st.cache_data(ttl=300)`, `history(period="1d", interval="1m")`): se
+reemplaza el valor mostrado y el último punto de la serie local para que
+valor, variación y minigráfico cuenten lo mismo; si Yahoo falla, las
+tarjetas vuelven solas al comportamiento anterior (trío FNC). Un caption
+debajo detalla precio y fecha/hora Colombia de cada dato y aclara que fuera
+de horario bursátil es el cierre de la sesión (Coffee C cierra ~12:30
+Colombia). **La tarjeta FNC, el simulador, el histórico y los snapshots
+conservan el trío oficial FNC** — esto matiza la decisión de "coherencia
+entre vistas": el panorama prioriza el mercado vivo y el simulador la
+referencia oficial. Es la única llamada de red en runtime de la app y
+degrada en silencio. Nota diagnóstica: tras un deploy, Streamlit Cloud puede
+recargar `app.py` sin reimportar módulos ya cargados (TypeError por firma
+vieja en `reporte/pdf.py`); se corrige con Manage app → Reboot.
 Las tres tarjetas de mercado tienen un control segmentado **Mensual/Semanal**
 (`modo_comparacion_mercado`, predeterminado Mensual) que cambia la variación
 mostrada: semanal = contra el cierre previo (un paso atrás, como antes); mensual =
