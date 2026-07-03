@@ -1,10 +1,22 @@
 from datetime import date
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
 import pandas as pd
 
-from fuentes import cafe, clima, fx, precio_interno, referencia_mercado_fnc
+from fuentes import (
+    _fnc_comun,
+    cafe,
+    clima,
+    fx,
+    noticias,
+    precio_interno,
+    referencia_mercado_fnc,
+)
+from config import FNC_PATRON_ARCHIVO_HISTORICO
+from procesar import calibracion_fnc
 from procesar.calibracion_fnc import preparar
 
 
@@ -103,7 +115,7 @@ class PrecioInternoHistoricoTests(unittest.TestCase):
             "html.parser",
         )
 
-        url = precio_interno._buscar_url_historico(sopa)
+        url = _fnc_comun.buscar_url_excel(sopa, FNC_PATRON_ARCHIVO_HISTORICO)
 
         self.assertEqual(
             url,
@@ -151,6 +163,99 @@ class ReferenciaMercadoFncTests(unittest.TestCase):
 
         esperado = 2_160_000 / (3_435.99 * 276.40)
         self.assertAlmostEqual(calibracion.iloc[0]["coeficiente_implicito"], esperado)
+
+
+class FncComunTests(unittest.TestCase):
+    def test_buscar_hoja_tolera_tildes_y_mayusculas(self) -> None:
+        hojas = ["Portada", "8. PRODUCCION mensual", "9. Área"]
+
+        hoja = _fnc_comun.buscar_hoja(hojas, "8. Producción mensual")
+
+        self.assertEqual(hoja, "8. PRODUCCION mensual")
+
+    def test_buscar_hoja_sin_coincidencia_devuelve_none(self) -> None:
+        self.assertIsNone(_fnc_comun.buscar_hoja(["Portada"], "8. Producción"))
+
+    def test_buscar_url_excel_toma_el_ultimo_candidato(self) -> None:
+        sopa = precio_interno.BeautifulSoup(
+            '<a href="/uploads/Exportaciones-Abril-2026.xlsx">A</a>'
+            '<a href="/uploads/Exportaciones-Mayo-2026.xlsx">M</a>'
+            '<a href="/otro.pdf">no</a>',
+            "html.parser",
+        )
+
+        url = _fnc_comun.buscar_url_excel(sopa, "Exportaciones")
+
+        self.assertTrue(url.endswith("Exportaciones-Mayo-2026.xlsx"))
+
+    def test_sin_tildes_normaliza_diacriticos(self) -> None:
+        self.assertEqual(_fnc_comun._sin_tildes("Área café"), "Area cafe")
+
+
+class CalibracionFncGuardarTests(unittest.TestCase):
+    def _fila(self, fecha: str, precio_fnc: float) -> pd.DataFrame:
+        return pd.DataFrame(
+            [
+                {
+                    "fecha": fecha,
+                    "precio_fnc": precio_fnc,
+                    "tasa_cambio": 3_400.0,
+                    "precio_ny": 275.0,
+                    "coeficiente_implicito": precio_fnc / (3_400.0 * 275.0),
+                    "fuente": "FNC",
+                }
+            ],
+            columns=calibracion_fnc.COLUMNAS,
+        )
+
+    def test_merge_idempotente_conserva_una_fila_por_fecha(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            ruta = Path(tmp) / "calibracion.csv"
+            calibracion_fnc.guardar(self._fila("2026-06-25", 2_160_000), ruta)
+            # La misma fecha con un valor corregido reemplaza, no duplica.
+            resultado = calibracion_fnc.guardar(
+                self._fila("2026-06-25", 2_170_000), ruta
+            )
+
+            self.assertEqual(len(resultado), 1)
+            self.assertEqual(resultado.iloc[0]["precio_fnc"], 2_170_000)
+
+    def test_guardar_vacio_conserva_lo_existente(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            ruta = Path(tmp) / "calibracion.csv"
+            calibracion_fnc.guardar(self._fila("2026-06-25", 2_160_000), ruta)
+
+            resultado = calibracion_fnc.guardar(
+                pd.DataFrame(columns=calibracion_fnc.COLUMNAS), ruta
+            )
+
+            self.assertEqual(len(resultado), 1)
+
+
+class NoticiasTests(unittest.TestCase):
+    def test_normaliza_articulos_al_contrato(self) -> None:
+        articulos = pd.DataFrame(
+            {
+                "seendate": ["20260625T120000Z", "no-es-fecha"],
+                "title": ["Café colombiano sube", "Sin URL"],
+                "url": ["https://ejemplo.co/1", "https://ejemplo.co/2"],
+                "language": ["Spanish", "English"],
+            }
+        )
+
+        resultado = noticias._normalizar_articulos(articulos)
+
+        self.assertListEqual(list(resultado.columns), noticias.COLUMNAS)
+        # La primera fila es válida; la segunda cae por fecha inválida.
+        self.assertEqual(len(resultado), 1)
+        self.assertEqual(resultado.iloc[0]["fuente"], "gdelt")
+        self.assertEqual(resultado.iloc[0]["geografia"], noticias.GEOGRAFIA_PAIS)
+
+    def test_normaliza_articulos_vacios_conserva_columnas(self) -> None:
+        resultado = noticias._normalizar_articulos(pd.DataFrame())
+
+        self.assertTrue(resultado.empty)
+        self.assertListEqual(list(resultado.columns), noticias.COLUMNAS)
 
 
 if __name__ == "__main__":

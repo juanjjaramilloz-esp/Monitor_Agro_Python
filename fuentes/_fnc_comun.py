@@ -11,7 +11,12 @@ conserva su manejo de error del contrato (DataFrame vacío con columnas
 correctas).
 """
 
+import unicodedata
+from urllib.parse import urljoin
+
 import requests
+
+from config import URL_PRECIO_INTERNO_FNC
 
 # Cabecera de navegador: algunos WAF rechazan el User-Agent por defecto de requests.
 CABECERAS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -42,3 +47,44 @@ def limpiar_cache() -> None:
     """Vacía las cachés; útil en pruebas o para forzar una descarga fresca."""
     _CACHE_TEXTO.clear()
     _CACHE_BINARIO.clear()
+
+
+def _sin_tildes(texto: str) -> str:
+    """Quita tildes y diacríticos para comparar nombres de forma robusta."""
+    normalizado = unicodedata.normalize("NFKD", texto)
+    return "".join(c for c in normalizado if not unicodedata.combining(c))
+
+
+def _normalizar(texto: str) -> str:
+    """Normaliza un texto (sin tildes, sin espacios extremos, minúsculas)."""
+    return _sin_tildes(texto).strip().lower()
+
+
+def buscar_url_excel(sopa, patron: str, base: str = URL_PRECIO_INTERNO_FNC) -> str | None:
+    """Devuelve el último `.xlsx` enlazado en la página cuyo href contiene `patron`.
+
+    El emparejamiento es insensible a mayúsculas/minúsculas. Se usa para los
+    tres descargables FNC (precio/producción comparten patrón; exportaciones
+    usa el suyo), evitando repetir la misma lógica en cada fuente.
+    """
+    patron_norm = patron.lower()
+    candidatos = [
+        urljoin(base, str(enlace["href"]))
+        for enlace in sopa.find_all("a", href=True)
+        if patron_norm in str(enlace["href"]).lower()
+        and ".xlsx" in str(enlace["href"]).lower()
+    ]
+    return candidatos[-1] if candidatos else None
+
+
+def buscar_hoja(nombres_hojas, prefijo: str) -> str | None:
+    """Primera hoja cuyo nombre empieza por `prefijo`, sin tildes ni mayúsculas.
+
+    Unifica el criterio de las tres fuentes FNC (antes cada una comparaba de
+    forma distinta), tolerando variaciones de tildes y capitalización.
+    """
+    objetivo = _normalizar(prefijo)
+    return next(
+        (nombre for nombre in nombres_hojas if _normalizar(nombre).startswith(objetivo)),
+        None,
+    )

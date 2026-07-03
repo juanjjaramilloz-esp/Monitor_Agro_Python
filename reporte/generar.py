@@ -6,6 +6,7 @@ import pandas as pd
 
 from config import CATALOGO_VARIABLES, FUENTES_COMERCIALES
 from procesar.proyeccion import ModeloPrecioFNC, ResultadoEscenario
+from reporte.formato import numero as _numero
 
 
 VARIABLES_BRIEF = [
@@ -14,11 +15,6 @@ VARIABLES_BRIEF = [
     "fx_usd_local",
     "produccion_nacional",
 ]
-
-
-def _numero(valor: float, decimales: int = 1) -> str:
-    texto = f"{valor:,.{decimales}f}"
-    return texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def _cop(valor: float) -> str:

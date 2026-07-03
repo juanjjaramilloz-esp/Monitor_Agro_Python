@@ -19,10 +19,8 @@ descarga o el parseo fallan, se devuelve un DataFrame vacío con las columnas
 correctas.
 """
 
-import unicodedata
 from datetime import date
 from io import BytesIO
-from urllib.parse import urljoin
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -40,21 +38,6 @@ from fuentes import _fnc_comun
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-
-
-def _sin_tildes(texto: str) -> str:
-    normalizado = unicodedata.normalize("NFKD", texto)
-    return "".join(caracter for caracter in normalizado if not unicodedata.combining(caracter))
-
-
-def _buscar_url_excel(sopa: BeautifulSoup) -> str | None:
-    """Encuentra el descargable oficial de precios, área y producción."""
-    candidatos = []
-    for enlace in sopa.find_all("a", href=True):
-        href = str(enlace["href"])
-        if FNC_PATRON_ARCHIVO_HISTORICO in href and ".xlsx" in href.lower():
-            candidatos.append(urljoin(URL_PRECIO_INTERNO_FNC, href))
-    return candidatos[-1] if candidatos else None
 
 
 def _normalizar(
@@ -103,21 +86,15 @@ def obtener(
     try:
         html = _fnc_comun.descargar_texto(URL_PRECIO_INTERNO_FNC)
         sopa = BeautifulSoup(html, "html.parser")
-        url_excel = _buscar_url_excel(sopa)
+        url_excel = _fnc_comun.buscar_url_excel(sopa, FNC_PATRON_ARCHIVO_HISTORICO)
         if url_excel is None:
             print("  AVISO: no se encontró el Excel de producción FNC.")
             return pd.DataFrame(columns=COLUMNAS)
 
         archivo = BytesIO(_fnc_comun.descargar_binario(url_excel))
         excel = pd.ExcelFile(archivo)
-        prefijo = _sin_tildes(FNC_PREFIJO_HOJA_PRODUCCION_MENSUAL).lower()
-        hoja = next(
-            (
-                nombre
-                for nombre in excel.sheet_names
-                if _sin_tildes(nombre.strip()).lower().startswith(prefijo)
-            ),
-            None,
+        hoja = _fnc_comun.buscar_hoja(
+            excel.sheet_names, FNC_PREFIJO_HOJA_PRODUCCION_MENSUAL
         )
         if hoja is None:
             print("  AVISO: el Excel FNC no contiene la hoja mensual esperada.")

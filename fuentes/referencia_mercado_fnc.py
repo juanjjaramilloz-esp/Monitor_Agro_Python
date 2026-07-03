@@ -13,21 +13,11 @@ from datetime import date
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from config import GEOGRAFIA_PAIS, URL_PRECIO_INTERNO_FNC
+from config import BANDAS_PLAUSIBLES_FNC, GEOGRAFIA_PAIS, URL_PRECIO_INTERNO_FNC
 from fuentes import _fnc_comun
 
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-
-# Bandas de plausibilidad por variable (mismo criterio que precio_interno):
-# si el parseo devuelve un valor fuera de rango (por ejemplo, un cambio de
-# formato numérico en la página), se descarta el trío completo en vez de
-# contaminar la calibración del simulador.
-_BANDAS_PLAUSIBLES = {
-    "precio_interno_referencia": (500_000.0, 6_000_000.0),
-    "precio_cafe_fnc_calculo": (50.0, 1_000.0),
-    "fx_fnc_calculo": (1_000.0, 10_000.0),
-}
 
 
 def _numero_colombiano(texto: str) -> float:
@@ -63,7 +53,7 @@ def _parsear(texto: str) -> pd.DataFrame:
         if not coincidencia:
             return pd.DataFrame(columns=COLUMNAS)
         valor = _numero_colombiano(coincidencia.group(1))
-        minimo, maximo = _BANDAS_PLAUSIBLES[variable]
+        minimo, maximo = BANDAS_PLAUSIBLES_FNC[variable]
         if not minimo <= valor <= maximo:
             print(
                 f"  AVISO: {variable}={valor} fuera de la banda plausible "

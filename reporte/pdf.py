@@ -32,6 +32,7 @@ from reportlab.platypus import (
 )
 
 from config import CATALOGO_VARIABLES, COLORES_INTERFAZ
+from reporte.formato import numero as _numero
 
 
 _ACENTO_HEX = COLORES_INTERFAZ["acento"]
@@ -246,13 +247,6 @@ def _etiqueta_indicador(etiqueta_es: str, idioma: str) -> str:
     if idioma == "en":
         return _ETIQUETA_ES_A_EN.get(etiqueta_es, etiqueta_es)
     return etiqueta_es
-
-
-def _numero(valor: float, decimales: int = 1, idioma: str = "es") -> str:
-    texto = f"{valor:,.{decimales}f}"
-    if idioma == "en":
-        return texto
-    return texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def _fig_a_png(figura) -> bytes:

@@ -81,8 +81,21 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   unitaria nueva del PDF en inglés (61 pruebas en total). Verificado
   extrayendo el texto de PDFs de muestra en ambos idiomas (títulos,
   indicadores, fuentes, unidades y pie traducidos; el ES quedó idéntico).
-  Queda anotado para después: unificar los `_buscar_url_excel` duplicados
-  entre fuentes FNC (la descarga ya es compartida).
+- **Higiene tras auditoría (2026-07-03).** Seis mejoras de calidad sin
+  cambios visibles ni de contrato (69 pruebas OK, import 3.13 y 3.14):
+  (1) `fuentes/_fnc_comun.py` gana `buscar_url_excel(sopa, patron)` y
+  `buscar_hoja(nombres, prefijo)` (normaliza tildes/mayúsculas); las cuatro
+  fuentes FNC dejan de duplicar la búsqueda de URL y unifican el matching de
+  hojas (antes cada una comparaba distinto). (2) Parámetros a `config.py`:
+  `PROYECCION_PASO_FX/CAFE`, `PRECIO_INTERNO_MIN/MAX`, `BANDAS_PLAUSIBLES_FNC`
+  (antes "quemados" en app.py, precio_interno y referencia_mercado_fnc).
+  (3) Formato numérico único en `reporte/formato.py` (`numero`), usado por
+  `reporte/pdf.py` y `reporte/generar.py`; el `_numero` de app.py se deja
+  intacto a propósito (usa el global IDIOMA). (4) `_agregar_puntuales`
+  (historico) vectorizado con groupby.agg. (5) Pruebas nuevas: helpers
+  `_fnc_comun`, `noticias._normalizar_articulos` y
+  `calibracion_fnc.guardar` (merge idempotente). Nada queda pendiente de la
+  auditoría de código.
 
 ## Estado verificable
 

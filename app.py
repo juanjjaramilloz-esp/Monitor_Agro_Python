@@ -22,6 +22,8 @@ from config import (
     PERIODOS_VISUALIZACION,
     PROYECCION_CARGAS_MAXIMAS,
     PROYECCION_CARGAS_PREDETERMINADAS,
+    PROYECCION_PASO_CAFE,
+    PROYECCION_PASO_FX,
     PROYECCION_PUNTOS_MATRIZ,
     PROYECCION_RANGO_FACTOR_CAFE,
     PROYECCION_RANGO_FACTOR_FX,
@@ -60,10 +62,10 @@ CONFIG_GRAFICO = {
 }
 
 
-# Paso de los botones +/- del simulador: la tasa de cambio se mueve de a 20 COP
-# y el Coffee C de a 2,5 US¢/lb, escalas legibles para el escenario.
-PASO_FX = 20.0
-PASO_CAFE = 2.5
+# Alias locales de los pasos del escenario (definidos en config.py) para no
+# repetir el prefijo PROYECCION_ en los seis puntos de uso del simulador.
+PASO_FX = PROYECCION_PASO_FX
+PASO_CAFE = PROYECCION_PASO_CAFE
 
 
 # Las fuentes usan unidades "de máquina" en el contrato de datos; aquí se

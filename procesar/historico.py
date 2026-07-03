@@ -71,19 +71,20 @@ def _agregar_puntuales(tabla: pd.DataFrame) -> pd.DataFrame:
 
     puntuales = puntuales.sort_values("fecha")
     claves = ["semana_fin", "geografia", "variable", "unidad", "fuente"]
-    filas = []
-    for valores_clave, grupo in puntuales.groupby(claves, sort=True):
-        ultima = grupo.iloc[-1]
-        fila = dict(zip(claves, valores_clave))
-        fila.update(
-            {
-                "fecha_dato": ultima["fecha"],
-                "valor": float(ultima["valor"]),
-                "dias_observados": grupo["fecha"].nunique(),
-            }
+    # Un punto por (semana, serie): el último dato de la semana y cuántos días
+    # distintos se observaron. Vectorizado con groupby.agg (antes iteraba en
+    # Python); "last" toma la fila más reciente por el orden ascendente de fecha.
+    agregado = (
+        puntuales.groupby(claves, sort=True)
+        .agg(
+            fecha_dato=("fecha", "last"),
+            valor=("valor", "last"),
+            dias_observados=("fecha", "nunique"),
         )
-        filas.append(fila)
-    return pd.DataFrame(filas, columns=COLUMNAS_HISTORICO_SEMANAL)
+        .reset_index()
+    )
+    agregado["valor"] = agregado["valor"].astype(float)
+    return agregado[COLUMNAS_HISTORICO_SEMANAL]
 
 
 def _agregar_clima(tabla: pd.DataFrame) -> pd.DataFrame:

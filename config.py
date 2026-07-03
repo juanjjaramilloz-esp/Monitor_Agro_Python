@@ -120,6 +120,10 @@ PROYECCION_RANGO_FACTOR_CAFE = (0.70, 1.30)
 PROYECCION_PUNTOS_MATRIZ = 9
 PROYECCION_CARGAS_PREDETERMINADAS = 1
 PROYECCION_CARGAS_MAXIMAS = 1_000
+# Paso de los botones +/- del escenario: la tasa de cambio se mueve de a 20
+# COP y el Coffee C de a 2,5 US¢/lb, escalas legibles para el usuario.
+PROYECCION_PASO_FX = 20.0
+PROYECCION_PASO_CAFE = 2.5
 ESTIMADOR_DIAS_CALIBRACION = 5
 ESTIMADOR_DECAIMIENTO_RECIENTE = 3.0
 ESTIMADOR_OBSERVACIONES_VALIDACION = 300
@@ -276,6 +280,18 @@ FNC_PREFIJO_HOJA_EXPORTACIONES_MENSUALES = "1. Total_Volumen"
 FNC_FILA_ENCABEZADO_EXPORTACIONES = 6
 FNC_COLUMNA_FECHA_EXPORTACIONES = "MES"
 FNC_COLUMNA_VALOR_EXPORTACIONES = "Total Exportaciones"
+
+# Bandas de plausibilidad de los precios FNC. Defienden contra cambios de
+# formato numérico en la página (p. ej. leer "$2.110.000" como 2.11, o un
+# Coffee C en formato estadounidense): un valor fuera de rango se descarta.
+PRECIO_INTERNO_MIN = 500_000
+PRECIO_INTERNO_MAX = 10_000_000
+# Rango (mínimo, máximo) por variable del trío coherente de la FNC.
+BANDAS_PLAUSIBLES_FNC = {
+    "precio_interno_referencia": (500_000.0, 6_000_000.0),
+    "precio_cafe_fnc_calculo": (50.0, 1_000.0),
+    "fx_fnc_calculo": (1_000.0, 10_000.0),
+}
 
 # ---------------------------------------------------------------------------
 # Clima (Fase 1c) — Open-Meteo

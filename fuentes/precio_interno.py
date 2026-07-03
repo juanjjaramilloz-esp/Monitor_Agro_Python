@@ -27,7 +27,6 @@ obtener el entero 2110000. Interpretarlo como float decimal sería un bug.
 import re
 from datetime import date
 from io import BytesIO
-from urllib.parse import urljoin
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -39,16 +38,13 @@ from config import (
     FNC_PATRON_ARCHIVO_HISTORICO,
     FNC_PREFIJO_HOJA_PRECIO_DIARIO,
     GEOGRAFIA_PAIS,
+    PRECIO_INTERNO_MAX,
+    PRECIO_INTERNO_MIN,
     URL_PRECIO_INTERNO_FNC,
 )
 from fuentes import _fnc_comun
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
-
-# Banda de plausibilidad para el precio (COP/carga). Defiende contra el bug
-# clásico de leer "$2.110.000" como 2.11: ese valor caería fuera de la banda.
-_PRECIO_MIN = 500_000
-_PRECIO_MAX = 10_000_000
 
 
 def _parsear_precio(texto: str) -> int | None:
@@ -61,7 +57,7 @@ def _parsear_precio(texto: str) -> int | None:
     crudo = coincidencia.group(1)
     # El punto es separador de miles en formato colombiano: se elimina.
     entero = int(crudo.replace(".", ""))
-    if not (_PRECIO_MIN <= entero <= _PRECIO_MAX):
+    if not (PRECIO_INTERNO_MIN <= entero <= PRECIO_INTERNO_MAX):
         print(f"  AVISO: precio {entero} fuera de banda plausible; posible cambio de formato.")
         return None
     return entero
@@ -82,16 +78,6 @@ def _parsear_fecha(sopa: BeautifulSoup, texto: str) -> date | None:
     if m:
         return pd.to_datetime(m.group(1), format="%Y-%m-%d").date()
     return None
-
-
-def _buscar_url_historico(sopa: BeautifulSoup) -> str | None:
-    """Encuentra el Excel de precios publicado en la página de estadísticas."""
-    candidatos = []
-    for enlace in sopa.find_all("a", href=True):
-        href = str(enlace["href"])
-        if FNC_PATRON_ARCHIVO_HISTORICO in href and ".xlsx" in href.lower():
-            candidatos.append(urljoin(URL_PRECIO_INTERNO_FNC, href))
-    return candidatos[-1] if candidatos else None
 
 
 def _normalizar_historico(
@@ -132,21 +118,14 @@ def _obtener_historico(
     desde: date,
     hasta: date,
 ) -> pd.DataFrame:
-    url_historico = _buscar_url_historico(sopa)
+    url_historico = _fnc_comun.buscar_url_excel(sopa, FNC_PATRON_ARCHIVO_HISTORICO)
     if url_historico is None:
         print("  AVISO: no se encontró el Excel histórico de precios FNC.")
         return pd.DataFrame(columns=COLUMNAS)
 
     archivo = BytesIO(_fnc_comun.descargar_binario(url_historico))
     excel = pd.ExcelFile(archivo)
-    hoja = next(
-        (
-            nombre
-            for nombre in excel.sheet_names
-            if nombre.strip().startswith(FNC_PREFIJO_HOJA_PRECIO_DIARIO)
-        ),
-        None,
-    )
+    hoja = _fnc_comun.buscar_hoja(excel.sheet_names, FNC_PREFIJO_HOJA_PRECIO_DIARIO)
     if hoja is None:
         print("  AVISO: el Excel FNC no contiene la hoja diaria esperada.")
         return pd.DataFrame(columns=COLUMNAS)
