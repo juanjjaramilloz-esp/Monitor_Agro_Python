@@ -52,12 +52,12 @@ _CABECERA_TABLA = colors.HexColor(COLORES_INTERFAZ["sidebar"])
 # cuenten lo mismo; esta capa no importa app.py para no depender de Streamlit.
 _TEXTOS = {
     "titulo": {
-        "es": "Herramienta Consultas y Reportes",
-        "en": "Consultation and Reporting Tool",
+        "es": "Pulso Cafetero",
+        "en": "Coffee Pulse",
     },
     "titulo_documento": {
-        "es": "Brief del periodo — Herramienta Consultas y Reportes",
-        "en": "Period brief — Consultation and Reporting Tool",
+        "es": "Brief del periodo — Pulso Cafetero",
+        "en": "Period brief — Coffee Pulse",
     },
     "subtitulo": {
         "es": "Brief del periodo · {inicio} a {fin} · generado el {generado}",
@@ -530,7 +530,7 @@ def _pie_pagina(canvas, documento, idioma: str = "es") -> None:
     canvas.line(2 * cm, 1.25 * cm, ancho - 2 * cm, 1.25 * cm)
     canvas.setFillColor(_SECUNDARIO)
     canvas.setFont("Helvetica", 7.5)
-    canvas.drawString(2 * cm, 0.85 * cm, "Juan José Jaramillo · Monitor Agro Colombia")
+    canvas.drawString(2 * cm, 0.85 * cm, "Juan José Jaramillo · Pulso Cafetero")
     canvas.drawRightString(
         ancho - 2 * cm, 0.85 * cm, f"{_tr('pagina', idioma)} {documento.page}"
     )

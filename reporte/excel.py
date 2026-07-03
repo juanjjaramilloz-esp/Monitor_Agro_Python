@@ -76,7 +76,7 @@ def _crear_resumen(writer, tabla: pd.DataFrame, idioma: str) -> None:
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "A10"
 
-    titulo = "Monitor Agro Colombia — Commercial data" if idioma == "en" else "Monitor Agro Colombia — Datos comerciales"
+    titulo = "Coffee Pulse — Commercial data" if idioma == "en" else "Pulso Cafetero — Datos comerciales"
     subtitulo = (
         "Reusable evidence with date, unit, source and frequency."
         if idioma == "en"

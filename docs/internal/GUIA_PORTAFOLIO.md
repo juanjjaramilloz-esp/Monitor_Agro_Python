@@ -1,4 +1,7 @@
-# Paquete de portafolio — Monitor Agro Colombia
+# Paquete de portafolio — Pulso Cafetero (Monitor Agro Colombia)
+
+> **Documento interno de trabajo.** Plan de validación y publicación; no es
+> documentación del producto.
 
 Este documento reúne el material que debe completarse fuera del código. No se
 publicará una reseña ni se atribuirá apoyo institucional sin permiso explícito.
@@ -28,6 +31,22 @@ Registrar:
 5. ¿Te ahorró tiempo? ¿Cuánto, aproximadamente?
 6. ¿Qué información faltó o resultó confusa?
 7. ¿La volverías a usar para una tarea similar? ¿Por qué?
+
+### Las tres preguntas clave para la reseña de LinkedIn
+
+Si solo hay tiempo para tres, estas producen las respuestas más citables
+(impacto concreto + tiempo ahorrado + credibilidad institucional). Pedir
+respuestas de 2-3 frases y conservar la aprobación textual por escrito:
+
+1. **¿Para qué tarea o entregable real la usaste, y qué pudiste reutilizar
+   directamente (una cifra, gráfica, el Excel o el PDF)?** → demuestra uso
+   real, no demo.
+2. **Frente a tu forma habitual de reunir y verificar estas series, ¿cuánto
+   tiempo te ahorró, aproximadamente?** → el dato cuantificable que más pesa
+   ("de X horas a Y minutos").
+3. **¿Qué te dio la confianza para usar estos datos en un contexto profesional
+   o institucional?** → la cita de credibilidad (fuentes, trazabilidad,
+   metodología) dicha por una directora de investigación.
 
 ### Autorización de la reseña
 
@@ -87,13 +106,13 @@ Grabar a 1440×900, sin audio o con subtítulos breves, cursor lento y zoom al
 
 ## 4. Entrada para la hoja de vida
 
-**Monitor Agro Colombia — Proyecto de análisis de datos y negocios**  
+**Pulso Cafetero — Proyecto de análisis de datos y negocios**  
 Python · pandas · Streamlit · Plotly · GitHub Actions
 
 - Desarrollé una aplicación bilingüe que integra Coffee C, USD/COP, precio FNC,
   producción y exportaciones de café desde 2023 para consulta y análisis.
 - Automaticé la validación, actualización y publicación cada dos días;
-  implementé 59 pruebas y entregables en Excel, PDF y Markdown.
+  implementé 69 pruebas y entregables en Excel, PDF y Markdown.
 - Diseñé la herramienta con enfoque de investigación del sector cafetero y la
   estoy validando mediante una tarea real con una directora de investigación
   para evaluar su utilidad en consultas, informes y escenarios.
@@ -107,13 +126,13 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 > fechas y unidades sean comparables y convertirlas en un insumo reutilizable
 > para un informe es otra historia.
 >
-> Por eso construí Monitor Agro Colombia: una aplicación bilingüe que integra
+> Por eso construí Pulso Cafetero: una aplicación bilingüe que integra
 > Coffee C, USD/COP, precio interno FNC, producción y exportaciones nacionales.
 > Permite filtrar el histórico desde 2023, descargar datos en Excel, generar un
 > brief en PDF y explorar escenarios de precio y margen.
 >
 > El proyecto une mi formación en Negocios Internacionales con el análisis de
-> datos: Python, pandas, Streamlit, automatización con GitHub Actions y 59
+> datos: Python, pandas, Streamlit, automatización con GitHub Actions y 69
 > pruebas unitarias. La decisión más importante fue no fabricar un score sin
 > conocimiento experto suficiente; prioricé trazabilidad, cadencias honestas y
 > utilidad real.

@@ -1,0 +1,31 @@
+name: Pruebas
+
+# Corre la suite completa (sin internet) en cada push y pull request a main.
+# Es la señal de salud del proyecto: si este badge está en verde, la lógica
+# de fuentes, procesamiento, reportes y simulador pasa sus 69 pruebas.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar la suite
+        run: python -m unittest discover -s tests -v

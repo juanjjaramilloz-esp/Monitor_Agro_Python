@@ -1,17 +1,33 @@
-# Monitor Agro Colombia
+# Pulso Cafetero ☕
 
 **Datos de mercado cafetero convertidos en evidencia lista para analizar,
 presentar y descargar.**
+
+[![Pruebas](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/pruebas.yml/badge.svg)](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/pruebas.yml)
+[![Datos](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml/badge.svg)](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml)
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+[![App en vivo](https://img.shields.io/badge/Streamlit-app%20en%20vivo-FF4B4B)](https://kitconsultayreporte.streamlit.app/)
 
 [Abrir la aplicación](https://kitconsultayreporte.streamlit.app/) ·
 [Ver las decisiones de producto](#decisiones-de-producto-y-análisis) ·
 [Ejecutar localmente](#ejecución-local)
 
+> **EN — Coffee Pulse** is a bilingual (ES/EN) data tool that turns Colombian
+> coffee market data into reusable evidence: it integrates ICE Coffee C,
+> USD/COP, the FNC internal reference price and national production/exports
+> since 2023, with near-real-time market prices (~15 min delay), downloadable
+> Excel workbooks, a bilingual PDF brief and a price/margin scenario
+> simulator. Built with Python, pandas, Streamlit and GitHub Actions;
+> 69 offline unit tests and automated data refresh every 2 days.
+
+*(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
+del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
+
 ## El problema
 
 Preparar un análisis del sector cafetero exige buscar series en varias fuentes,
 limpiarlas, comprobar fechas y unidades y volver a construir las gráficas para
-cada informe o reunión. Monitor Agro Colombia reduce ese trabajo al reunir el
+cada informe o reunión. Pulso Cafetero reduce ese trabajo al reunir el
 precio Coffee C, USD/COP, precio interno de referencia FNC, producción y
 exportaciones nacionales en una sola aplicación.
 
@@ -22,9 +38,13 @@ internacional, análisis de datos y necesidades reales de investigación.
 ## La solución
 
 - Compara Coffee C, USD/COP y precio FNC en una escala base 100.
+- Muestra el **último precio de mercado** de USD/COP y Coffee C (~15 minutos
+  de retraso) junto al histórico semanal, sin mezclar proveedores en la
+  calibración.
 - Conserva producción y exportaciones en su cadencia mensual real.
 - Descarga un libro Excel con resumen, tabla filtrable y diccionario, además de
-  un brief ejecutivo en PDF de tres páginas.
+  un **brief ejecutivo en PDF de tres páginas, en español o inglés** según el
+  idioma activo.
 - Explora escenarios de precio interno y margen bruto mediante Coffee C,
   USD/COP, costo, volumen y factor de rendimiento.
 - Funciona en español e inglés, incluidos textos, números y gráficas.
@@ -33,16 +53,22 @@ El histórico comienza en enero de 2023. El pipeline conserva además lluvia y
 temperaturas de ocho departamentos cafeteros, aunque esa capa no se muestra en
 la interfaz actual para mantener el foco comercial.
 
+## Vistazo
+
+| Panorama nacional | Simulador |
+|---|---|
+| ![Panorama nacional](docs/img/panorama.png) | ![Simulador](docs/img/simulador.png) |
+
 ## Evidencia verificable
 
 | Señal | Resultado |
 |---|---:|
-| Observaciones diarias normalizadas | 33.610 |
-| Semanas completas de mercado y clima | 181 |
-| Observaciones mensuales de producción y exportaciones | 82 |
-| Pruebas unitarias sin internet | 59 |
+| Observaciones diarias normalizadas | 33.600+ (crecen cada 2 días) |
+| Semanas completas de mercado y clima | 181+ |
+| Observaciones mensuales de producción y exportaciones | 82+ |
+| Pruebas unitarias sin internet | 69 |
 | Actualización automática | Cada 2 días |
-| Salidas reutilizables | Excel, PDF y Markdown |
+| Salidas reutilizables | Excel, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
 
 La automatización fue validada en un runner real de GitHub Actions: actualiza
@@ -76,10 +102,11 @@ patrocinio, adopción ni aval institucional.
 ## Arquitectura y stack
 
 ```text
-fuentes/  -> contratos estables por fuente
+fuentes/  -> contratos estables por fuente (descarga FNC compartida y cacheada)
 procesar/ -> calidad, histórico, indicadores, visualización y escenarios
-reporte/  -> brief Markdown, informe del simulador y PDF ejecutivo
+reporte/  -> brief Markdown, informe del simulador, Excel y PDF bilingüe
 datos/    -> histórico, indicadores, metadatos y snapshots
+tests/    -> 69 pruebas unitarias sin internet (CI en cada push)
 app.py    -> interfaz Streamlit bilingüe
 ```
 
@@ -88,14 +115,20 @@ Open-Meteo · GDELT · GitHub Actions.
 
 ## Ejecución local
 
-Abre PowerShell en `E:\Monitor_Agro_Python` y ejecuta:
+Requiere Python 3.13+.
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-python main.py
+git clone https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python.git
+cd Monitor_Agro_Python
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1        # Windows · en Linux/macOS: source .venv/bin/activate
+pip install -r requirements.txt
+python main.py                       # verifica los contratos de las fuentes
+streamlit run app.py                 # abre el tablero en localhost:8501
 ```
 
-Para comprobar la lógica sin depender de internet:
+Para comprobar la lógica sin depender de internet (69 pruebas, también corren
+en CI en cada push):
 
 ```powershell
 python -m unittest discover -s tests -v
@@ -176,7 +209,7 @@ datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 - `datos/indicadores/indicadores_semanales.csv`: capa derivada completa.
 - `datos/indicadores/resumen_ultima_semana.csv`: vista compacta de la última
   semana disponible.
-- `datos/visualizacion/series_visualizacion.csv`: 6.409 filas listas para
+- `datos/visualizacion/series_visualizacion.csv`: series listas para
   gráficos; es derivado y se regenera con el comando anterior.
 - `datos/visualizacion/resumen_visual.csv`: última semana con metadatos.
 - `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
@@ -192,13 +225,6 @@ mínimo, máximo y promedio.
 Huila, Antioquia, Tolima, Cauca, Nariño, Caldas, Risaralda y Quindío. El clima
 de cada departamento usa por ahora una coordenada municipal representativa,
 definida en `config.py`; no representa toda la variación interna departamental.
-
-## Material de portafolio
-
-La [guía de validación y publicación](docs/portfolio/GUIA.md) contiene las
-preguntas para la prueba con usuarias, el guion de demostración y los borradores
-para la hoja de vida y LinkedIn. Los marcadores de resultado deben reemplazarse
-solo después de recibir evidencia y autorización explícita.
 
 ## Licencia
 

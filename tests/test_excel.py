@@ -51,7 +51,7 @@ class ExcelComercialTests(unittest.TestCase):
 
         resumen = libro["Resumen"]
         self.assertGreaterEqual(len(resumen._charts), 1)
-        self.assertEqual(resumen["A1"].value, "Monitor Agro Colombia — Datos comerciales")
+        self.assertEqual(resumen["A1"].value, "Pulso Cafetero — Datos comerciales")
 
     def test_libro_rechaza_tabla_vacia(self) -> None:
         with self.assertRaisesRegex(ValueError, "No hay datos"):

@@ -155,7 +155,7 @@ def generar(
         & datos["semana_fin"].between(inicio_ts, fin_ts)
     ].copy()
     lineas = [
-        "# Brief de consulta — Herramienta Consultas y Reportes",
+        "# Brief de consulta — Pulso Cafetero",
         "",
         f"**Periodo seleccionado:** {inicio_ts:%d/%m/%Y} a {fin_ts:%d/%m/%Y}  ",
         f"**Fecha de generación:** {fecha_generacion:%d/%m/%Y}",
@@ -208,7 +208,7 @@ def generar_informe_simulador(
         else "sin dato de retorno sobre costo"
     )
     lineas = [
-        "# Informe del simulador — Herramienta Consultas y Reportes",
+        "# Informe del simulador — Pulso Cafetero",
         "",
         f"**Fecha de generación:** {fecha_generacion:%d/%m/%Y}",
         "",

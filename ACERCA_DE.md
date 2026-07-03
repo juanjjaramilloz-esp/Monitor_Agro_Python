@@ -1,6 +1,6 @@
-# Acerca de Monitor Agro Colombia
+# Acerca de Pulso Cafetero
 
-Esta página reúne, en un solo lugar, **información comercial del café
+**Pulso Cafetero** reúne, en un solo lugar, **información comercial del café
 colombiano**. Está pensada para apoyar análisis, informes y
 reuniones del sector cafetero: integra varias fuentes oficiales y públicas, las
 deja limpias y comparables, y permite consultarlas, graficarlas y exportarlas
@@ -92,6 +92,9 @@ El histórico arranca en enero de 2023. Cada serie conserva su **cadencia
 honesta**: precio y dólar se muestran por semana; producción y exportaciones
 solo aparecen en los meses efectivamente publicados, sin rellenar las semanas
 intermedias. El clima también se procesa semanalmente en el pipeline.
+Adicionalmente, las tarjetas de USD/COP y Coffee C del panorama muestran el
+**último precio de mercado** (con unos 15 minutos de retraso); ese dato es
+informativo y no alimenta el histórico ni el simulador.
 
 La información climática continúa recolectándose en el pipeline, pero no se
 muestra en las dos vistas actuales para mantener el foco comercial.

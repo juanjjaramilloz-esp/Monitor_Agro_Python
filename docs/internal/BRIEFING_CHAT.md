@@ -1,4 +1,7 @@
-# Briefing estratégico - Monitor Agro Colombia
+# Briefing estratégico - Pulso Cafetero (Monitor Agro Colombia)
+
+> **Documento interno de trabajo.** Contexto de producto para sesiones de
+> planeación; no es documentación del producto.
 
 Vigencia del briefing: **30 de junio de 2026**.
 

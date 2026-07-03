@@ -1,4 +1,8 @@
-# Continuidad técnica — Monitor Agro Colombia
+# Continuidad técnica — Pulso Cafetero (Monitor Agro Colombia)
+
+> **Documento interno de trabajo.** Bitácora de desarrollo asistido; no es
+> documentación del producto. Para conocer el proyecto ver `README.md` y
+> `ACERCA_DE.md` en la raíz.
 
 Bitácora operativa para asistentes con acceso al repo. Solo estado y hallazgos
 que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
@@ -37,10 +41,11 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 - Próximo: validar kit, brief y simulador con una tarea real de CRECE; preparar
   el resultado y la reseña autorizada para el portafolio. El README ya presenta
   problema, solución, evidencia, decisiones e impacto pendiente; la guía
-  `docs/portfolio/GUIA.md` contiene entrevista, autorización, textos para CV y
-  LinkedIn y guion audiovisual. Siguen pendientes las capturas y el video/GIF:
-  Edge headless no esperó el render interactivo de Streamlit, por lo que se
-  descartaron las capturas de carga y deben grabarse con un navegador normal.
+  `docs/internal/GUIA_PORTAFOLIO.md` contiene entrevista, autorización, textos para CV y
+  LinkedIn y guion audiovisual. Las capturas del README ya existen
+  (`docs/img/panorama.png` y `docs/img/simulador.png`, tomadas el 03/07 con
+  Playwright + Chrome a 1440px, `--client.toolbarMode viewer` para ocultar el
+  botón Deploy); sigue pendiente el video/GIF, que debe grabarse a mano.
 - El rediseño visual integral probado el 30/06 fue revertido por solicitud del
   usuario tras un fallo de importación en Streamlit Cloud. La app conserva la
   interfaz anterior y todas las mejoras funcionales previas: filtros mensuales,
@@ -56,7 +61,7 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   `st.dataframe` estilizados con el mismo lenguaje visual de tarjeta (borde,
   radio, acento) que las métricas y gráficas; hover de acento en los títulos
   de `st.expander`. Verificado con `python -c "import app"` (sin excepciones)
-  y las 59 pruebas unitarias (OK).
+  y las pruebas unitarias de entonces (hoy 69, OK).
 - **Robustez tras auditoría de código (2026-06-30).** Correcciones quirúrgicas,
   sin dependencias nuevas ni cambios de contrato: (1) las tarjetas de mercado
   ya no lanzan `IndexError` cuando la referencia viene del respaldo diario y
@@ -96,6 +101,20 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   `_fnc_comun`, `noticias._normalizar_articulos` y
   `calibracion_fnc.guardar` (merge idempotente). Nada queda pendiente de la
   auditoría de código.
+- **Optimización para LinkedIn (2026-07-03, pedido del usuario).** (1) Marca
+  nueva: la app se llama **"Pulso Cafetero"** (EN "Coffee Pulse"), subtítulo
+  "Consultas, reportes y simulación del café colombiano"; renombrados
+  page_title, TEXTOS, títulos/pie del PDF, títulos del Excel y del brief/
+  informe Markdown, y los nombres de archivo descargables
+  (`brief_pulso_cafetero_*`…); el repo y la URL no cambian. (2) Docs internos
+  movidos a `docs/internal/` (CONTEXTO_IAS, BRIEFING_CHAT, GUIA_PORTAFOLIO)
+  con encabezado de "documento interno"; CLAUDE.md §0 y §9 apuntan a las
+  rutas nuevas. (3) Nuevo workflow `.github/workflows/pruebas.yml` (unittest
+  en push/PR) con badge en el README. (4) README renovado: badges, resumen en
+  inglés, cifras corregidas (69 pruebas, conteos no congelados), features
+  nuevas (intradía, PDF bilingüe), instalación reproducible con git clone,
+  sección "Vistazo" con capturas en `docs/img/`. (5) GUIA con las 3 preguntas
+  clave para la reseña de CRECE.
 
 ## Estado verificable
 
@@ -277,7 +296,7 @@ COP, 0,06%). Los botones +/- del escenario se mueven en pasos legibles
 (`%.0f`) y el Coffee C con uno (`%.1f`). El default y `_mantener_escenario_en_rango`
 ajustan al mismo paso.
 
-**Validación última.** Tras revertir el rediseño: 59 pruebas unitarias y la
+**Validación última.** Tras revertir el rediseño: las pruebas unitarias (hoy 69) y la
 importación completa de `app.py` pasan; el endpoint público responde HTTP 200.
 La versión restaurada ya había pasado Streamlit headless con salud `ok` sin
 excepciones; PDF e informe fueron generados y revisados; factor de rendimiento

@@ -1,4 +1,4 @@
-"""Kit de consulta, reporte y simulación del Monitor Agro Colombia."""
+"""Pulso Cafetero: consultas, reportes y simulación del café colombiano."""
 
 from io import BytesIO
 from math import ceil, floor
@@ -94,19 +94,19 @@ IDIOMA = "es"
 
 TEXTOS = {
     "titulo": {
-        "es": "Herramienta Consultas y Reportes",
-        "en": "Consultation and Reporting Tool",
+        "es": "Pulso Cafetero",
+        "en": "Coffee Pulse",
     },
     "subtitulo": {
         "es": (
-            "Kit de consulta y reporte para integrar, comparar y exportar "
-            "evidencia comercial del café colombiano · {semanas} semanas "
-            "cerradas hasta {ultima} · referencia comercial al {referencia}"
+            "Consultas, reportes y simulación del café colombiano · "
+            "{semanas} semanas cerradas hasta {ultima} · referencia "
+            "comercial al {referencia}"
         ),
         "en": (
-            "Consultation and reporting kit to integrate, compare and export "
-            "commercial evidence on Colombian coffee · {semanas} closed weeks "
-            "through {ultima} · commercial reference as of {referencia}"
+            "Consultation, reporting and simulation of Colombian coffee · "
+            "{semanas} closed weeks through {ultima} · commercial reference "
+            "as of {referencia}"
         ),
     },
     "introduccion": {
@@ -683,7 +683,7 @@ def _metodo(codigo: str) -> str:
 
 
 st.set_page_config(
-    page_title="Herramienta Consultas y Reportes",
+    page_title="Pulso Cafetero",
     page_icon="☕",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -1511,7 +1511,7 @@ def _simulador_proyeccion(
     st.download_button(
         _t("btn_informe"),
         data=informe.encode("utf-8"),
-        file_name=f"informe_simulador_monitor_agro_{pd.Timestamp.today():%Y%m%d}.md",
+        file_name=f"informe_simulador_pulso_cafetero_{pd.Timestamp.today():%Y%m%d}.md",
         mime="text/markdown",
         width="stretch",
         help=_t("help_informe"),
@@ -1940,7 +1940,7 @@ with tab_panorama:
     st.subheader(_t("sub_exportar"))
     descarga = preparar_descarga_comercial(filtrados)
     nombre_archivo = (
-        f"monitor_agro_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
+        f"pulso_cafetero_comercial_{filtrados['semana_fin'].min():%Y%m%d}_"
         f"{filtrados['semana_fin'].max():%Y%m%d}.xlsx"
     )
     filas_semanales = filtrados[
@@ -1976,7 +1976,7 @@ with tab_panorama:
             semanas,
             IDIOMA,
         ),
-        file_name=f"brief_monitor_agro_{clave_pdf}.pdf",
+        file_name=f"brief_pulso_cafetero_{clave_pdf}.pdf",
         mime="application/pdf",
         width="stretch",
         help=_t("help_pdf"),
