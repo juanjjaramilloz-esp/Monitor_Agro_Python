@@ -122,38 +122,88 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 
 ## 5. Borrador para LinkedIn
 
-> Encontrar un precio del café es fácil. Reunir varias series, comprobar que sus
-> fechas y unidades sean comparables y convertirlas en un insumo reutilizable
-> para un informe es otra historia.
->
-> Por eso construí Pulso Cafetero: una aplicación bilingüe que integra
-> Coffee C, USD/COP, precio interno FNC, producción y exportaciones nacionales.
-> Permite filtrar el histórico desde 2023, descargar datos en Excel, generar un
-> brief en PDF y explorar escenarios de precio y margen.
->
-> El proyecto une mi formación en Negocios Internacionales con el análisis de
-> datos: Python, pandas, Streamlit, automatización con GitHub Actions y 69
-> pruebas unitarias. La decisión más importante fue no fabricar un score sin
-> conocimiento experto suficiente; prioricé trazabilidad, cadencias honestas y
-> utilidad real.
->
-> Ahora lo estoy validando con una tarea real de investigación del sector
-> cafetero. [Añadir el resultado concreto después de la prueba].
->
-> Aplicación: https://kitconsultayreporte.streamlit.app/
+### Versión final (español) — lista para pegar
 
-Adjuntar el video como primera pieza. En “Destacados”, incluir la app, la
-publicación y una muestra legible del PDF. En “Proyectos”, asociar Python,
-pandas, análisis de datos, inteligencia de negocios, visualización de datos y
-comercio internacional.
+> Encontrar el precio del café es fácil. Convertirlo en evidencia lista para
+> un informe es otra historia.
+>
+> Quien prepara un análisis del sector cafetero pierde horas reuniendo series
+> de varias fuentes, verificando fechas y unidades, y rearmando las mismas
+> gráficas para cada entregable. Construí Pulso Cafetero para eliminar ese
+> trabajo.
+>
+> ☕ Qué hace:
+> • Integra el precio internacional (ICE Coffee C), USD/COP, el precio
+> interno FNC y la producción y exportaciones de Colombia desde 2023.
+> • Muestra el último precio de mercado del dólar y del café (~15 min de
+> retraso) junto al histórico semanal.
+> • Exporta la evidencia en Excel y en un brief PDF de tres páginas, en
+> español o inglés.
+> • Simula escenarios de precio interno y margen bruto por carga.
+>
+> 🔧 Cómo está hecho: Python, pandas, Streamlit y Plotly; 69 pruebas
+> unitarias que corren en CI; datos que se actualizan solos cada 2 días con
+> GitHub Actions.
+>
+> 📊 La decisión de la que más aprendí no fue técnica: me negué a fabricar un
+> "índice de riesgo" sin conocimiento experto que lo respaldara. Preferí
+> trazabilidad, cadencias honestas y utilidad verificable — el mismo criterio
+> que pide un análisis serio.
+>
+> [RESULTADO DE LA PRUEBA — 2-3 líneas: tarea real resuelta, tiempo ahorrado
+> y cita aprobada de la directora de investigación, con el disclaimer de no
+> aval institucional.]
+>
+> 👉 Pruébala (sin registro): https://kitconsultayreporte.streamlit.app/
+> 📂 Código y metodología: https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python
+>
+> #AnálisisDeDatos #Python #Streamlit #DataAnalytics #Café #Colombia
 
-## 6. Control antes de publicar
+Notas de uso: la primera línea es el gancho (LinkedIn corta ahí el "ver
+más"); adjuntar el video como primera pieza (o las dos capturas de
+`docs/img/` como carrusel si el video no está listo); publicar martes a
+jueves en la mañana; responder los comentarios del primer día.
 
-- [ ] La participante aprobó literalmente reseña y atribución.
-- [ ] La reseña no sugiere aval institucional.
-- [ ] Las cifras coinciden con datos y pruebas actuales.
-- [ ] App, README y enlaces abren sin iniciar sesión.
-- [ ] Capturas sin información personal y con texto legible.
-- [ ] El video dura como máximo 45 segundos.
+### Versión corta (inglés) — primer comentario o segundo post
+
+> Finding a coffee price is easy. Turning it into report-ready evidence is
+> not.
+>
+> I built Coffee Pulse, a bilingual (ES/EN) data tool for the Colombian
+> coffee sector: it integrates ICE Coffee C, USD/COP, the FNC internal price
+> and national production/exports since 2023, shows near-real-time market
+> prices, exports Excel workbooks and a PDF brief, and simulates price/margin
+> scenarios.
+>
+> Python · pandas · Streamlit · 69 unit tests in CI · automated data refresh
+> every 2 days.
+>
+> Try it (no sign-up): https://kitconsultayreporte.streamlit.app/
+
+En “Destacados”, incluir la app, la publicación y una muestra legible del
+PDF. En “Proyectos”, asociar Python, pandas, análisis de datos, inteligencia
+de negocios, visualización de datos y comercio internacional.
+
+## 6. Checklist final de publicación
+
+**El post (contenido):**
+- [ ] El resultado de la prueba reemplazó el marcador [RESULTADO DE LA PRUEBA].
+- [ ] La participante aprobó literalmente reseña y atribución (por escrito).
+- [ ] La reseña incluye el disclaimer de no aval institucional de CRECE.
+- [ ] El video (30-45 s) está grabado según el guion de la sección 3, o en su
+      defecto se usan las dos capturas de `docs/img/` como carrusel.
+
+**La vitrina (app + repo):**
+- [ ] La app pública muestra "Pulso Cafetero" (hacer Reboot en Streamlit
+      Cloud si aún muestra el nombre anterior).
+- [ ] El badge de Pruebas está en verde (pestaña Actions del repo).
+- [ ] Descripción y topics del repo aplicados en GitHub.
+- [ ] La protección de rama de `main` quedó reactivada tras el force-push.
+- [ ] Cifras y fechas de las capturas coinciden con la app en vivo.
+- [ ] App, README y enlaces abren sin iniciar sesión (probar en incógnito).
+
+**El perfil:**
+- [ ] "Destacados" con la app, el post y una muestra del PDF.
+- [ ] Proyecto añadido en "Proyectos" con las skills asociadas.
+- [ ] Titular del perfil coherente con el rol buscado.
 - [ ] CV y LinkedIn describen el aporte personal en primera persona.
-- [ ] El resultado de la prueba reemplazó los marcadores pendientes.
