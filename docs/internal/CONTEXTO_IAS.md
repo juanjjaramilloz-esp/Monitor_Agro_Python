@@ -131,11 +131,24 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   del periodo junto al Excel (`_a_csv`, UTF-8 BOM, fechas AAAA-MM-DD,
   contrato en español estable entre idiomas); README al día. Validación de
   ambas: lint limpio, `import app` OK, 69 pruebas OK.
-- **Backlog priorizado costo/beneficio (2026-07-06):** (a) snapshot semanal
-  en CI (pendiente conocido, cierra Fase 6); (b) correlación móvil
-  Coffee C ↔ FNC en el panorama (profundidad analítica visible); (c) medir
-  cobertura de pruebas en CI; (d) GIF demo del README (manual, requiere al
-  usuario). El score sigue pausado.
+- **Snapshot semanal en CI (2026-07-06), cierra el pendiente de Fase 6.**
+  `procesar.unir.unir()` vuelve a golpear las fuentes en vivo (no lee el
+  histórico ya actualizado), incluida la página FNC que la misma corrida ya
+  consulta dos veces (`historico` + `calibracion_fnc`); y como identifica el
+  snapshot por fecha exacta del día, correrlo en cada ejecución (~15/mes)
+  generaría un archivo casi cada 2 días, no uno semanal. Se añadió un paso
+  nuevo en `actualizar-datos.yml` que solo invoca `python -m procesar.unir`
+  si `datos/snapshots/` no tiene ya un snapshot fechado dentro de la semana
+  ISO en curso (lunes–hoy, comparación lexicográfica de nombres
+  `snapshot_AAAA-MM-DD.csv`, verificada con 4 casos límite en bash local:
+  vacío, semana pasada, hoy, lunes exacto). `continue-on-error: true` como
+  el resto de pasos de datos; el commit ya incluía `datos/` completo, sin
+  cambios ahí. Queda pendiente observar en un run real si la tercera
+  consulta semanal a la FNC es tolerada por su WAF.
+- **Backlog priorizado costo/beneficio (2026-07-06):** (a) medir cobertura
+  de pruebas en CI; (b) correlación móvil Coffee C ↔ FNC en el panorama
+  (profundidad analítica visible); (c) GIF demo del README (manual, requiere
+  al usuario). El score sigue pausado.
 
 ## Estado verificable
 

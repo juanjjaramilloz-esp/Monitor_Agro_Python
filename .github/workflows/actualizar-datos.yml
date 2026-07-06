@@ -55,6 +55,32 @@ jobs:
         continue-on-error: true
         run: python -m procesar.visualizacion
 
+      # procesar.unir vuelve a consultar las fuentes en vivo (no lee el
+      # histórico ya actualizado), incluida la página FNC que este mismo run
+      # ya golpeó dos veces (historico + calibracion_fnc). Se limita a una
+      # vez por semana ISO (lunes-domingo) para que sea un snapshot semanal
+      # de verdad y no ~15 archivos al mes ni una tercera descarga FNC en
+      # cada corrida.
+      - name: Generar snapshot semanal si aún no existe esta semana
+        continue-on-error: true
+        run: |
+          dow=$(date -u +%u)
+          lunes=$(date -u -d "-$((dow - 1)) days" +%Y-%m-%d)
+          existe_esta_semana=false
+          for f in datos/snapshots/snapshot_*.csv; do
+            [ -e "$f" ] || continue
+            fecha=$(basename "$f" .csv | sed 's/^snapshot_//')
+            if [[ "$fecha" > "$lunes" || "$fecha" == "$lunes" ]]; then
+              existe_esta_semana=true
+              break
+            fi
+          done
+          if [ "$existe_esta_semana" = true ]; then
+            echo "Ya existe un snapshot de esta semana (desde $lunes); no se genera otro."
+          else
+            python -m procesar.unir
+          fi
+
       - name: Confirmar cambios si los hay
         run: |
           git config user.name "github-actions[bot]"
