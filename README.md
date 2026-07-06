@@ -18,7 +18,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 76 offline unit tests and automated data refresh every 2 days.
+> 76 offline unit tests and automated data refresh on business days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
@@ -72,11 +72,11 @@ la interfaz actual para mantener el foco comercial.
 
 | Señal | Resultado |
 |---|---:|
-| Observaciones diarias normalizadas | 33.600+ (crecen cada 2 días) |
+| Observaciones diarias normalizadas | 33.600+ (crecen en días hábiles) |
 | Semanas completas de mercado y clima | 181+ |
 | Observaciones mensuales de producción y exportaciones | 82+ |
 | Pruebas unitarias sin internet | 76 |
-| Actualización automática | Cada 2 días |
+| Actualización automática | Días hábiles |
 | Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
 
@@ -202,8 +202,9 @@ tablero no contiene score ni semáforos de riesgo.
 
 ## Actualización automática
 
-`.github/workflows/actualizar-datos.yml` corre en GitHub Actions cada 2 días
-(10:00 UTC) y también a mano (`workflow_dispatch`). Refresca una ventana reciente
+`.github/workflows/actualizar-datos.yml` corre en GitHub Actions de lunes a
+viernes (10:00 UTC), siguiendo el ritmo de publicación diaria de la FNC, y
+también a mano (`workflow_dispatch`). Refresca una ventana reciente
 del histórico de forma idempotente, recalcula indicadores y visualización, y hace
 commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit
 Community Cloud, así que los datos se actualizan sin intervención. Los pasos de
@@ -215,7 +216,7 @@ calculadas del histórico (grounding), el prompt le prohíbe predecir o
 recomendar, y el resultado queda versionado en `datos/comentario/` con fecha y
 modelo. La API key vive solo como secret del repositorio (`ANTHROPIC_API_KEY`);
 la app pública no hace ninguna llamada de IA, así que el costo no depende del
-número de visitantes (~15 llamadas al mes).
+número de visitantes (~20 llamadas al mes, una por día hábil).
 
 ## Archivos de resultados
 

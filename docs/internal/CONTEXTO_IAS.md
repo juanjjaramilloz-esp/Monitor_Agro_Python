@@ -192,6 +192,18 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   y el prompt ancla los niveles "actuales" ahí, usando las semanas cerradas
   solo como trayectoria. `construir_contexto(historico, calibracion=None)`
   mantiene compatibilidad. Caption de la app actualizado. 78 pruebas OK.
+- **Cadencia diaria de la automatización (2026-07-06, pedido del usuario).**
+  El cron de `actualizar-datos.yml` pasó de cada 2 días a **lunes a viernes**
+  (`"0 10 * * 1-5"`) para que `calibracion_fnc.csv` (el trío oficial FNC) se
+  actualice el mismo día hábil en que la FNC lo publica, en vez de quedar
+  hasta 2 días atrás como pasaba con el comentario de IA. README, ACERCA_DE y
+  CLAUDE.md (local) actualizados; nombre del workflow y mensaje de commit ya
+  no dicen "cada 2 días". Estimado de llamadas a Claude sube de ~15 a ~20/mes
+  (sigue siendo trivial en costo). **Riesgo a vigilar:** la página de
+  estadísticas FNC se consultará ~5 veces/semana en vez de ~3-4; si el WAF de
+  la FNC empieza a bloquear, el síntoma sería `referencia_diaria` ausente del
+  comentario y `calibracion_fnc.csv` sin fila nueva pese a la corrida — no
+  hay retroceso automático, habría que volver a cron cada 2 días si ocurre.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el

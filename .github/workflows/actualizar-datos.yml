@@ -1,4 +1,4 @@
-name: Actualización de datos cada 2 días
+name: Actualización de datos en días hábiles
 
 # Recolecta las fuentes y refresca el histórico versionado. Streamlit Community
 # Cloud redespliega solo al recibir el push. Las fuentes por scraping (FNC) o
@@ -7,8 +7,10 @@ name: Actualización de datos cada 2 días
 
 on:
   schedule:
-    # Días alternos del mes a las 10:00 UTC (~05:00 Colombia).
-    - cron: "0 10 */2 * *"
+    # Lunes a viernes a las 10:00 UTC (~05:00 Colombia), siguiendo el ritmo
+    # de publicación diaria de la FNC (el trío precio/Coffee C/TRM sale en
+    # días hábiles). Sin corridas sábado/domingo: la FNC no publica ese día.
+    - cron: "0 10 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
@@ -98,7 +100,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Sin cambios en datos; no se hace commit."
           else
-            git commit -m "Datos: actualización automática cada 2 días ($(date -u +%Y-%m-%d))"
+            git commit -m "Datos: actualización automática ($(date -u +%Y-%m-%d))"
             # Si el remoto avanzó entre el checkout y este push, rebasar
             # primero evita que el job falle por un push rechazado.
             git pull --rebase origin main
