@@ -162,6 +162,25 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   contra Coffee C y −0,33–0,07 contra USD/COP (último año). (3)
   **Equivalencias del precio estimado** en el simulador: COP/kg y COP/arroba
   (`CARGA_KG`, `ARROBAS_POR_CARGA`), marcadas como aritmética. README al día.
+- **Comentario del periodo con IA — Versión A implementada (2026-07-06).**
+  Nuevo `reporte/comentario_ia.py`: construye un contexto de cifras exactas
+  desde `historico_semanal.csv` (cierre/variación/máx/mín de las 3 series de
+  mercado en `COMENTARIO_IA_SEMANAS`=4 semanas, último mes de producción y
+  exportaciones con variación mensual/interanual, correlaciones de 26 semanas)
+  y llama a Claude (`claude-opus-4-8`, salida estructurada JSON con
+  `comentario_es`/`comentario_en`; el prompt prohíbe predecir/recomendar y
+  citar cifras no entregadas). El resultado se versiona en
+  `datos/comentario/comentario_periodo.json` con fecha y modelo. Paso nuevo en
+  `actualizar-datos.yml` (`continue-on-error`, secret `ANTHROPIC_API_KEY`);
+  la app **no** hace llamadas de IA en runtime: `cargar()` lee el JSON y el
+  Panorama lo muestra tras la correlación con caption de trazabilidad
+  bilingüe (si el archivo no existe, el bloque no aparece). `anthropic==0.116.0`
+  pinneado en requirements. 7 pruebas nuevas con cliente mockeado (76 en
+  total), ruff limpio, `import app` OK. **Pendiente del usuario:** crear la
+  API key en console.anthropic.com y guardarla como secret `ANTHROPIC_API_KEY`
+  del repo; el primer comentario real aparecerá tras la siguiente corrida del
+  workflow (se puede disparar a mano con `workflow_dispatch`). Evolución
+  futura posible: incluir el comentario en el brief PDF y la Versión B (chat).
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el

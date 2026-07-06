@@ -19,6 +19,7 @@ DIR_SNAPSHOTS = DIR_DATOS / "snapshots"
 DIR_HISTORICO = DIR_DATOS / "historico"
 DIR_INDICADORES = DIR_DATOS / "indicadores"
 DIR_VISUALIZACION = DIR_DATOS / "visualizacion"
+DIR_COMENTARIO = DIR_DATOS / "comentario"
 
 # Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
@@ -137,6 +138,16 @@ ARROBAS_POR_CARGA = 10
 # sobre variaciones semanales (no niveles) para no inflar la medida con la
 # tendencia común de las series.
 CORRELACION_VENTANA_SEMANAS = 26
+
+# Comentario del periodo generado con Claude (precomputado en CI, nunca en
+# runtime de la app). La API key vive solo como secret de GitHub Actions
+# (ANTHROPIC_API_KEY); ver CLAUDE.md sección 9. El comentario queda versionado
+# en DIR_COMENTARIO con fecha y modelo para trazabilidad.
+COMENTARIO_IA_MODELO = "claude-opus-4-8"
+COMENTARIO_IA_MAX_TOKENS = 2000
+# Semanas hacia atrás que resume el comentario (mercado semanal).
+COMENTARIO_IA_SEMANAS = 4
+ARCHIVO_COMENTARIO_IA = DIR_COMENTARIO / "comentario_periodo.json"
 
 # Factor de rendimiento FNC: kg de café pergamino seco para una carga de
 # excelso. 94 es la referencia con la que se publica el precio interno. Un

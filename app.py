@@ -13,6 +13,7 @@ from config import (
     CARGA_KG,
     CATALOGO_VARIABLES,
     COLORES_INTERFAZ,
+    COMENTARIO_IA_SEMANAS,
     CORRELACION_VENTANA_SEMANAS,
     COSTO_PRODUCCION_FECHA,
     COSTO_PRODUCCION_FUENTE,
@@ -54,6 +55,7 @@ from procesar.visualizacion import (
 from procesar.visualizacion import (
     ejecutar as preparar_visualizacion,
 )
+from reporte.comentario_ia import cargar as cargar_comentario_ia
 from reporte.excel import generar_excel_comercial
 from reporte.generar import generar_informe_simulador
 from reporte.pdf import generar_pdf_brief
@@ -163,6 +165,24 @@ TEXTOS = {
         ),
     },
     "md_variaciones": {"es": "**Variaciones por indicador**", "en": "**Changes by indicator**"},
+    "md_comentario_ia": {
+        "es": "**Comentario del periodo (redactado con IA)**",
+        "en": "**Period commentary (AI-written)**",
+    },
+    "cap_comentario_ia": {
+        "es": (
+            "Redactado por {modelo} el {fecha} durante la actualización "
+            "automática de datos, usando únicamente cifras de las últimas "
+            "{semanas} semanas del propio kit. Describe lo observado; no es "
+            "pronóstico ni recomendación."
+        ),
+        "en": (
+            "Written by {modelo} on {fecha} during the automated data "
+            "refresh, using only figures from the kit's own last {semanas} "
+            "weeks. It describes what was observed; it is not a forecast or "
+            "a recommendation."
+        ),
+    },
     "md_lectura_rapida": {
         "es": "**Lectura rápida del periodo**",
         "en": "**Period at a glance**",
@@ -2201,6 +2221,21 @@ with tab_panorama:
             config=CONFIG_GRAFICO,
         )
         st.caption(_t("cap_correlacion").format(ventana=CORRELACION_VENTANA_SEMANAS))
+
+    comentario_ia = cargar_comentario_ia()
+    if comentario_ia is not None:
+        st.markdown(_t("md_comentario_ia"))
+        st.markdown(
+            comentario_ia["comentario_es" if IDIOMA == "es" else "comentario_en"]
+        )
+        fecha_comentario = pd.Timestamp(comentario_ia["fecha_generacion"])
+        st.caption(
+            _t("cap_comentario_ia").format(
+                modelo=comentario_ia.get("modelo", "Claude"),
+                fecha=f"{fecha_comentario:%d/%m/%Y}",
+                semanas=comentario_ia.get("periodo_semanas", COMENTARIO_IA_SEMANAS),
+            )
+        )
 
     st.subheader(_t("sub_prodexp"))
     _bloque_produccion_exportaciones(filtrados, datos)

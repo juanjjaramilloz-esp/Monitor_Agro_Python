@@ -18,7 +18,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 69 offline unit tests and automated data refresh every 2 days.
+> 76 offline unit tests and automated data refresh every 2 days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
@@ -42,6 +42,10 @@ internacional, análisis de datos y necesidades reales de investigación.
   variación, máximos y mínimos con fechas), lista para copiar en informes.
 - Muestra la **correlación móvil** del precio FNC con Coffee C y con USD/COP
   sobre variaciones semanales, con lectura neutral y sin causalidad.
+- Publica un **comentario del periodo redactado con IA (Claude)**, generado en
+  la actualización automática de datos y anclado exclusivamente a cifras del
+  propio kit: describe sin predecir ni recomendar, queda versionado con fecha
+  y modelo, y la app no hace ninguna llamada de IA en runtime.
 - Muestra el **último precio de mercado** de USD/COP y Coffee C (~15 minutos
   de retraso) junto al histórico semanal, sin mezclar proveedores en la
   calibración.
@@ -71,7 +75,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.600+ (crecen cada 2 días) |
 | Semanas completas de mercado y clima | 181+ |
 | Observaciones mensuales de producción y exportaciones | 82+ |
-| Pruebas unitarias sin internet | 69 |
+| Pruebas unitarias sin internet | 76 |
 | Actualización automática | Cada 2 días |
 | Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
@@ -111,12 +115,12 @@ fuentes/  -> contratos estables por fuente (descarga FNC compartida y cacheada)
 procesar/ -> calidad, histórico, indicadores, visualización y escenarios
 reporte/  -> brief Markdown, informe del simulador, Excel y PDF bilingüe
 datos/    -> histórico, indicadores, metadatos y snapshots
-tests/    -> 69 pruebas unitarias sin internet (CI en cada push)
+tests/    -> 76 pruebas unitarias sin internet (CI en cada push)
 app.py    -> interfaz Streamlit bilingüe
 ```
 
 Python · pandas · Plotly · Streamlit · matplotlib · reportlab · yfinance ·
-Open-Meteo · GDELT · GitHub Actions.
+Open-Meteo · GDELT · GitHub Actions · Claude API (Anthropic).
 
 ## Ejecución local
 
@@ -132,7 +136,7 @@ python main.py                       # verifica los contratos de las fuentes
 streamlit run app.py                 # abre el tablero en localhost:8501
 ```
 
-Para comprobar la lógica sin depender de internet (69 pruebas, también corren
+Para comprobar la lógica sin depender de internet (76 pruebas, también corren
 en CI en cada push):
 
 ```powershell
@@ -205,6 +209,14 @@ commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit
 Community Cloud, así que los datos se actualizan sin intervención. Los pasos de
 datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 
+La misma corrida redacta el **comentario del periodo con Claude**
+(`python -m reporte.comentario_ia`): recibe únicamente cifras exactas ya
+calculadas del histórico (grounding), el prompt le prohíbe predecir o
+recomendar, y el resultado queda versionado en `datos/comentario/` con fecha y
+modelo. La API key vive solo como secret del repositorio (`ANTHROPIC_API_KEY`);
+la app pública no hace ninguna llamada de IA, así que el costo no depende del
+número de visitantes (~15 llamadas al mes).
+
 ## Archivos de resultados
 
 - `datos/historico/historico_diario.csv`: observaciones originales normalizadas.
@@ -220,6 +232,8 @@ datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 - `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
   colores y formatos de las nueve variables.
 - `datos/snapshots/`: fotografías archivadas de las ejecuciones semanales.
+- `datos/comentario/comentario_periodo.json`: comentario del periodo redactado
+  con Claude en CI, bilingüe y con fecha y modelo para trazabilidad.
 
 La semana se cierra el domingo. Café, USD/COP y precio FNC usan el último dato
 disponible de la semana. La lluvia se suma y las temperaturas se agregan a

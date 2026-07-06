@@ -81,6 +81,15 @@ jobs:
             python -m procesar.unir
           fi
 
+      # El comentario queda versionado en datos/comentario/ con fecha y modelo;
+      # la app solo lee el archivo (cero llamadas de IA en runtime). La key
+      # vive únicamente como secret del repo.
+      - name: Redactar comentario del periodo con Claude
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m reporte.comentario_ia
+
       - name: Confirmar cambios si los hay
         run: |
           git config user.name "github-actions[bot]"

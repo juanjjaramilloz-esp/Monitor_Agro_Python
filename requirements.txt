@@ -15,8 +15,8 @@ plotly==6.8.0          # gráficos interactivos del tablero
 matplotlib==3.11.0     # renderiza las gráficas del brief en PDF (sin navegador)
 reportlab==5.0.0       # maqueta el brief del periodo como PDF ejecutivo
 
-# --- Reporte / resumen con IA (Fase 4) ---
-# anthropic     # descomentar en la Fase 4 si usamos Claude API para el resumen
+# --- Comentario del periodo con IA (precomputado en CI) ---
+anthropic==0.116.0     # Claude API; solo lo llama la automatización, nunca la app
 
 # --- Cara visual ---
 # Streamlit y Plotly están activos para la versión básica de feedback.
