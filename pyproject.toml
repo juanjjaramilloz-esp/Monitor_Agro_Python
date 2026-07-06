@@ -1,0 +1,17 @@
+# Configuración de herramientas de desarrollo (el proyecto no se empaqueta).
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+extend-exclude = ["datos", "outputs", "docs"]
+
+[tool.ruff.lint]
+# E/W: estilo pycodestyle · F: errores pyflakes · B: bugs probables (bugbear)
+# UP: modernización de sintaxis · I: orden de imports
+select = ["E", "W", "F", "B", "UP", "I"]
+ignore = [
+    "E501", # longitud de línea: la controla el formato existente, no el linter
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "fuentes", "procesar", "reporte"]

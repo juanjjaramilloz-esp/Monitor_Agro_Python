@@ -8,14 +8,12 @@ horas distintas introduce error en la calibración del simulador.
 """
 
 import re
-from datetime import date
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
 from config import BANDAS_PLAUSIBLES_FNC, GEOGRAFIA_PAIS, URL_PRECIO_INTERNO_FNC
 from fuentes import _fnc_comun
-
 
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 

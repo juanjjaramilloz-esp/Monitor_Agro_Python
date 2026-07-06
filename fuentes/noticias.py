@@ -30,7 +30,6 @@ from config import (
     TERMINOS_NOTICIAS,
 )
 
-
 COLUMNAS = ["fecha", "geografia", "titulo", "url", "fuente", "idioma", "tono", "categoria"]
 
 

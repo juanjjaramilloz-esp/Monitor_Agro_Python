@@ -20,7 +20,6 @@ import yfinance as yf
 
 from config import GEOGRAFIA_GLOBAL, TICKER_CAFE_ARABICA
 
-
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 

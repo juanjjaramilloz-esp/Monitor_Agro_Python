@@ -1,11 +1,12 @@
-from datetime import date
-from pathlib import Path
 import tempfile
 import unittest
+from datetime import date
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pandas as pd
 
+from config import FNC_PATRON_ARCHIVO_HISTORICO
 from fuentes import (
     _fnc_comun,
     cafe,
@@ -15,7 +16,6 @@ from fuentes import (
     precio_interno,
     referencia_mercado_fnc,
 )
-from config import FNC_PATRON_ARCHIVO_HISTORICO
 from procesar import calibracion_fnc
 from procesar.calibracion_fnc import preparar
 

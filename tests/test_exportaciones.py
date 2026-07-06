@@ -1,6 +1,6 @@
+import unittest
 from datetime import date
 from io import BytesIO
-import unittest
 from unittest.mock import Mock, patch
 
 import pandas as pd

@@ -22,7 +22,6 @@ Decisión de fechas (ver CONTEXTO_IAS.md):
 """
 
 from datetime import date
-from typing import Optional
 
 import pandas as pd
 
@@ -43,7 +42,7 @@ def _agregar_clima(df_clima: pd.DataFrame, fecha_snapshot: date) -> pd.DataFrame
     for departamento, grupo in df_clima.groupby("geografia"):
         fecha_dato = grupo["fecha"].max()
 
-        def _serie(var: str) -> pd.Series:
+        def _serie(var: str, grupo: pd.DataFrame = grupo) -> pd.Series:
             return grupo.loc[grupo["variable"] == var, "valor"]
 
         temp_min = _serie("temp_min")
@@ -125,7 +124,7 @@ def _guardar_snapshot(
 
 
 def unir(
-    fecha_snapshot: Optional[date] = None,
+    fecha_snapshot: date | None = None,
     sobrescribir: bool = False,
 ) -> pd.DataFrame:
     """

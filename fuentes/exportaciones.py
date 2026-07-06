@@ -22,7 +22,6 @@ from config import (
 )
 from fuentes import _fnc_comun
 
-
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 

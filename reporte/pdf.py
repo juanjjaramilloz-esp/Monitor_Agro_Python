@@ -34,7 +34,6 @@ from reportlab.platypus import (
 from config import CATALOGO_VARIABLES, COLORES_INTERFAZ
 from reporte.formato import numero as _numero
 
-
 _ACENTO_HEX = COLORES_INTERFAZ["acento"]
 _TEXTO_HEX = COLORES_INTERFAZ["texto"]
 _SECUNDARIO_HEX = COLORES_INTERFAZ["texto_secundario"]

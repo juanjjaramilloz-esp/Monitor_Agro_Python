@@ -18,8 +18,6 @@ from fuentes import (
     produccion,
     referencia_mercado_fnc,
 )
-from procesar import score, unir
-from reporte import generar
 
 # Columnas esperadas por el contrato numérico (CLAUDE.md, sección 4)
 COLS_NUMERICAS = {"fecha", "geografia", "variable", "valor", "unidad", "fuente"}

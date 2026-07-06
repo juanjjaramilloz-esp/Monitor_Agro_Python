@@ -15,7 +15,6 @@ semana a semana. Solo se incorpora en la Fase 7.
 
 import pandas as pd
 
-
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 

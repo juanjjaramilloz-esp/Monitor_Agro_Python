@@ -21,7 +21,6 @@ from procesar.calidad import (
     validar_historico_semanal,
 )
 
-
 RUTA_DIARIO = DIR_HISTORICO / "historico_diario.csv"
 RUTA_SEMANAL = DIR_HISTORICO / "historico_semanal.csv"
 VARIABLES_PUNTUALES = {

@@ -6,7 +6,6 @@ import pandas as pd
 
 from config import DEPARTAMENTOS
 
-
 COLUMNAS_SNAPSHOT = [
     "fecha_snapshot",
     "fecha_dato",

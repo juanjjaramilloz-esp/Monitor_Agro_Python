@@ -11,7 +11,6 @@ from config import (
     ESTIMADOR_OBSERVACIONES_VALIDACION,
 )
 
-
 VARIABLES_BASE = {
     "precio_fnc": "precio_interno_referencia",
     "tasa_cambio": "fx_usd_local",

@@ -11,7 +11,6 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 
 from config import COLORES_INTERFAZ
 
-
 _VERDE = COLORES_INTERFAZ["acento"].replace("#", "")
 _VERDE_SUAVE = COLORES_INTERFAZ["sidebar"].replace("#", "")
 _TEXTO = COLORES_INTERFAZ["texto"].replace("#", "")
@@ -104,7 +103,9 @@ def _crear_resumen(writer, tabla: pd.DataFrame, idioma: str) -> None:
         tabla["variable"].nunique(),
         f"{date.today():%d/%m/%Y}",
     ]
-    for columna, (etiqueta, valor) in enumerate(zip(etiquetas, valores), start=1):
+    for columna, (etiqueta, valor) in enumerate(
+        zip(etiquetas, valores, strict=True), start=1
+    ):
         celda_etiqueta = ws.cell(4, columna, etiqueta)
         celda_valor = ws.cell(5, columna, valor)
         celda_etiqueta.fill = PatternFill("solid", fgColor=_VERDE_SUAVE)

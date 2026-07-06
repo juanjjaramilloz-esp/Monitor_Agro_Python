@@ -8,7 +8,6 @@ from config import CATALOGO_VARIABLES, FUENTES_COMERCIALES
 from procesar.proyeccion import ModeloPrecioFNC, ResultadoEscenario
 from reporte.formato import numero as _numero
 
-
 VARIABLES_BRIEF = [
     "precio_interno_referencia",
     "precio_cafe_arabica",

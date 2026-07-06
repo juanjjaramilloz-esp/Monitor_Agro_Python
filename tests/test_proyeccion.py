@@ -1,12 +1,12 @@
-from datetime import date
 import unittest
+from datetime import date
 
 import pandas as pd
 
 from procesar.proyeccion import (
     ModeloPrecioFNC,
-    calibrar_modelo,
     calcular_escenario,
+    calibrar_modelo,
     crear_matriz_sensibilidad,
     estimar_precio_fnc,
     obtener_bases,

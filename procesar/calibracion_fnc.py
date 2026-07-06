@@ -7,7 +7,6 @@ import pandas as pd
 from config import DIR_HISTORICO
 from fuentes import referencia_mercado_fnc
 
-
 RUTA_CALIBRACION_FNC = DIR_HISTORICO / "calibracion_fnc.csv"
 COLUMNAS = [
     "fecha",

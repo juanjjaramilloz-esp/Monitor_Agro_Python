@@ -1,6 +1,5 @@
 """Pulso Cafetero: consultas, reportes y simulación del café colombiano."""
 
-from io import BytesIO
 from math import ceil, floor
 from pathlib import Path
 
@@ -31,29 +30,30 @@ from config import (
     TICKER_FX,
     VARIABLES_MENSUALES,
 )
+from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
+from procesar.historico import RUTA_DIARIO
 from procesar.proyeccion import (
     ResultadoEscenario,
-    calibrar_modelo,
     calcular_escenario,
+    calibrar_modelo,
     crear_matriz_sensibilidad,
     obtener_bases,
     obtener_bases_calibracion,
 )
-from procesar.historico import RUTA_DIARIO
-from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 from procesar.visualizacion import (
     RUTA_SERIES,
     configuracion_eje_mensual,
-    ejecutar as preparar_visualizacion,
     filtrar_periodo_visualizacion,
     incorporar_referencia_comercial_actual,
     preparar_descarga_comercial,
     series_necesitan_regenerarse,
 )
-from reporte.generar import generar_informe_simulador
+from procesar.visualizacion import (
+    ejecutar as preparar_visualizacion,
+)
 from reporte.excel import generar_excel_comercial
+from reporte.generar import generar_informe_simulador
 from reporte.pdf import generar_pdf_brief
-
 
 CONFIG_GRAFICO = {
     "displaylogo": False,
@@ -1550,7 +1550,7 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
     # simulador conservan el trío oficial publicado por la FNC.
     intradia = _precios_intradia()
     ticker_por_variable = {"fx_usd_local": "fx", "precio_cafe_arabica": "cafe"}
-    for columna, variable in zip(columnas, variables):
+    for columna, variable in zip(columnas, variables, strict=True):
         serie = tabla[tabla["variable"] == variable].sort_values("semana_fin")
         seleccion = datos[datos["variable"] == variable]
         if seleccion.empty:
@@ -1599,7 +1599,11 @@ def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
             continue
         actual = serie.iloc[-1]
 
-        def cambio(periodos: int) -> float | None:
+        def cambio(
+            periodos: int,
+            serie: pd.DataFrame = serie,
+            actual: pd.Series = actual,
+        ) -> float | None:
             if len(serie) <= periodos:
                 return None
             anterior = float(serie.iloc[-periodos - 1]["valor"])

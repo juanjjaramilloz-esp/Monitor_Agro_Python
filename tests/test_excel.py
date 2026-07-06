@@ -1,5 +1,5 @@
-from io import BytesIO
 import unittest
+from io import BytesIO
 
 import pandas as pd
 from openpyxl import load_workbook

@@ -1,8 +1,9 @@
 name: Pruebas
 
-# Corre la suite completa (sin internet) en cada push y pull request a main.
-# Es la señal de salud del proyecto: si este badge está en verde, la lógica
-# de fuentes, procesamiento, reportes y simulador pasa sus 69 pruebas.
+# Corre lint (ruff) y la suite completa (sin internet) en cada push y pull
+# request a main. Es la señal de salud del proyecto: si este badge está en
+# verde, el código pasa el linter y la lógica de fuentes, procesamiento,
+# reportes y simulador pasa sus pruebas.
 
 on:
   push:
@@ -11,6 +12,25 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar herramientas de desarrollo
+        run: pip install -r requirements-dev.txt
+
+      - name: Ejecutar ruff
+        run: ruff check .
+
   pruebas:
     runs-on: ubuntu-latest
     timeout-minutes: 10

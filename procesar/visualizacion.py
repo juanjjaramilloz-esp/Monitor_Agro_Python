@@ -15,12 +15,11 @@ from config import (
     REGIONES_CAFE,
     UMBRAL_ANOMALIA_ALTA,
     UMBRAL_ANOMALIA_MODERADA,
-    VARIABLES_MENSUALES,
     VARIABLES_INDICE_BASE_100,
+    VARIABLES_MENSUALES,
 )
 from procesar.calidad import COLUMNAS_VISUALIZACION, validar_visualizacion
 from procesar.indicadores import calcular
-
 
 RUTA_HISTORICO = DIR_HISTORICO / "historico_semanal.csv"
 RUTA_SERIES = DIR_VISUALIZACION / "series_visualizacion.csv"

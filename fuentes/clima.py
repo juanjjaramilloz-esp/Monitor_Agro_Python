@@ -25,7 +25,6 @@ from config import (
     URL_OPEN_METEO_PRONOSTICO,
 )
 
-
 COLUMNAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
 MAPEO_VARIABLES = {
@@ -86,7 +85,9 @@ def obtener(
                     print(f"  AVISO: {departamento} - sin datos para {variable_api}.")
                     continue
 
-                for fecha, valor in zip(fechas, valores):
+                # strict=False: si la API devuelve arreglos desiguales se
+                # conserva la tolerancia previa (truncar al más corto).
+                for fecha, valor in zip(fechas, valores, strict=False):
                     if valor is None:
                         continue
 

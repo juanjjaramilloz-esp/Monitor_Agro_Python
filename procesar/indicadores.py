@@ -7,8 +7,8 @@ import pandas as pd
 from config import (
     DIR_HISTORICO,
     DIR_INDICADORES,
-    GEOGRAFIA_PAIS,
     GEOGRAFIA_GLOBAL,
+    GEOGRAFIA_PAIS,
     GEOGRAFIA_PRIORITARIA,
     INDICADORES_MIN_OBS_ANOMALIA,
     INDICADORES_VENTANA_ANOMALIA,
@@ -23,7 +23,6 @@ from procesar.calidad import (
     validar_historico_semanal,
     validar_indicadores,
 )
-
 
 RUTA_HISTORICO = DIR_HISTORICO / "historico_semanal.csv"
 RUTA_INDICADORES = DIR_INDICADORES / "indicadores_semanales.csv"

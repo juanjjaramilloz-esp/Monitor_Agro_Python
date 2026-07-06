@@ -1,0 +1,6 @@
+# Herramientas solo de desarrollo (no las necesita la app desplegada).
+#
+# Instalar (con el entorno virtual activo):
+#   pip install -r requirements-dev.txt
+
+ruff==0.15.20   # linter (config en pyproject.toml; corre también en CI)

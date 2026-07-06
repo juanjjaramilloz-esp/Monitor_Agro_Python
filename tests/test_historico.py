@@ -1,10 +1,9 @@
-from datetime import date, timedelta
 import unittest
+from datetime import date, timedelta
 
 import pandas as pd
 
 from procesar.historico import _combinar_historico, agregar_semanal
-
 
 COLUMNAS_DIARIAS = ["fecha", "geografia", "variable", "valor", "unidad", "fuente"]
 
