@@ -13,6 +13,7 @@ from config import (
     CARGA_KG,
     CATALOGO_VARIABLES,
     COLORES_INTERFAZ,
+    CORRELACION_VENTANA_SEMANAS,
     COSTO_PRODUCCION_FECHA,
     COSTO_PRODUCCION_FUENTE,
     COSTO_PRODUCCION_REFERENCIA,
@@ -200,6 +201,27 @@ TEXTOS = {
             "**Production and exports** ({mes}): {produccion} vs. "
             "{exportaciones} thousand 60-kg bags (difference: {diferencia}; "
             "not equivalent to inventories)."
+        ),
+    },
+    "chart_corr_titulo": {
+        "es": "Correlación móvil de variaciones semanales ({ventana} semanas)",
+        "en": "Rolling correlation of weekly changes ({ventana} weeks)",
+    },
+    "cap_correlacion": {
+        "es": (
+            "Correlación de Pearson entre variaciones semanales, en ventana "
+            "móvil de {ventana} semanas cerradas calculada sobre todo el "
+            "histórico y mostrada para el periodo elegido. Cerca de +1 las "
+            "series se movieron en la misma dirección; cerca de −1, en "
+            "direcciones opuestas; cerca de 0, sin relación lineal. Mide "
+            "co-movimiento, no causalidad."
+        ),
+        "en": (
+            "Pearson correlation of weekly changes over a rolling window of "
+            "{ventana} closed weeks, computed on the full history and shown "
+            "for the selected period. Near +1 the series moved in the same "
+            "direction; near −1, in opposite directions; near 0, no linear "
+            "relationship. It measures co-movement, not causality."
         ),
     },
     "lectura_prodexp_separado": {
@@ -1106,6 +1128,66 @@ def _grafico_mercado(tabla: pd.DataFrame) -> go.Figure:
     figura.add_hline(y=100, line_dash="dot", line_color="#9CA39D", line_width=1)
     figura.update_layout(title=_t("chart_mercado_titulo"))
     return _layout(figura, 430)
+
+
+def _grafico_correlacion_movil(
+    semanal: pd.DataFrame,
+    filtrada: pd.DataFrame,
+) -> go.Figure | None:
+    """Correlación móvil del FNC con Coffee C y con USD/COP, o None sin datos.
+
+    Se calcula sobre variaciones semanales (no niveles, para no inflar la
+    medida con la tendencia común) usando todo el histórico de semanas
+    cerradas, y se muestra solo la ventana del periodo elegido.
+    """
+    mercado = semanal[semanal["categoria"] == "Mercado"]
+    pivote = mercado.pivot_table(
+        index="semana_fin", columns="variable", values="valor", aggfunc="last"
+    ).sort_index()
+    requeridas = {"precio_interno_referencia", "precio_cafe_arabica", "fx_usd_local"}
+    if not requeridas.issubset(pivote.columns):
+        return None
+
+    retornos = pivote.pct_change()
+    ventana = CORRELACION_VENTANA_SEMANAS
+    base = retornos["precio_interno_referencia"].rolling(ventana, min_periods=ventana)
+    correlaciones = pd.DataFrame(
+        {
+            "FNC ↔ Coffee C": base.corr(retornos["precio_cafe_arabica"]),
+            "FNC ↔ USD/COP": base.corr(retornos["fx_usd_local"]),
+        }
+    )
+    inicio = pd.Timestamp(filtrada["semana_fin"].min())
+    fin = pd.Timestamp(filtrada["semana_fin"].max())
+    indice = pd.to_datetime(correlaciones.index)
+    correlaciones = correlaciones[(indice >= inicio) & (indice <= fin)]
+    if correlaciones.dropna(how="all").empty:
+        return None
+
+    colores_pares = {
+        "FNC ↔ Coffee C": CATALOGO_VARIABLES["precio_cafe_arabica"]["color"],
+        "FNC ↔ USD/COP": CATALOGO_VARIABLES["fx_usd_local"]["color"],
+    }
+    figura = go.Figure()
+    for nombre, serie in correlaciones.items():
+        figura.add_trace(
+            go.Scatter(
+                x=correlaciones.index,
+                y=serie,
+                mode="lines",
+                name=nombre,
+                line=dict(color=colores_pares[nombre], width=2.5),
+                hovertemplate=(
+                    "%{x|%d %b %Y}<br>" + nombre + ": %{y:.2f}<extra></extra>"
+                ),
+            )
+        )
+    figura.add_hline(y=0, line_dash="dot", line_color="#9CA39D", line_width=1)
+    figura.update_layout(
+        title=_t("chart_corr_titulo").format(ventana=ventana),
+        yaxis=dict(range=[-1.05, 1.05]),
+    )
+    return _layout(figura, 360)
 
 
 def _grafico_produccion(tabla: pd.DataFrame) -> go.Figure:
@@ -2110,6 +2192,16 @@ with tab_panorama:
         hide_index=True,
         width="stretch",
     )
+    grafico_correlacion = _grafico_correlacion_movil(datos_semanales, filtrados)
+    if grafico_correlacion is not None:
+        st.plotly_chart(
+            grafico_correlacion,
+            width="stretch",
+            theme=None,
+            config=CONFIG_GRAFICO,
+        )
+        st.caption(_t("cap_correlacion").format(ventana=CORRELACION_VENTANA_SEMANAS))
+
     st.subheader(_t("sub_prodexp"))
     _bloque_produccion_exportaciones(filtrados, datos)
 
