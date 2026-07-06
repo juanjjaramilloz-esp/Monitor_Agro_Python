@@ -33756,6 +33756,9 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-29,Nariño,precipitacion,0.0,mm,open-meteo
 2026-06-29,Nariño,temp_max,23.6,°C,open-meteo
 2026-06-29,Nariño,temp_min,18.0,°C,open-meteo
+2026-06-29,Quindío,precipitacion,3.1,mm,open-meteo
+2026-06-29,Quindío,temp_max,26.2,°C,open-meteo
+2026-06-29,Quindío,temp_min,17.6,°C,open-meteo
 2026-06-29,Risaralda,precipitacion,0.6,mm,open-meteo
 2026-06-29,Risaralda,temp_max,26.5,°C,open-meteo
 2026-06-29,Risaralda,temp_min,17.9,°C,open-meteo
@@ -33780,6 +33783,9 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-06-30,Nariño,precipitacion,0.2,mm,open-meteo
 2026-06-30,Nariño,temp_max,26.2,°C,open-meteo
 2026-06-30,Nariño,temp_min,18.0,°C,open-meteo
+2026-06-30,Quindío,precipitacion,8.1,mm,open-meteo
+2026-06-30,Quindío,temp_max,25.6,°C,open-meteo
+2026-06-30,Quindío,temp_min,17.2,°C,open-meteo
 2026-06-30,Risaralda,precipitacion,1.1,mm,open-meteo
 2026-06-30,Risaralda,temp_max,26.2,°C,open-meteo
 2026-06-30,Risaralda,temp_min,17.9,°C,open-meteo
@@ -33804,6 +33810,12 @@ fecha,geografia,variable,valor,unidad,fuente
 2026-07-01,Nariño,precipitacion,1.0,mm,open-meteo
 2026-07-01,Nariño,temp_max,23.4,°C,open-meteo
 2026-07-01,Nariño,temp_min,18.5,°C,open-meteo
+2026-07-01,Quindío,precipitacion,2.7,mm,open-meteo
+2026-07-01,Quindío,temp_max,24.3,°C,open-meteo
+2026-07-01,Quindío,temp_min,16.6,°C,open-meteo
+2026-07-01,Risaralda,precipitacion,0.9,mm,open-meteo
+2026-07-01,Risaralda,temp_max,25.5,°C,open-meteo
+2026-07-01,Risaralda,temp_min,18.1,°C,open-meteo
 2026-07-01,Tolima,precipitacion,0.3,mm,open-meteo
 2026-07-01,Tolima,temp_max,23.8,°C,open-meteo
 2026-07-01,Tolima,temp_min,17.5,°C,open-meteo
