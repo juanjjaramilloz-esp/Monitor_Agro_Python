@@ -192,6 +192,18 @@ TEXTOS = {
             "relative magnitude across series with different units."
         ),
     },
+    "subtab_base100": {"es": "Comparación base 100", "en": "Base-100 comparison"},
+    "subtab_correlacion": {"es": "Correlación móvil", "en": "Rolling correlation"},
+    "cap_correlacion_no_disponible": {
+        "es": (
+            "Aún no hay suficientes semanas cerradas en el periodo elegido "
+            "para calcular la correlación móvil."
+        ),
+        "en": (
+            "There aren't enough closed weeks in the selected period yet to "
+            "compute the rolling correlation."
+        ),
+    },
     "md_variaciones": {"es": "**Variaciones por indicador**", "en": "**Changes by indicator**"},
     "md_comentario_ia": {
         "es": "**Comentario del periodo (redactado con IA)**",
@@ -2234,13 +2246,31 @@ with tab_panorama:
     st.subheader(_t("sub_lectura"))
     st.caption(_t("cap_lectura"))
     _metricas_mercado(filtrados)
-    st.plotly_chart(
-        _grafico_mercado(filtrados),
-        width="stretch",
-        theme=None,
-        config=CONFIG_GRAFICO,
+    subtab_base100, subtab_correlacion = st.tabs(
+        [_t("subtab_base100"), _t("subtab_correlacion")]
     )
-    st.caption(_t("cap_base100"))
+    with subtab_base100:
+        st.plotly_chart(
+            _grafico_mercado(filtrados),
+            width="stretch",
+            theme=None,
+            config=CONFIG_GRAFICO,
+        )
+        st.caption(_t("cap_base100"))
+    with subtab_correlacion:
+        grafico_correlacion = _grafico_correlacion_movil(datos_semanales, filtrados)
+        if grafico_correlacion is not None:
+            st.plotly_chart(
+                grafico_correlacion,
+                width="stretch",
+                theme=None,
+                config=CONFIG_GRAFICO,
+            )
+            st.caption(
+                _t("cap_correlacion").format(ventana=CORRELACION_VENTANA_SEMANAS)
+            )
+        else:
+            st.caption(_t("cap_correlacion_no_disponible"))
     frases_rapidas = _frases_lectura_rapida(filtrados)
     if frases_rapidas:
         st.markdown(_t("md_lectura_rapida"))
@@ -2257,15 +2287,6 @@ with tab_panorama:
         hide_index=True,
         width="stretch",
     )
-    grafico_correlacion = _grafico_correlacion_movil(datos_semanales, filtrados)
-    if grafico_correlacion is not None:
-        st.plotly_chart(
-            grafico_correlacion,
-            width="stretch",
-            theme=None,
-            config=CONFIG_GRAFICO,
-        )
-        st.caption(_t("cap_correlacion").format(ventana=CORRELACION_VENTANA_SEMANAS))
 
     comentario_ia = cargar_comentario_ia()
     if comentario_ia is not None:

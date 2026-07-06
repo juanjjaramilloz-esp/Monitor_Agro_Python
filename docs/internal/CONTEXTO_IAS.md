@@ -236,6 +236,17 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   revés de la convención), informe del simulador, README (bloque EN y "El
   problema" en ES) y el prompt del comentario IA (ahora le exige a Claude
   expandir en su primera mención por idioma, igual que el resto de la app).
+- **Correlación como pestaña junto a la base 100 (2026-07-06, pedido del
+  usuario).** El Panorama estaba largo (mercado → base100 → lectura rápida →
+  variaciones → correlación → comentario IA → prod/exp); ambas gráficas se
+  agruparon en `st.tabs(["Comparación base 100", "Correlación móvil"])`
+  anidado dentro de `tab_panorama`, justo tras las tarjetas de mercado. La
+  correlación gana caption de respaldo (`cap_correlacion_no_disponible`)
+  para cuando `_grafico_correlacion_movil` devuelve `None` (antes ese caso
+  simplemente no mostraba nada); lectura rápida y la tabla de variaciones
+  quedan fuera de las sub-pestañas, visibles sin importar cuál esté activa.
+  Verificado en Preview con `button[role="tab"]`: las 4 pestañas (2
+  principales + 2 anidadas) aparecen y cambian de contenido correctamente.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
