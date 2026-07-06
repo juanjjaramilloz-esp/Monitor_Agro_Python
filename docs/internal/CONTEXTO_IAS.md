@@ -219,6 +219,23 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   se quiere ver el efecto de un cambio de prompt sin esperar; el cron
   programado y los `workflow_dispatch` sin marcar siguen respetando la
   cadencia normal.
+- **Sección de feedback en el sidebar (2026-07-06, pedido del usuario).** Sin
+  backend propio (Streamlit Cloud), se optó por un enlace `mailto:` (costo
+  cero, sin cuenta externa ni llamada de red en runtime) sobre un formulario
+  tipo Formspree: `st.text_area` + `st.link_button` arma
+  `mailto:{CORREO_FEEDBACK}?subject=...&body=...` con `urllib.parse.quote`;
+  el correo también se muestra en texto plano como respaldo si el navegador
+  no abre un cliente de correo. `CORREO_FEEDBACK` y `FEEDBACK_MAX_CARACTERES`
+  (tope de 500 caracteres, evita romper la URL mailto) en `config.py`.
+  Verificado en Preview: el enlace se arma bien con asunto y cuerpo.
+- **Expansión de "FNC" a nombre completo donde no rompe UI (2026-07-06,
+  pedido del usuario).** Se mantiene la sigla en espacios estrechos ya
+  decididos (tarjetas, mapa de sensibilidad, tablas) y se agrega la expansión
+  en la primera mención de cada documento donde faltaba: intro del brief PDF
+  (antes solo la sección de fuentes al final tenía el nombre completo, al
+  revés de la convención), informe del simulador, README (bloque EN y "El
+  problema" en ES) y el prompt del comentario IA (ahora le exige a Claude
+  expandir en su primera mención por idioma, igual que el resto de la app).
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el

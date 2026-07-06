@@ -2,6 +2,7 @@
 
 from math import ceil, floor
 from pathlib import Path
+from urllib.parse import quote
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -15,12 +16,14 @@ from config import (
     COLORES_INTERFAZ,
     COMENTARIO_IA_SEMANAS,
     CORRELACION_VENTANA_SEMANAS,
+    CORREO_FEEDBACK,
     COSTO_PRODUCCION_FECHA,
     COSTO_PRODUCCION_FUENTE,
     COSTO_PRODUCCION_REFERENCIA,
     COSTO_PRODUCCION_URL,
     FACTOR_RENDIMIENTO_RANGO,
     FACTOR_RENDIMIENTO_REFERENCIA,
+    FEEDBACK_MAX_CARACTERES,
     FUENTES_COMERCIALES,
     PERIODOS_VISUALIZACION,
     PROYECCION_CARGAS_MAXIMAS,
@@ -137,6 +140,31 @@ TEXTOS = {
     "periodo": {"es": "Periodo", "en": "Period"},
     "fechas_cierre": {"es": "Fechas de cierre", "en": "Closing dates"},
     "autor": {"es": "Autor: Juan José Jaramillo", "en": "Author: Juan José Jaramillo"},
+    "feedback_titulo": {"es": "Enviar feedback", "en": "Send feedback"},
+    "feedback_ayuda": {
+        "es": (
+            "¿Encontraste un error o tienes una sugerencia? Escríbela aquí; "
+            "el botón abre tu cliente de correo con el mensaje listo."
+        ),
+        "en": (
+            "Found a bug or have a suggestion? Write it here; the button "
+            "opens your email client with the message ready."
+        ),
+    },
+    "feedback_campo": {"es": "Tu mensaje", "en": "Your message"},
+    "feedback_asunto": {
+        "es": "Feedback Pulso Cafetero",
+        "en": "Pulso Cafetero feedback",
+    },
+    "feedback_boton": {"es": "Enviar por correo", "en": "Send by email"},
+    "feedback_cuerpo_vacio": {
+        "es": "(sin mensaje adicional)",
+        "en": "(no additional message)",
+    },
+    "feedback_alterno": {
+        "es": "Si no se abre tu cliente de correo, escribe a {correo}.",
+        "en": "If your email client doesn't open, write to {correo}.",
+    },
     # --- Pestañas ---
     "tab_panorama": {"es": "Panorama nacional", "en": "National overview"},
     "tab_simulador": {"es": "Simulador", "en": "Simulator"},
@@ -2180,6 +2208,21 @@ else:
         filtrados = _filtrar_periodo(datos, PERIODOS_VISUALIZACION["1 año"])
 st.sidebar.divider()
 st.sidebar.caption(_t("autor"))
+with st.sidebar.expander(_t("feedback_titulo")):
+    st.caption(_t("feedback_ayuda"))
+    mensaje_feedback = st.text_area(
+        _t("feedback_campo"),
+        max_chars=FEEDBACK_MAX_CARACTERES,
+        key="feedback_mensaje",
+    )
+    cuerpo = quote(mensaje_feedback.strip() or _t("feedback_cuerpo_vacio"))
+    asunto = quote(_t("feedback_asunto"))
+    st.link_button(
+        _t("feedback_boton"),
+        f"mailto:{CORREO_FEEDBACK}?subject={asunto}&body={cuerpo}",
+        width="stretch",
+    )
+    st.caption(_t("feedback_alterno").format(correo=CORREO_FEEDBACK))
 
 tab_panorama, tab_proyeccion = st.tabs(
     [_t("tab_panorama"), _t("tab_simulador")],

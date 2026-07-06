@@ -64,16 +64,16 @@ _TEXTOS = {
     },
     "introduccion": {
         "es": (
-            "Lectura descriptiva del precio interno FNC, el café internacional "
-            "(ICE Coffee C) y la tasa de cambio USD/COP. Los movimientos no "
-            "implican causalidad ni califican el resultado como favorable o "
-            "desfavorable."
+            "Lectura descriptiva del precio interno de la Federación Nacional "
+            "de Cafeteros (FNC), el café internacional (ICE Coffee C) y la "
+            "tasa de cambio USD/COP. Los movimientos no implican causalidad "
+            "ni califican el resultado como favorable o desfavorable."
         ),
         "en": (
-            "Descriptive reading of the FNC internal price, international "
-            "coffee (ICE Coffee C) and the USD/COP exchange rate. Movements do "
-            "not imply causality nor qualify the outcome as favorable or "
-            "unfavorable."
+            "Descriptive reading of the National Federation of Coffee Growers "
+            "(FNC) internal price, international coffee (ICE Coffee C) and "
+            "the USD/COP exchange rate. Movements do not imply causality nor "
+            "qualify the outcome as favorable or unfavorable."
         ),
     },
     "sec_panorama": {"es": "Panorama comercial", "en": "Commercial overview"},

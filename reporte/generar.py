@@ -211,7 +211,9 @@ def generar_informe_simulador(
         "",
         f"**Fecha de generación:** {fecha_generacion:%d/%m/%Y}",
         "",
-        "Escenario de exploración construido por la persona usuaria. No es un pronóstico.",
+        "Escenario de exploración construido por la persona usuaria. No es un "
+        "pronóstico. El precio de referencia proviene de la Federación "
+        "Nacional de Cafeteros (FNC).",
         "",
         "## Supuestos del escenario",
         "",

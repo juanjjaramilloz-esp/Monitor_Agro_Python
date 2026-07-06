@@ -59,6 +59,10 @@ datos de tu memoria ni contexto externo (noticias, clima, política).
 - Describe lo observado; NUNCA predigas, recomiendes comprar/vender ni \
 califiques nada como oportunidad o riesgo.
 - Cita cifras con su fecha (formato dd/mm/aaaa) tal como vienen en los datos.
+- La primera vez que menciones a la FNC en cada idioma, escribe el nombre \
+completo con la sigla entre paréntesis: "Federación Nacional de Cafeteros \
+(FNC)" en español, "National Federation of Coffee Growers (FNC)" en inglés; \
+las siguientes veces usa solo "FNC".
 - Si un dato viene marcado como no disponible, no lo menciones ni lo estimes.
 - La correlación no implica causalidad; si la mencionas, dilo.
 

@@ -14,7 +14,8 @@ presentar y descargar.**
 
 > **EN — Coffee Pulse** is a bilingual (ES/EN) data tool that turns Colombian
 > coffee market data into reusable evidence: it integrates ICE Coffee C,
-> USD/COP, the FNC internal reference price and national production/exports
+> USD/COP, the National Federation of Coffee Growers (FNC) internal reference
+> price and national production/exports
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
@@ -28,8 +29,9 @@ del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
 Preparar un análisis del sector cafetero exige buscar series en varias fuentes,
 limpiarlas, comprobar fechas y unidades y volver a construir las gráficas para
 cada informe o reunión. Pulso Cafetero reduce ese trabajo al reunir el
-precio Coffee C, USD/COP, precio interno de referencia FNC, producción y
-exportaciones nacionales en una sola aplicación.
+precio Coffee C, USD/COP, precio interno de referencia de la Federación
+Nacional de Cafeteros (FNC), producción y exportaciones nacionales en una
+sola aplicación.
 
 El proyecto fue concebido por **Juan José Jaramillo**, estudiante de Negocios
 Internacionales y analista de datos autodidacta, como puente entre comercio
@@ -57,6 +59,8 @@ internacional, análisis de datos y necesidades reales de investigación.
   USD/COP, costo, volumen y factor de rendimiento, con el precio estimado
   también en COP/kg y COP/arroba.
 - Funciona en español e inglés, incluidos textos, números y gráficas.
+- Incluye una sección de **feedback** en la barra lateral (enlace de correo
+  prellenado, sin backend propio).
 
 El histórico comienza en enero de 2023. El pipeline conserva además lluvia y
 temperaturas de ocho departamentos cafeteros, aunque esa capa no se muestra en

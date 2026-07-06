@@ -149,6 +149,14 @@ COMENTARIO_IA_MAX_TOKENS = 2000
 COMENTARIO_IA_SEMANAS = 4
 ARCHIVO_COMENTARIO_IA = DIR_COMENTARIO / "comentario_periodo.json"
 
+# Correo de contacto para el feedback de la app (no es un secreto: se muestra
+# a las personas usuarias como destino alternativo si su navegador no abre
+# un cliente de correo desde el enlace mailto).
+CORREO_FEEDBACK = "juanjosejaramillozarate@gmail.com"
+# Límite de caracteres del mensaje de feedback: los navegadores truncan las
+# URLs mailto muy largas; este tope evita un enlace roto.
+FEEDBACK_MAX_CARACTERES = 500
+
 # Factor de rendimiento FNC: kg de café pergamino seco para una carga de
 # excelso. 94 es la referencia con la que se publica el precio interno. Un
 # factor menor (mejor rendimiento) sube el precio recibido; uno mayor lo baja.
