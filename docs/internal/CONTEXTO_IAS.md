@@ -116,6 +116,27 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   sección "Vistazo" con capturas en `docs/img/`. (5) GUIA con las 3 preguntas
   clave para la reseña de CRECE.
 
+- **Cambio de etapa (2026-07-06, pedido del usuario).** El MVP se declara
+  terminado; `CLAUDE.md` fue reescrito (queda local, está en `.gitignore`):
+  las fases dan paso a **mejora continua orientada a portafolio** con criterio
+  costo/beneficio y libertad creativa, sujeta a invariantes (no romper la app
+  desplegada, contrato de fuentes, honestidad de datos, config centralizada,
+  bilingüismo, secretos). Regla nueva de docs: el README se actualiza siempre
+  que un cambio altere lo que afirma; los demás siguen bajo petición.
+- **Primera tanda de mejoras (2026-07-06).** (1) Linting con **ruff**
+  (E/W/F/B/UP/I, config en `pyproject.toml`, `requirements-dev.txt`, job
+  `lint` en `pruebas.yml`); se corrigieron los 42 hallazgos (imports, orden,
+  `zip(strict=...)`, cierres sobre variables de bucle ligados por argumento)
+  sin cambios de comportamiento. (2) **Descarga CSV** de la tabla comercial
+  del periodo junto al Excel (`_a_csv`, UTF-8 BOM, fechas AAAA-MM-DD,
+  contrato en español estable entre idiomas); README al día. Validación de
+  ambas: lint limpio, `import app` OK, 69 pruebas OK.
+- **Backlog priorizado costo/beneficio (2026-07-06):** (a) snapshot semanal
+  en CI (pendiente conocido, cierra Fase 6); (b) correlación móvil
+  Coffee C ↔ FNC en el panorama (profundidad analítica visible); (c) medir
+  cobertura de pruebas en CI; (d) GIF demo del README (manual, requiere al
+  usuario). El score sigue pausado.
+
 ## Estado verificable
 
 **Cobertura/calidad.** Pivote LatAm → 8 departamentos cafeteros completo.
