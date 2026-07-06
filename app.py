@@ -9,6 +9,8 @@ import streamlit as st
 import yfinance as yf
 
 from config import (
+    ARROBAS_POR_CARGA,
+    CARGA_KG,
     CATALOGO_VARIABLES,
     COLORES_INTERFAZ,
     COSTO_PRODUCCION_FECHA,
@@ -560,6 +562,18 @@ TEXTOS = {
             "Federation of Coffee Growers (FNC) reference. A lower factor "
             "(better yield) raises the received price; a higher one lowers it. "
             "Approximate adjustment, not the official formula."
+        ),
+    },
+    "cap_equivalencias": {
+        "es": (
+            "Equivalencias aritméticas del precio estimado: ≈ {kg} COP/kg · "
+            "{arroba} COP/arroba (una carga de {carga_kg} kg equivale a "
+            "{arrobas} arrobas)."
+        ),
+        "en": (
+            "Arithmetic equivalents of the estimated price: ≈ {kg} COP/kg · "
+            "{arroba} COP/arroba (one {carga_kg}-kg carga equals "
+            "{arrobas} arrobas)."
         ),
     },
     "btn_restablecer": {
@@ -1525,6 +1539,15 @@ def _simulador_proyeccion(
             ),
             delta_color="off",
         )
+
+    st.caption(
+        _t("cap_equivalencias").format(
+            kg=_numero(resultado.precio_fnc_estimado / CARGA_KG, 0),
+            arroba=_numero(resultado.precio_fnc_estimado / ARROBAS_POR_CARGA, 0),
+            carga_kg=CARGA_KG,
+            arrobas=ARROBAS_POR_CARGA,
+        )
+    )
 
     grafico_1, grafico_2 = st.columns([0.85, 1.15])
     with grafico_1:
