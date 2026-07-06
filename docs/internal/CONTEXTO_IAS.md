@@ -261,10 +261,18 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   misma redactó la reseña; se publica verbatim en el README ("Impacto y
   validación" ya actualizado) con aclaración editorial "[hoy Pulso
   Cafetero]" y atribución por cargo sin nombre personal (añadirlo solo con
-  autorización expresa). **Pendiente antes de publicar el post:** (1) grabar
-  el video/GIF (manual) o usar las 2 capturas como carrusel; (2) repasar el
-  checklist de la sección 6 de la guía (topics del repo, badge verde, prueba
-  en incógnito, app pública mostrando "Pulso Cafetero").
+  autorización expresa). **Video grabado** (57 s, sin audio) y **checklist de la
+  sección 6 de la guía verificado por el usuario** (badge verde, app pública
+  con "Pulso Cafetero", enlaces en incógnito). El texto final del post (ES)
+  reemplazó la frase "la decisión de la que más aprendí no fue técnica" —
+  sonaba a fórmula de post motivacional— por una mención concreta y natural
+  del comentario del periodo con IA (cruza series, no predice/recomienda,
+  solo cita cifras entregadas) como bullet de producto, y una frase corta y
+  directa sobre esa restricción de diseño en vez de un cierre reflexivo.
+  **Publicación programada para el martes 2026-07-07, 8:30am** (ventana
+  recomendada: gente revisando LinkedIn al inicio del día laboral). Queda
+  pendiente solo que el usuario responda comentarios en la primera hora tras
+  publicar.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
