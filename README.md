@@ -42,9 +42,9 @@ internacional, análisis de datos y necesidades reales de investigación.
   de retraso) junto al histórico semanal, sin mezclar proveedores en la
   calibración.
 - Conserva producción y exportaciones en su cadencia mensual real.
-- Descarga un libro Excel con resumen, tabla filtrable y diccionario, además de
-  un **brief ejecutivo en PDF de tres páginas, en español o inglés** según el
-  idioma activo.
+- Descarga un libro Excel con resumen, tabla filtrable y diccionario, un CSV
+  abierto listo para pandas/R, y un **brief ejecutivo en PDF de tres páginas,
+  en español o inglés** según el idioma activo.
 - Explora escenarios de precio interno y margen bruto mediante Coffee C,
   USD/COP, costo, volumen y factor de rendimiento.
 - Funciona en español e inglés, incluidos textos, números y gráficas.
@@ -68,7 +68,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones mensuales de producción y exportaciones | 82+ |
 | Pruebas unitarias sin internet | 69 |
 | Actualización automática | Cada 2 días |
-| Salidas reutilizables | Excel, PDF (ES/EN) y Markdown |
+| Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
 
 La automatización fue validada en un runner real de GitHub Actions: actualiza

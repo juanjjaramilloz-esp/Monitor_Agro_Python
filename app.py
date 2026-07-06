@@ -176,6 +176,20 @@ TEXTOS = {
         "es": "Incluye valores, variaciones, unidad, fuente, alcance y fecha real del dato.",
         "en": "Includes values, changes, unit, source, scope and the real data date.",
     },
+    "btn_csv": {
+        "es": "Descargar series comerciales (CSV)",
+        "en": "Download commercial series (CSV)",
+    },
+    "help_csv": {
+        "es": (
+            "La misma tabla del Excel en formato abierto, lista para pandas, "
+            "R o cualquier herramienta de análisis. Fechas en AAAA-MM-DD."
+        ),
+        "en": (
+            "The same table as the Excel workbook in an open format, ready "
+            "for pandas, R or any analysis tool. Dates in YYYY-MM-DD."
+        ),
+    },
     "btn_pdf": {
         "es": "Descargar brief del periodo (PDF)",
         "en": "Download period brief (PDF)",
@@ -1801,6 +1815,16 @@ def _a_excel(tabla: pd.DataFrame) -> bytes:
     return generar_excel_comercial(salida, IDIOMA)
 
 
+def _a_csv(tabla: pd.DataFrame) -> bytes:
+    """Serializa la tabla comercial en CSV abierto y reutilizable.
+
+    Conserva los códigos y unidades del contrato (en español) para que el
+    archivo sea estable entre idiomas; UTF-8 con BOM para que Excel muestre
+    bien las tildes al abrirlo con doble clic.
+    """
+    return tabla.to_csv(index=False, date_format="%Y-%m-%d").encode("utf-8-sig")
+
+
 @st.cache_data(show_spinner="Preparando el brief en PDF…")
 def _brief_pdf(
     inicio: pd.Timestamp,
@@ -1954,14 +1978,22 @@ with tab_panorama:
     inicio_brief = pd.Timestamp(referencia_rango["semana_fin"].min())
     fin_brief = pd.Timestamp(referencia_rango["semana_fin"].max())
     clave_pdf = f"{inicio_brief:%Y%m%d}_{fin_brief:%Y%m%d}"
-    col_csv, col_brief = st.columns(2)
-    col_csv.download_button(
+    col_excel, col_csv, col_brief = st.columns(3)
+    col_excel.download_button(
         _t("btn_excel"),
         data=_a_excel(descarga),
         file_name=nombre_archivo,
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         width="stretch",
         help=_t("help_excel"),
+    )
+    col_csv.download_button(
+        _t("btn_csv"),
+        data=_a_csv(descarga),
+        file_name=nombre_archivo.replace(".xlsx", ".csv"),
+        mime="text/csv",
+        width="stretch",
+        help=_t("help_csv"),
     )
     col_brief.download_button(
         _t("btn_pdf"),
