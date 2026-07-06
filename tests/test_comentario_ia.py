@@ -50,6 +50,30 @@ def _historico_sintetico() -> pd.DataFrame:
     return pd.DataFrame(filas)
 
 
+def _calibracion_sintetica() -> pd.DataFrame:
+    """Trío diario FNC más fresco que el último cierre semanal sintético."""
+    return pd.DataFrame(
+        [
+            {
+                "fecha": "2025-12-24",
+                "precio_fnc": 2_500_000.0,
+                "tasa_cambio": 3_400.0,
+                "precio_ny": 300.0,
+                "coeficiente_implicito": 2.45,
+                "fuente": "FNC",
+            },
+            {
+                "fecha": "2025-12-26",
+                "precio_fnc": 2_600_000.0,
+                "tasa_cambio": 3_300.0,
+                "precio_ny": 310.0,
+                "coeficiente_implicito": 2.54,
+                "fuente": "FNC",
+            },
+        ]
+    )
+
+
 class ConstruirContextoTests(unittest.TestCase):
     def test_contexto_incluye_mercado_mensuales_y_correlaciones(self):
         contexto = comentario_ia.construir_contexto(_historico_sintetico())
@@ -77,6 +101,33 @@ class ConstruirContextoTests(unittest.TestCase):
         self.assertEqual(
             contexto["correlaciones"]["fnc_vs_usd_cop"]["valor"], 1.0
         )
+
+    def test_referencia_diaria_usa_la_ultima_fila_y_mide_la_brecha(self):
+        historico = _historico_sintetico()
+        contexto = comentario_ia.construir_contexto(
+            historico, _calibracion_sintetica()
+        )
+        referencia = contexto["referencia_diaria"]
+        self.assertEqual(referencia["fecha"], "26/12/2025")
+        fx = referencia["valores"]["fx_usd_local"]
+        self.assertEqual(fx["valor"], 3_300.0)
+        self.assertEqual(fx["unidad"], "COP/USD")
+        # Brecha frente al cierre semanal sintético de la misma serie.
+        cierre = contexto["series_mercado"]["fx_usd_local"]["cierre"]
+        esperado = round((3_300.0 / cierre - 1) * 100, 2)
+        self.assertEqual(fx["variacion_desde_cierre_semanal_pct"], esperado)
+        self.assertEqual(
+            set(referencia["valores"]),
+            {"precio_interno_referencia", "precio_cafe_arabica", "fx_usd_local"},
+        )
+
+    def test_sin_calibracion_no_hay_referencia_diaria(self):
+        contexto = comentario_ia.construir_contexto(_historico_sintetico())
+        self.assertNotIn("referencia_diaria", contexto)
+        contexto_vacia = comentario_ia.construir_contexto(
+            _historico_sintetico(), pd.DataFrame()
+        )
+        self.assertNotIn("referencia_diaria", contexto_vacia)
 
     def test_contexto_sin_datos_no_lanza(self):
         vacio = pd.DataFrame(

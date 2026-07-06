@@ -172,15 +172,17 @@ TEXTOS = {
     "cap_comentario_ia": {
         "es": (
             "Redactado por {modelo} el {fecha} durante la actualización "
-            "automática de datos, usando únicamente cifras de las últimas "
-            "{semanas} semanas del propio kit. Describe lo observado; no es "
-            "pronóstico ni recomendación."
+            "automática de datos, usando únicamente cifras del propio kit: "
+            "las últimas {semanas} semanas de mercado y la referencia diaria "
+            "más reciente de la FNC. Describe lo observado; no es pronóstico "
+            "ni recomendación."
         ),
         "en": (
             "Written by {modelo} on {fecha} during the automated data "
-            "refresh, using only figures from the kit's own last {semanas} "
-            "weeks. It describes what was observed; it is not a forecast or "
-            "a recommendation."
+            "refresh, using only the kit's own figures: the last {semanas} "
+            "market weeks and the most recent FNC daily reference. It "
+            "describes what was observed; it is not a forecast or a "
+            "recommendation."
         ),
     },
     "md_lectura_rapida": {

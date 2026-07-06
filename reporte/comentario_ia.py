@@ -27,6 +27,7 @@ from config import (
     DIR_COMENTARIO,
     DIR_HISTORICO,
 )
+from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 
 RUTA_HISTORICO = DIR_HISTORICO / "historico_semanal.csv"
 
@@ -36,6 +37,14 @@ VARIABLES_MERCADO = [
     "fx_usd_local",
 ]
 VARIABLES_MENSUALES_COMENTARIO = ["produccion_nacional", "exportaciones_cafe"]
+
+# Columna del trío diario FNC (calibracion_fnc.csv) que corresponde a cada
+# serie semanal de mercado, con la unidad fija de esa publicación oficial.
+COLUMNAS_CALIBRACION = {
+    "precio_interno_referencia": ("precio_fnc", "COP/carga_125kg"),
+    "precio_cafe_arabica": ("precio_ny", "USc/lb"),
+    "fx_usd_local": ("tasa_cambio", "COP/USD"),
+}
 
 INSTRUCCIONES_SISTEMA = """Eres el analista de datos de "Pulso Cafetero", un \
 kit de consulta sobre la agroexportación de café de Colombia. Redactas un \
@@ -53,6 +62,19 @@ califiques nada como oportunidad o riesgo.
 - Si un dato viene marcado como no disponible, no lo menciones ni lo estimes.
 - La correlación no implica causalidad; si la mencionas, dilo.
 
+Cómo manejar las dos fechas de los datos:
+- El campo "referencia_diaria" (si está presente) trae los niveles MÁS \
+RECIENTES: la publicación diaria conjunta de la FNC. Los niveles "actuales" \
+del comentario se anclan SIEMPRE ahí, citando su fecha.
+- Las "series_mercado" son semanas cerradas y sirven para la trayectoria del \
+periodo (variación, máximos, mínimos), no para el nivel vigente. Nunca \
+presentes el cierre semanal como el dato de hoy si existe la referencia \
+diaria.
+- Si la referencia diaria trae "variacion_desde_cierre_semanal_pct", úsala \
+para decir qué cambió DESPUÉS del cierre semanal (p. ej. "tras el cierre \
+semanal, el dólar retrocedió X% hasta N el dd/mm/aaaa"); es de los datos más \
+valiosos del paquete porque el lector aún no lo vio agregado en el tablero.
+
 Cómo cruzar las cifras (esto es lo que hace útil el comentario, no una lista \
 de series aisladas):
 - Si el precio interno FNC y el USD/COP se movieron en direcciones distintas \
@@ -68,13 +90,14 @@ que el mercado o no; si no coincide el mes, no fuerces la comparación.
 - Cada oración del párrafo 1 y 2 debe conectar al menos dos cifras entre sí, \
 no describir una sola serie de forma aislada.
 
-Tono profesional y claro, sin jerga innecesaria; 3 párrafos cortos: (1) cómo \
-se combinaron los movimientos del precio interno, Coffee C y USD/COP en el \
-periodo (la relación entre ellos, no cada uno por separado), (2) qué dicen \
-las dos correlaciones sobre cuál variable pesó más, y cómo se compara la \
-variación mensual de producción/exportaciones con la dirección del mercado \
-cuando el mes coincide, (3) qué relación entre series conviene seguir \
-observando y por qué, en términos descriptivos (sin pronóstico).
+Tono profesional y claro, sin jerga innecesaria; 3 párrafos cortos: (1) \
+dónde están HOY las tres variables según la referencia diaria y cómo se \
+combinaron sus movimientos para llegar ahí (la relación entre ellas, no cada \
+una por separado, incluyendo lo ocurrido tras el cierre semanal), (2) qué \
+dicen las dos correlaciones sobre cuál variable pesó más, y cómo se compara \
+la variación mensual de producción/exportaciones con la dirección del \
+mercado cuando el mes coincide, (3) qué relación entre series conviene \
+seguir observando y por qué, en términos descriptivos (sin pronóstico).
 
 Entrega el comentario en español y su traducción fiel al inglés."""
 
@@ -173,7 +196,50 @@ def _correlacion_reciente(
     return None if pd.isna(valor) else round(float(valor), 2)
 
 
-def construir_contexto(historico: pd.DataFrame) -> dict:
+def _referencia_diaria(
+    calibracion: pd.DataFrame | None,
+    series_mercado: dict,
+) -> dict | None:
+    """Último trío oficial FNC/Coffee C/TRM, con su brecha frente al cierre semanal.
+
+    El histórico semanal solo agrega semanas cerradas; el trío de la
+    calibración se publica a diario y suele ser varios días más fresco. Esa
+    brecha es justamente lo que el comentario debe reflejar para no citar
+    como "actual" un cierre que el mercado ya dejó atrás.
+    """
+    if calibracion is None or calibracion.empty or "fecha" not in calibracion:
+        return None
+    ordenada = calibracion.sort_values("fecha").reset_index(drop=True)
+    ultima = ordenada.iloc[-1]
+    referencia: dict = {
+        "fecha": _fecha(ultima["fecha"]),
+        "descripcion": (
+            "Última publicación diaria conjunta de la FNC (precio interno, "
+            "Coffee C y TRM); más reciente que el cierre semanal."
+        ),
+        "valores": {},
+    }
+    for variable, (columna, unidad) in COLUMNAS_CALIBRACION.items():
+        if columna not in ordenada.columns or pd.isna(ultima[columna]):
+            continue
+        dato = {
+            "valor": float(ultima[columna]),
+            "unidad": unidad,
+            "etiqueta": CATALOGO_VARIABLES[variable]["etiqueta"],
+        }
+        cierre_semanal = series_mercado.get(variable, {}).get("cierre")
+        if cierre_semanal:
+            dato["variacion_desde_cierre_semanal_pct"] = round(
+                (float(ultima[columna]) / float(cierre_semanal) - 1) * 100, 2
+            )
+        referencia["valores"][variable] = dato
+    return referencia if referencia["valores"] else None
+
+
+def construir_contexto(
+    historico: pd.DataFrame,
+    calibracion: pd.DataFrame | None = None,
+) -> dict:
     """Arma el paquete de cifras exactas que el modelo puede citar (y nada más)."""
     datos = historico.copy()
     datos["fecha_dato"] = pd.to_datetime(datos["fecha_dato"])
@@ -215,15 +281,20 @@ def construir_contexto(historico: pd.DataFrame) -> dict:
             "ventana_semanas": CORRELACION_VENTANA_SEMANAS,
             "nota": "Pearson sobre variaciones semanales; no implica causalidad.",
         }
+    referencia = _referencia_diaria(calibracion, contexto["series_mercado"])
+    if referencia is not None:
+        contexto["referencia_diaria"] = referencia
     return contexto
 
 
 def construir_mensaje(contexto: dict) -> str:
     """Mensaje de usuario: solo las cifras que el comentario puede citar."""
     return (
-        "Redacta el comentario del periodo con base exclusiva en estas cifras "
-        f"(últimas {contexto['periodo_semanas']} semanas del mercado y último "
-        "mes publicado de las series mensuales):\n\n"
+        "Redacta el comentario del periodo con base exclusiva en estas cifras. "
+        f"Incluyen las últimas {contexto['periodo_semanas']} semanas cerradas "
+        "del mercado, el último mes publicado de las series mensuales y, si "
+        "está presente, la referencia diaria más reciente (campo "
+        "'referencia_diaria'), que es el dato más fresco disponible:\n\n"
         + json.dumps(contexto, ensure_ascii=False, indent=2)
     )
 
@@ -283,7 +354,10 @@ def main() -> None:
         print("comentario_ia: sin ANTHROPIC_API_KEY en el entorno; no se genera.")
         return
     historico = pd.read_csv(RUTA_HISTORICO)
-    contexto = construir_contexto(historico)
+    calibracion = (
+        pd.read_csv(RUTA_CALIBRACION_FNC) if RUTA_CALIBRACION_FNC.exists() else None
+    )
+    contexto = construir_contexto(historico, calibracion)
     if not contexto["series_mercado"]:
         print("comentario_ia: sin series de mercado suficientes; no se genera.")
         return

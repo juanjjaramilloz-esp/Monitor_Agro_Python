@@ -181,6 +181,17 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   del repo; el primer comentario real aparecerá tras la siguiente corrida del
   workflow (se puede disparar a mano con `workflow_dispatch`). Evolución
   futura posible: incluir el comentario en el brief PDF y la Versión B (chat).
+  **Iteración por feedback del usuario (2026-07-06):** el primer comentario
+  real solo repetía cifras visibles en el tablero y citaba un USD/COP
+  "desactualizado" (el cierre semanal, días más viejo que la tarjeta en vivo).
+  Dos correcciones: (1) el prompt ahora exige **cruzar** series (compensación
+  dólar↔Coffee C, comparar los dos coeficientes de correlación, contrastar
+  mensuales con mercado solo si el mes coincide) en vez de resumir cada una;
+  (2) el contexto incluye `referencia_diaria` desde `calibracion_fnc.csv`
+  (trío oficial FNC del día, con brecha % frente al cierre semanal por serie)
+  y el prompt ancla los niveles "actuales" ahí, usando las semanas cerradas
+  solo como trayectoria. `construir_contexto(historico, calibracion=None)`
+  mantiene compatibilidad. Caption de la app actualizado. 78 pruebas OK.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
