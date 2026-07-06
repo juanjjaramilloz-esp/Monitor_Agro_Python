@@ -210,13 +210,16 @@ commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit
 Community Cloud, así que los datos se actualizan sin intervención. Los pasos de
 datos toleran fallos puntuales de las fuentes (scraping/yfinance).
 
-La misma corrida redacta el **comentario del periodo con Claude**
-(`python -m reporte.comentario_ia`): recibe únicamente cifras exactas ya
-calculadas del histórico (grounding), el prompt le prohíbe predecir o
-recomendar, y el resultado queda versionado en `datos/comentario/` con fecha y
-modelo. La API key vive solo como secret del repositorio (`ANTHROPIC_API_KEY`);
-la app pública no hace ninguna llamada de IA, así que el costo no depende del
-número de visitantes (~20 llamadas al mes, una por día hábil).
+Cada corrida verifica si toca redactar el **comentario del periodo con
+Claude** (`python -m reporte.comentario_ia`): aunque los datos se refrescan en
+días hábiles, el comentario se limita a **cada 2 días** (según la fecha del
+último guardado, no del día de la semana) para no llamar a la API a diario.
+Recibe únicamente cifras exactas ya calculadas del histórico y la referencia
+diaria más reciente (grounding), el prompt le prohíbe predecir o recomendar,
+y el resultado queda versionado en `datos/comentario/` con fecha y modelo. La
+API key vive solo como secret del repositorio (`ANTHROPIC_API_KEY`); la app
+pública no hace ninguna llamada de IA, así que el costo no depende del número
+de visitantes (~15 llamadas al mes).
 
 ## Archivos de resultados
 

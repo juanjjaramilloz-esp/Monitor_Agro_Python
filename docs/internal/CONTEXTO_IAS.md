@@ -204,6 +204,16 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   la FNC empieza a bloquear, el síntoma sería `referencia_diaria` ausente del
   comentario y `calibracion_fnc.csv` sin fila nueva pese a la corrida — no
   hay retroceso automático, habría que volver a cron cada 2 días si ocurre.
+- **Cadencias desacopladas: datos vs. comentario IA (2026-07-06, pedido del
+  usuario).** El cron general sigue en días hábiles, pero el paso de Claude
+  ahora tiene un paso previo (`Verificar si toca redactar comentario IA`) que
+  compara la fecha de hoy con `fecha_generacion` del último
+  `comentario_periodo.json` y solo corre `reporte.comentario_ia` si pasaron
+  ≥2 días; usa `steps.<id>.outputs.toca` como condición `if:`. Es robusto a
+  corridas que fallaron (compara contra la última fecha guardada, no contra
+  el día de la semana). La `referencia_diaria` sigue siendo fresca cuando el
+  comentario sí corre, porque toma el `calibracion_fnc.csv` de esa misma
+  corrida (que se actualiza a diario). Vuelve el estimado a ~15 llamadas/mes.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el

@@ -83,10 +83,33 @@ jobs:
             python -m procesar.unir
           fi
 
+      # Los datos (histórico, calibración) se refrescan en días hábiles, pero
+      # el comentario de Claude se limita a cada 2 días para no llamar a la
+      # API a diario. Se basa en la fecha_generacion del último comentario
+      # guardado (no en el día de la semana), así que es robusto a corridas
+      # que fallaron o se saltaron.
+      - name: Verificar si toca redactar comentario IA
+        id: chequeo_comentario
+        run: |
+          archivo="datos/comentario/comentario_periodo.json"
+          if [ ! -f "$archivo" ]; then
+            echo "toca=true" >> "$GITHUB_OUTPUT"
+          else
+            fecha=$(python -c "import json; print(json.load(open('$archivo'))['fecha_generacion'])")
+            dias=$(( ( $(date -u +%s) - $(date -u -d "$fecha" +%s) ) / 86400 ))
+            if [ "$dias" -ge 2 ]; then
+              echo "toca=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "toca=false" >> "$GITHUB_OUTPUT"
+              echo "Último comentario de hace $dias día(s) ($fecha); aún no tocan 2."
+            fi
+          fi
+
       # El comentario queda versionado en datos/comentario/ con fecha y modelo;
       # la app solo lee el archivo (cero llamadas de IA en runtime). La key
       # vive únicamente como secret del repo.
       - name: Redactar comentario del periodo con Claude
+        if: steps.chequeo_comentario.outputs.toca == 'true'
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
