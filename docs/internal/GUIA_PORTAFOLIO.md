@@ -48,6 +48,52 @@ respuestas de 2-3 frases y conservar la aprobación textual por escrito:
    o institucional?** → la cita de credibilidad (fuentes, trazabilidad,
    metodología) dicha por una directora de investigación.
 
+### Resultado de la prueba (recibido 2026-07-06)
+
+La Directora de Investigaciones de CRECE respondió las tres preguntas clave
+por escrito. Registro condensado:
+
+- **Tarea/entregable:** análisis sectorial del comportamiento reciente del
+  mercado cafetero colombiano; insumos para informes, presentaciones,
+  reuniones técnicas y conversaciones con actores del sector.
+- **Reutilizado directamente:** brief ejecutivo en PDF, gráficas comparables
+  y series descargables en CSV (conservan fecha real, unidad y fuente).
+- **Ahorro de tiempo:** 40–60% en una tarea estándar de preparación de
+  insumos; "algo que normalmente podría tomar entre dos y tres horas podría
+  reducirse a alrededor de una hora o menos". El mayor ahorro: no buscar,
+  limpiar y contrastar manualmente datos de mercado, producción y
+  exportaciones antes de iniciar el análisis.
+- **Fuente de confianza:** trazabilidad de fuente/unidad/periodicidad por
+  variable, cadencia real sin relleno artificial, fuentes reconocibles para
+  el sector (ICE Coffee C, FNC, FEPCafé) y claridad de alcance (no emite
+  recomendaciones ni califica riesgos; no reemplaza el criterio técnico).
+
+Además entregó un párrafo de cierre en primera persona con su cargo, que es
+la base de la reseña siguiente. **Nota:** ella nombra la app como
+"Herramienta Consultas y Reportes del Café" (el nombre que vio); al pedir la
+aprobación textual, proponer la versión con "Pulso Cafetero" para que el
+texto publicado coincida con la marca actual.
+
+### Reseña propuesta (enviar para aprobación literal)
+
+> "Como Directora de Investigaciones del Centro de Estudios Regionales
+> Cafeteros y Empresariales (CRECE), utilicé Pulso Cafetero como apoyo para
+> preparar análisis sectoriales sobre el comportamiento reciente del mercado
+> cafetero colombiano. Su principal valor está en reducir el tiempo dedicado
+> a buscar, organizar y contrastar información que normalmente se encuentra
+> dispersa en distintas fuentes; en particular resultan útiles las gráficas
+> comparables, las descargas en CSV y el brief ejecutivo en PDF, porque
+> permiten reutilizar insumos directamente en reuniones, presentaciones o
+> documentos de trabajo. La confianza para usarla en un contexto profesional
+> proviene de que conserva la trazabilidad de las fuentes, unidades y
+> periodicidades, y de que es clara sobre su alcance: no reemplaza el
+> criterio técnico del equipo que analiza la información, sino que ofrece un
+> insumo ordenado, transparente y práctico."
+> — [Nombre], Directora de Investigaciones, CRECE
+
+Publicar siempre acompañada de: "Opinión personal derivada de una prueba de
+uso; no representa patrocinio, adopción ni aval institucional de CRECE".
+
 ### Autorización de la reseña
 
 Redactar la reseña después de la conversación y enviarla para aprobación
@@ -64,17 +110,28 @@ representa patrocinio, adopción ni aval institucional de CRECE”.
 Cuando termine la prueba, reemplazar el estado provisional de “Impacto y
 validación” por un mini caso verificable:
 
-```text
-Tarea probada:
-Entregable que estaba preparando:
-Cómo la resolvía antes:
-Qué utilizó en la app:
-Resultado reutilizado:
-Tiempo estimado antes / con la app:
-Mejora solicitada:
+Borrador listo con las respuestas de la prueba (pegar en el README **solo
+tras la autorización escrita**):
 
-“Reseña aprobada textualmente”.
-— Nombre, cargo, CRECE
+```text
+Tarea probada: análisis sectorial del comportamiento reciente del mercado
+  cafetero colombiano (precio internacional, tasa de cambio, precio interno,
+  producción y exportaciones de forma integrada).
+Entregable que estaba preparando: insumos para informes, presentaciones y
+  reuniones técnicas del área de investigación.
+Cómo la resolvía antes: consultar varias fuentes por separado, descargar o
+  copiar datos, revisar periodicidades, limpiar formatos, verificar unidades
+  y construir gráficas comparables a mano.
+Qué utilizó en la app: panorama integrado del periodo, gráficas comparables,
+  descargas en CSV y brief ejecutivo en PDF.
+Resultado reutilizado: el brief PDF, las gráficas y las series CSV, anexadas
+  a documentos de trabajo y análisis posteriores.
+Tiempo estimado antes / con la app: 2–3 horas → alrededor de 1 hora o menos
+  (ahorro estimado del 40–60%).
+Mejora solicitada: ninguna en esta prueba.
+
+[Reseña aprobada textualmente — ver texto propuesto en la sección 1.]
+— Nombre, Directora de Investigaciones, CRECE
 ```
 
 Si el ahorro de tiempo no puede medirse, describir el resultado cualitativo sin
@@ -111,13 +168,13 @@ Python · pandas · Streamlit · Plotly · GitHub Actions
 
 - Desarrollé una aplicación bilingüe que integra Coffee C, USD/COP, precio FNC,
   producción y exportaciones de café desde 2023 para consulta y análisis.
-- Automaticé la validación, actualización y publicación cada dos días;
-  implementé 69 pruebas y entregables en Excel, PDF y Markdown.
-- Diseñé la herramienta con enfoque de investigación del sector cafetero y la
-  estoy validando mediante una tarea real con una directora de investigación
-  para evaluar su utilidad en consultas, informes y escenarios.
+- Automaticé la validación, actualización y publicación de datos en días
+  hábiles; implementé 78 pruebas y entregables en Excel, CSV, PDF y Markdown.
+- Validada en una tarea real por la Directora de Investigaciones del CRECE:
+  ahorro estimado del 40–60% del tiempo de preparación de insumos para
+  informes y reuniones, con reutilización directa del brief PDF, las gráficas
+  y las descargas CSV.
 
-Tras la prueba, reemplazar la tercera viñeta por su resultado comprobado.
 Enlazar el nombre del proyecto directamente a la aplicación.
 
 ## 5. Borrador para LinkedIn
@@ -141,18 +198,29 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 > español o inglés.
 > • Simula escenarios de precio interno y margen bruto por carga.
 >
-> 🔧 Cómo está hecho: Python, pandas, Streamlit y Plotly; 69 pruebas
-> unitarias que corren en CI; datos que se actualizan solos cada 2 días con
-> GitHub Actions.
+> 🔧 Cómo está hecho: Python, pandas, Streamlit y Plotly; 78 pruebas
+> unitarias que corren en CI; datos que se actualizan solos cada día hábil
+> con GitHub Actions.
 >
 > 📊 La decisión de la que más aprendí no fue técnica: me negué a fabricar un
 > "índice de riesgo" sin conocimiento experto que lo respaldara. Preferí
 > trazabilidad, cadencias honestas y utilidad verificable — el mismo criterio
 > que pide un análisis serio.
 >
-> [RESULTADO DE LA PRUEBA — 2-3 líneas: tarea real resuelta, tiempo ahorrado
-> y cita aprobada de la directora de investigación, con el disclaimer de no
-> aval institucional.]
+> 📋 Puesta a prueba con una tarea real: la Directora de Investigaciones del
+> CRECE la usó para preparar un análisis sectorial del mercado cafetero
+> colombiano. Su estimación: entre 40% y 60% menos tiempo reuniendo y
+> verificando series — "algo que podría tomar entre dos y tres horas podría
+> reducirse a alrededor de una hora o menos". Reutilizó directamente el
+> brief PDF, las gráficas y las descargas CSV.
+>
+> "Conserva la trazabilidad de las fuentes, unidades y periodicidades, y es
+> clara sobre su alcance: no reemplaza el criterio técnico del equipo que
+> analiza la información, sino que ofrece un insumo ordenado, transparente y
+> práctico." — [Nombre], Directora de Investigaciones, CRECE
+>
+> (Opinión personal derivada de una prueba de uso; no representa patrocinio,
+> adopción ni aval institucional de CRECE.)
 >
 > 👉 Pruébala (sin registro): https://kitconsultayreporte.streamlit.app/
 > 📂 Código y metodología: https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python
@@ -175,8 +243,13 @@ jueves en la mañana; responder los comentarios del primer día.
 > prices, exports Excel workbooks and a PDF brief, and simulates price/margin
 > scenarios.
 >
-> Python · pandas · Streamlit · 69 unit tests in CI · automated data refresh
-> every 2 days.
+> Python · pandas · Streamlit · 78 unit tests in CI · automated data refresh
+> every business day.
+>
+> Tested on a real task by CRECE's Research Director: an estimated 40–60%
+> time saving when preparing market inputs for reports and meetings, reusing
+> the PDF brief, charts and CSV downloads directly. (Personal opinion from a
+> usage test; not an institutional endorsement.)
 >
 > Try it (no sign-up): https://kitconsultayreporte.streamlit.app/
 
@@ -187,9 +260,12 @@ de negocios, visualización de datos y comercio internacional.
 ## 6. Checklist final de publicación
 
 **El post (contenido):**
-- [ ] El resultado de la prueba reemplazó el marcador [RESULTADO DE LA PRUEBA].
-- [ ] La participante aprobó literalmente reseña y atribución (por escrito).
-- [ ] La reseña incluye el disclaimer de no aval institucional de CRECE.
+- [x] El resultado de la prueba reemplazó el marcador [RESULTADO DE LA PRUEBA]
+      (2026-07-06, con las respuestas escritas de la prueba real).
+- [ ] La participante aprobó literalmente reseña y atribución (por escrito):
+      enviarle la "Reseña propuesta" de la sección 1 (con el nombre "Pulso
+      Cafetero") y pedir el OK textual + permiso de nombre, cargo y CRECE.
+- [x] La reseña incluye el disclaimer de no aval institucional de CRECE.
 - [ ] El video (30-45 s) está grabado según el guion de la sección 3, o en su
       defecto se usan las dos capturas de `docs/img/` como carrusel.
 

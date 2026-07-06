@@ -19,7 +19,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 76 offline unit tests and automated data refresh on business days.
+> 78 offline unit tests and automated data refresh on business days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*

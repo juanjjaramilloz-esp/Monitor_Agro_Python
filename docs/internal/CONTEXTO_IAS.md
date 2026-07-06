@@ -247,6 +247,22 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   quedan fuera de las sub-pestañas, visibles sin importar cuál esté activa.
   Verificado en Preview con `button[role="tab"]`: las 4 pestañas (2
   principales + 2 anidadas) aparecen y cambian de contenido correctamente.
+- **Feedback real de CRECE recibido (2026-07-06).** La Directora de
+  Investigaciones respondió por escrito las 3 preguntas clave de
+  `GUIA_PORTAFOLIO.md`: usó la app para un análisis sectorial real, reutilizó
+  brief PDF + gráficas + CSV, estima ahorro de 40–60% (2–3 h → ~1 h) y la
+  confianza vino de trazabilidad/cadencia honesta/claridad de alcance. La
+  guía quedó actualizada con: registro de la prueba, reseña propuesta lista
+  para aprobación textual (con nota: ella usó el nombre viejo "Herramienta
+  Consultas y Reportes del Café"; proponerle la versión con "Pulso
+  Cafetero"), post de LinkedIn final ES/EN con el resultado, viñeta de CV
+  actualizada y cifras corregidas (78 pruebas, cadencia días hábiles; README
+  también corregido de 76→78). **Bloqueos antes de publicar:** (1)
+  autorización escrita de la reseña con nombre/cargo/CRECE; (2) tras el OK,
+  actualizar "Impacto y validación" del README con el borrador de la sección
+  2 de la guía; (3) grabar el video/GIF (manual) o usar las 2 capturas como
+  carrusel; (4) repasar el checklist de la sección 6 (topics del repo, badge
+  verde, incógnito).
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
