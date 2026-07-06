@@ -38,6 +38,10 @@ internacional, análisis de datos y necesidades reales de investigación.
 ## La solución
 
 - Compara Coffee C, USD/COP y precio FNC en una escala base 100.
+- Redacta automáticamente una **lectura rápida del periodo** (cierre,
+  variación, máximos y mínimos con fechas), lista para copiar en informes.
+- Muestra la **correlación móvil** del precio FNC con Coffee C y con USD/COP
+  sobre variaciones semanales, con lectura neutral y sin causalidad.
 - Muestra el **último precio de mercado** de USD/COP y Coffee C (~15 minutos
   de retraso) junto al histórico semanal, sin mezclar proveedores en la
   calibración.
@@ -46,7 +50,8 @@ internacional, análisis de datos y necesidades reales de investigación.
   abierto listo para pandas/R, y un **brief ejecutivo en PDF de tres páginas,
   en español o inglés** según el idioma activo.
 - Explora escenarios de precio interno y margen bruto mediante Coffee C,
-  USD/COP, costo, volumen y factor de rendimiento.
+  USD/COP, costo, volumen y factor de rendimiento, con el precio estimado
+  también en COP/kg y COP/arroba.
 - Funciona en español e inglés, incluidos textos, números y gráficas.
 
 El histórico comienza en enero de 2023. El pipeline conserva además lluvia y

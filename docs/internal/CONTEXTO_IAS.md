@@ -145,10 +145,29 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   el resto de pasos de datos; el commit ya incluía `datos/` completo, sin
   cambios ahí. Queda pendiente observar en un run real si la tercera
   consulta semanal a la FNC es tolerada por su WAF.
-- **Backlog priorizado costo/beneficio (2026-07-06):** (a) medir cobertura
-  de pruebas en CI; (b) correlación móvil Coffee C ↔ FNC en el panorama
-  (profundidad analítica visible); (c) GIF demo del README (manual, requiere
-  al usuario). El score sigue pausado.
+- **Criterio de priorización corregido (2026-07-06, pedido del usuario):**
+  dejar de priorizar backend/infra/solidez (eso ya está bien); priorizar
+  mejoras que quien **usa la app** note de inmediato — y por consecuencia el
+  reclutador que la abra. Registrado también en la memoria del asistente.
+- **Tanda de mejoras visibles (2026-07-06).** Tres features nuevas en la app,
+  bilingües, validadas con lint + 69 pruebas + `import app` con datos reales:
+  (1) **Lectura rápida del periodo** (panorama, bajo la gráfica base 100):
+  frases autogeneradas con cierre/variación/máx/mín con fechas de las tres
+  series y el último mes de producción vs. exportaciones (comparadas solo si
+  es el mismo mes), listas para copiar en informes; lenguaje descriptivo.
+  (2) **Correlación móvil** FNC↔Coffee C y FNC↔USD/COP (panorama, tras la
+  tabla de variaciones): Pearson sobre variaciones semanales, ventana de 26
+  semanas (`CORRELACION_VENTANA_SEMANAS` en config), calculada en todo el
+  histórico y mostrada en el periodo elegido; con datos reales da 0,86–0,96
+  contra Coffee C y −0,33–0,07 contra USD/COP (último año). (3)
+  **Equivalencias del precio estimado** en el simulador: COP/kg y COP/arroba
+  (`CARGA_KG`, `ARROBAS_POR_CARGA`), marcadas como aritmética. README al día.
+- **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
+  "visible para el usuario"):** (a) escenarios comparables/guardables en el
+  simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
+  brief PDF; (c) GIF demo del README (manual, requiere al usuario); (d)
+  medir cobertura de pruebas en CI (baja prioridad bajo el nuevo criterio).
+  El score sigue pausado.
 
 ## Estado verificable
 
