@@ -128,6 +128,16 @@ ESTIMADOR_DIAS_CALIBRACION = 5
 ESTIMADOR_DECAIMIENTO_RECIENTE = 3.0
 ESTIMADOR_OBSERVACIONES_VALIDACION = 300
 
+# Equivalencias de presentación del precio por carga: una carga son 125 kg
+# y se divide en 10 arrobas de 12,5 kg. Solo aritmética, no ajusta el precio.
+CARGA_KG = 125
+ARROBAS_POR_CARGA = 10
+
+# Ventana en semanas cerradas de la correlación móvil del panorama. Se calcula
+# sobre variaciones semanales (no niveles) para no inflar la medida con la
+# tendencia común de las series.
+CORRELACION_VENTANA_SEMANAS = 26
+
 # Factor de rendimiento FNC: kg de café pergamino seco para una carga de
 # excelso. 94 es la referencia con la que se publica el precio interno. Un
 # factor menor (mejor rendimiento) sube el precio recibido; uno mayor lo baja.

@@ -160,6 +160,59 @@ TEXTOS = {
         ),
     },
     "md_variaciones": {"es": "**Variaciones por indicador**", "en": "**Changes by indicator**"},
+    "md_lectura_rapida": {
+        "es": "**Lectura rápida del periodo**",
+        "en": "**Period at a glance**",
+    },
+    "cap_lectura_rapida": {
+        "es": (
+            "Frases generadas automáticamente con los datos mostrados "
+            "({inicio} a {fin}), listas para copiar en un informe. Describen "
+            "movimiento; no implican causalidad ni recomendación."
+        ),
+        "en": (
+            "Sentences generated automatically from the data on screen "
+            "({inicio} to {fin}), ready to paste into a report. They describe "
+            "movement; they imply no causality or recommendation."
+        ),
+    },
+    "lectura_mercado": {
+        "es": (
+            "**{indicador}**: cerró en {final} {unidad} ({cambio} frente al "
+            "inicio del periodo). Máximo: {maximo} ({fecha_max}); mínimo: "
+            "{minimo} ({fecha_min})."
+        ),
+        "en": (
+            "**{indicador}**: closed at {final} {unidad} ({cambio} vs. the "
+            "start of the period). High: {maximo} ({fecha_max}); low: "
+            "{minimo} ({fecha_min})."
+        ),
+    },
+    "lectura_prodexp": {
+        "es": (
+            "**Producción y exportaciones** ({mes}): {produccion} frente a "
+            "{exportaciones} miles de sacos de 60 kg (diferencia: "
+            "{diferencia}; no equivale a inventarios)."
+        ),
+        "en": (
+            "**Production and exports** ({mes}): {produccion} vs. "
+            "{exportaciones} thousand 60-kg bags (difference: {diferencia}; "
+            "not equivalent to inventories)."
+        ),
+    },
+    "lectura_prodexp_separado": {
+        "es": (
+            "**Producción** más reciente: {produccion} miles de sacos "
+            "({mes_prod}); **exportaciones** más recientes: {exportaciones} "
+            "miles de sacos ({mes_exp}). Son meses distintos, por eso no se "
+            "comparan directamente."
+        ),
+        "en": (
+            "**Latest production**: {produccion} thousand bags ({mes_prod}); "
+            "**latest exports**: {exportaciones} thousand bags ({mes_exp}). "
+            "Different months, so they are not compared directly."
+        ),
+    },
     "sub_prodexp": {
         "es": "Producción y exportaciones mensuales",
         "en": "Monthly production and exports",
@@ -1604,6 +1657,68 @@ def _metricas_mercado(tabla: pd.DataFrame) -> None:
         st.caption(_t("intradia").format(detalle=" · ".join(partes)))
 
 
+def _frases_lectura_rapida(tabla: pd.DataFrame) -> list[str]:
+    """Frases descriptivas del periodo mostrado, listas para copiar.
+
+    Resume cierre, cambio y extremos de cada serie de mercado y el último mes
+    de producción/exportaciones. Solo describe: sin juicio ni causalidad.
+    """
+    frases: list[str] = []
+    mercado = tabla[tabla["categoria"] == "Mercado"]
+    for variable in ["precio_interno_referencia", "precio_cafe_arabica", "fx_usd_local"]:
+        serie = mercado[mercado["variable"] == variable].sort_values("semana_fin")
+        if len(serie) < 2:
+            continue
+        valores = serie["valor"].astype(float)
+        inicial, final = valores.iloc[0], valores.iloc[-1]
+        if inicial == 0:
+            continue
+        decimales = int(serie["decimales"].iloc[-1])
+        fila_max = serie.loc[valores.idxmax()]
+        fila_min = serie.loc[valores.idxmin()]
+        frases.append(
+            _t("lectura_mercado").format(
+                indicador=_etiqueta_var(variable),
+                final=_numero(final, decimales),
+                unidad=_unidad_legible(serie["unidad"].iloc[-1]),
+                cambio=_pct_con_signo((final / inicial - 1) * 100),
+                maximo=_numero(float(fila_max["valor"]), decimales),
+                fecha_max=f"{pd.Timestamp(fila_max['semana_fin']):%d/%m/%Y}",
+                minimo=_numero(float(fila_min["valor"]), decimales),
+                fecha_min=f"{pd.Timestamp(fila_min['semana_fin']):%d/%m/%Y}",
+            )
+        )
+
+    produccion = tabla[tabla["variable"].eq("produccion_nacional")]
+    exportaciones = tabla[tabla["variable"].eq("exportaciones_cafe")]
+    if not produccion.empty and not exportaciones.empty:
+        fila_prod = produccion.sort_values("fecha_dato").iloc[-1]
+        fila_exp = exportaciones.sort_values("fecha_dato").iloc[-1]
+        mes_prod = pd.Timestamp(fila_prod["fecha_dato"])
+        mes_exp = pd.Timestamp(fila_exp["fecha_dato"])
+        valor_prod = float(fila_prod["valor"])
+        valor_exp = float(fila_exp["valor"])
+        if (mes_prod.year, mes_prod.month) == (mes_exp.year, mes_exp.month):
+            frases.append(
+                _t("lectura_prodexp").format(
+                    mes=f"{mes_prod:%m/%Y}",
+                    produccion=_numero(valor_prod, 1),
+                    exportaciones=_numero(valor_exp, 1),
+                    diferencia=_numero(valor_prod - valor_exp, 1),
+                )
+            )
+        else:
+            frases.append(
+                _t("lectura_prodexp_separado").format(
+                    produccion=_numero(valor_prod, 1),
+                    mes_prod=f"{mes_prod:%m/%Y}",
+                    exportaciones=_numero(valor_exp, 1),
+                    mes_exp=f"{mes_exp:%m/%Y}",
+                )
+            )
+    return frases
+
+
 def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
     """Resume cambios semanales, de 4 semanas y de 52 semanas sin causalidad."""
     filas = []
@@ -1956,6 +2071,16 @@ with tab_panorama:
         config=CONFIG_GRAFICO,
     )
     st.caption(_t("cap_base100"))
+    frases_rapidas = _frases_lectura_rapida(filtrados)
+    if frases_rapidas:
+        st.markdown(_t("md_lectura_rapida"))
+        st.markdown("\n".join(f"- {frase}" for frase in frases_rapidas))
+        st.caption(
+            _t("cap_lectura_rapida").format(
+                inicio=f"{pd.Timestamp(filtrados['semana_fin'].min()):%d/%m/%Y}",
+                fin=f"{pd.Timestamp(filtrados['semana_fin'].max()):%d/%m/%Y}",
+            )
+        )
     st.markdown(_t("md_variaciones"))
     st.dataframe(
         _variaciones_para_pantalla(_variaciones_mercado(datos_semanales)),
