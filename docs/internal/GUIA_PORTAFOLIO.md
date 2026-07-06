@@ -68,28 +68,16 @@ por escrito. Registro condensado:
   el sector (ICE Coffee C, FNC, FEPCafé) y claridad de alcance (no emite
   recomendaciones ni califica riesgos; no reemplaza el criterio técnico).
 
-Además entregó un párrafo de cierre en primera persona con su cargo, que es
-la base de la reseña siguiente. **Nota:** ella nombra la app como
-"Herramienta Consultas y Reportes del Café" (el nombre que vio); al pedir la
-aprobación textual, proponer la versión con "Pulso Cafetero" para que el
-texto publicado coincida con la marca actual.
+### Reseña aprobada (2026-07-06)
 
-### Reseña propuesta (enviar para aprobación literal)
-
-> "Como Directora de Investigaciones del Centro de Estudios Regionales
-> Cafeteros y Empresariales (CRECE), utilicé Pulso Cafetero como apoyo para
-> preparar análisis sectoriales sobre el comportamiento reciente del mercado
-> cafetero colombiano. Su principal valor está en reducir el tiempo dedicado
-> a buscar, organizar y contrastar información que normalmente se encuentra
-> dispersa en distintas fuentes; en particular resultan útiles las gráficas
-> comparables, las descargas en CSV y el brief ejecutivo en PDF, porque
-> permiten reutilizar insumos directamente en reuniones, presentaciones o
-> documentos de trabajo. La confianza para usarla en un contexto profesional
-> proviene de que conserva la trazabilidad de las fuentes, unidades y
-> periodicidades, y de que es clara sobre su alcance: no reemplaza el
-> criterio técnico del equipo que analiza la información, sino que ofrece un
-> insumo ordenado, transparente y práctico."
-> — [Nombre], Directora de Investigaciones, CRECE
+Ella misma redactó y envió el texto de la reseña en primera persona con su
+cargo, lo que constituye la aprobación textual. **Se publica verbatim** (el
+bloque de tres párrafos que cierra su feedback, ya incorporado en el README,
+sección "Impacto y validación"), con una única aclaración editorial entre
+corchetes: ella nombra la app "Herramienta Consultas y Reportes del Café"
+(el nombre que vio) y se añade "[hoy **Pulso Cafetero**]". La atribución
+publicada es "Directora de Investigaciones, CRECE" sin nombre personal;
+añadir el nombre solo si ella lo autoriza expresamente.
 
 Publicar siempre acompañada de: "Opinión personal derivada de una prueba de
 uso; no representa patrocinio, adopción ni aval institucional de CRECE".
@@ -214,10 +202,11 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 > reducirse a alrededor de una hora o menos". Reutilizó directamente el
 > brief PDF, las gráficas y las descargas CSV.
 >
-> "Conserva la trazabilidad de las fuentes, unidades y periodicidades, y es
-> clara sobre su alcance: no reemplaza el criterio técnico del equipo que
-> analiza la información, sino que ofrece un insumo ordenado, transparente y
-> práctico." — [Nombre], Directora de Investigaciones, CRECE
+> "La confianza para usarla en un contexto profesional proviene de que
+> conserva la trazabilidad de las fuentes, unidades y periodicidades, y de
+> que es clara sobre su alcance: no reemplaza el criterio técnico del equipo
+> que analiza la información, sino que ofrece un insumo ordenado,
+> transparente y práctico." — Directora de Investigaciones, CRECE
 >
 > (Opinión personal derivada de una prueba de uso; no representa patrocinio,
 > adopción ni aval institucional de CRECE.)
@@ -262,9 +251,9 @@ de negocios, visualización de datos y comercio internacional.
 **El post (contenido):**
 - [x] El resultado de la prueba reemplazó el marcador [RESULTADO DE LA PRUEBA]
       (2026-07-06, con las respuestas escritas de la prueba real).
-- [ ] La participante aprobó literalmente reseña y atribución (por escrito):
-      enviarle la "Reseña propuesta" de la sección 1 (con el nombre "Pulso
-      Cafetero") y pedir el OK textual + permiso de nombre, cargo y CRECE.
+- [x] La participante aprobó literalmente reseña y atribución (por escrito,
+      2026-07-06: ella misma redactó el texto publicado; se cita verbatim y
+      la atribución es su cargo sin nombre personal).
 - [x] La reseña incluye el disclaimer de no aval institucional de CRECE.
 - [ ] El video (30-45 s) está grabado según el guion de la sección 3, o en su
       defecto se usan las dos capturas de `docs/img/` como carrusel.

@@ -90,14 +90,55 @@ el redespliegue en Streamlit Community Cloud.
 
 ## Impacto y validación
 
-La herramienta está siendo probada con una directora de investigación del
-sector cafetero mediante una tarea real. Los resultados y la reseña se
-publicarán únicamente cuando termine la prueba y la participante apruebe de
-forma explícita el texto, su nombre, cargo y afiliación.
+La herramienta fue probada en julio de 2026 por la Directora de
+Investigaciones del Centro de Estudios Regionales Cafeteros y Empresariales
+(CRECE) mediante una tarea real de su trabajo:
 
-La validación registra la tarea, el entregable, las partes utilizadas, el
-resultado reutilizado, el trabajo evitado y las mejoras solicitadas. No implica
-patrocinio, adopción ni aval institucional.
+```text
+Tarea probada: análisis sectorial del comportamiento reciente del mercado
+  cafetero colombiano (precio internacional, tasa de cambio, precio interno,
+  producción y exportaciones de forma integrada).
+Entregable que preparaba: insumos para informes, presentaciones y reuniones
+  técnicas del área de investigación.
+Cómo lo resolvía antes: consultar varias fuentes por separado, descargar o
+  copiar datos, revisar periodicidades, limpiar formatos, verificar unidades
+  y construir gráficas comparables a mano.
+Qué utilizó en la app: panorama integrado del periodo, gráficas comparables,
+  descargas en CSV y brief ejecutivo en PDF.
+Resultado reutilizado: el brief PDF, las gráficas y las series CSV, anexadas
+  a documentos de trabajo y análisis posteriores.
+Tiempo estimado antes / con la app: 2–3 horas → alrededor de 1 hora o menos
+  (ahorro estimado del 40–60%).
+```
+
+Su reseña, aprobada textualmente:
+
+> Como Directora de Investigaciones del Centro de Estudios Regionales
+> Cafeteros y Empresariales - CRECE, utilicé la Herramienta Consultas y
+> Reportes del Café [hoy **Pulso Cafetero**] como apoyo para preparar
+> análisis sectoriales sobre el comportamiento reciente del mercado cafetero
+> colombiano. La herramienta facilita la consulta integrada de variables
+> clave como precio internacional del café, tasa de cambio, precio interno
+> de referencia, producción nacional y exportaciones.
+>
+> Su principal valor está en reducir el tiempo dedicado a buscar, organizar
+> y contrastar información que normalmente se encuentra dispersa en
+> distintas fuentes. En particular, resultan útiles las gráficas
+> comparables, las descargas en CSV y el brief ejecutivo en PDF, porque
+> permiten reutilizar insumos directamente en reuniones, presentaciones o
+> documentos de trabajo.
+>
+> La confianza para usarla en un contexto profesional proviene de que
+> conserva la trazabilidad de las fuentes, unidades y periodicidades, y de
+> que es clara sobre su alcance: no reemplaza el criterio técnico del equipo
+> que analiza la información, sino que ofrece un insumo ordenado,
+> transparente y práctico para apoyar la lectura de tendencias y la
+> discusión sectorial.
+>
+> — Directora de Investigaciones, CRECE
+
+*Opinión personal derivada de una prueba de uso; no representa patrocinio,
+adopción ni aval institucional de CRECE.*
 
 ## Decisiones de producto y análisis
 

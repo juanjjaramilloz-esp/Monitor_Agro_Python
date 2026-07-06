@@ -257,12 +257,14 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   Consultas y Reportes del Café"; proponerle la versión con "Pulso
   Cafetero"), post de LinkedIn final ES/EN con el resultado, viñeta de CV
   actualizada y cifras corregidas (78 pruebas, cadencia días hábiles; README
-  también corregido de 76→78). **Bloqueos antes de publicar:** (1)
-  autorización escrita de la reseña con nombre/cargo/CRECE; (2) tras el OK,
-  actualizar "Impacto y validación" del README con el borrador de la sección
-  2 de la guía; (3) grabar el video/GIF (manual) o usar las 2 capturas como
-  carrusel; (4) repasar el checklist de la sección 6 (topics del repo, badge
-  verde, incógnito).
+  también corregido de 76→78). **Aprobación confirmada el mismo día:** ella
+  misma redactó la reseña; se publica verbatim en el README ("Impacto y
+  validación" ya actualizado) con aclaración editorial "[hoy Pulso
+  Cafetero]" y atribución por cargo sin nombre personal (añadirlo solo con
+  autorización expresa). **Pendiente antes de publicar el post:** (1) grabar
+  el video/GIF (manual) o usar las 2 capturas como carrusel; (2) repasar el
+  checklist de la sección 6 de la guía (topics del repo, badge verde, prueba
+  en incógnito, app pública mostrando "Pulso Cafetero").
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
