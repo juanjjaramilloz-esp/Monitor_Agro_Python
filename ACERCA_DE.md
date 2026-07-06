@@ -22,6 +22,9 @@ textos, los números y las gráficas.
 - **Descargar las series** del periodo que elija, en Excel, con fecha real del
   dato, unidad y fuente; y generar un **brief en PDF** con las gráficas, las
   variaciones y las fuentes, listo para un informe o una reunión.
+- **Leer un comentario del periodo redactado con inteligencia artificial**
+  (Claude), que resume lo que se movió en el mercado usando únicamente las
+  cifras que ya se muestran en la página.
 - **Explorar escenarios** de precio interno y margen con el simulador.
 
 ---
@@ -34,6 +37,8 @@ textos, los números y las gráficas.
    están las descargas por periodo: las series comerciales en Excel y un brief en
    PDF con las gráficas. La referencia comercial más reciente coincide con la
    usada por el simulador; el histórico permanece agregado por semanas cerradas.
+   Debajo de la correlación aparece un **comentario del periodo redactado con
+   IA**, actualizado junto con los datos (ver más abajo).
 2. **Simulador.** Escenarios de precio interno y margen al mover supuestos de
    Coffee C, USD/COP, costo, volumen y factor de rendimiento, con la opción de
    descargar un informe del escenario (ver más abajo).
@@ -101,6 +106,19 @@ muestra en las dos vistas actuales para mantener el foco comercial.
 
 **Departamentos cubiertos:** Huila, Antioquia, Tolima, Cauca, Nariño, Caldas,
 Risaralda y Quindío.
+
+---
+
+## El comentario del periodo, en palabras simples
+
+Junto con la actualización de datos, el sistema le pide a **Claude** (el
+modelo de IA de Anthropic) que redacte un comentario corto sobre lo que pasó
+en el mercado. Al modelo solo se le entregan las cifras exactas ya calculadas
+por el kit —cierres, variaciones, fechas—, nunca noticias ni información de
+su propio conocimiento, y se le indica explícitamente que **describa, no
+prediga ni recomiende**. El comentario queda guardado con la fecha en que se
+redactó y el modelo usado; la página nunca hace una llamada de IA mientras
+usted la visita, solo muestra el texto ya generado.
 
 ---
 
