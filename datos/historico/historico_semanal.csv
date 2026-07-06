@@ -6317,6 +6317,7 @@ semana_fin,fecha_dato,geografia,variable,valor,unidad,fuente,dias_observados
 2026-06-07,2026-06-07,Antioquia,temp_promedio_semanal,23.3071,°C,open-meteo,7
 2026-06-07,2026-06-05,COLOMBIA,fx_usd_local,3577.669921875,COP/USD,yfinance,5
 2026-06-07,2026-06-07,COLOMBIA,precio_interno_referencia,2017000.0,COP/carga_125kg,FNC,7
+2026-06-07,2026-06-01,COLOMBIA,produccion_nacional,1304.0,miles_sacos_60kg,FNC,1
 2026-06-07,2026-06-07,Caldas,precipitacion_semanal,125.6,mm,open-meteo,7
 2026-06-07,2026-06-07,Caldas,temp_max_semanal,21.7,°C,open-meteo,7
 2026-06-07,2026-06-07,Caldas,temp_min_semanal,13.1,°C,open-meteo,7
