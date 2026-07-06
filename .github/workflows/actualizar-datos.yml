@@ -11,7 +11,12 @@ on:
     # de publicación diaria de la FNC (el trío precio/Coffee C/TRM sale en
     # días hábiles). Sin corridas sábado/domingo: la FNC no publica ese día.
     - cron: "0 10 * * 1-5"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      forzar_comentario_ia:
+        description: "Forzar el comentario IA aunque no hayan pasado 2 días"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -91,6 +96,11 @@ jobs:
       - name: Verificar si toca redactar comentario IA
         id: chequeo_comentario
         run: |
+          if [ "${{ github.event.inputs.forzar_comentario_ia }}" = "true" ]; then
+            echo "toca=true" >> "$GITHUB_OUTPUT"
+            echo "Forzado manualmente vía workflow_dispatch."
+            exit 0
+          fi
           archivo="datos/comentario/comentario_periodo.json"
           if [ ! -f "$archivo" ]; then
             echo "toca=true" >> "$GITHUB_OUTPUT"

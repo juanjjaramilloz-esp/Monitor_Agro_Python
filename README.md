@@ -214,6 +214,9 @@ Cada corrida verifica si toca redactar el **comentario del periodo con
 Claude** (`python -m reporte.comentario_ia`): aunque los datos se refrescan en
 días hábiles, el comentario se limita a **cada 2 días** (según la fecha del
 último guardado, no del día de la semana) para no llamar a la API a diario.
+Para forzarlo antes de esos 2 días (por ejemplo, tras cambiar el prompt),
+dispara el workflow a mano marcando el checkbox **"Forzar el comentario IA"**
+en `workflow_dispatch`.
 Recibe únicamente cifras exactas ya calculadas del histórico y la referencia
 diaria más reciente (grounding), el prompt le prohíbe predecir o recomendar,
 y el resultado queda versionado en `datos/comentario/` con fecha y modelo. La

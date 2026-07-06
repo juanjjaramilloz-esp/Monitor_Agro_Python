@@ -214,6 +214,11 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   el día de la semana). La `referencia_diaria` sigue siendo fresca cuando el
   comentario sí corre, porque toma el `calibracion_fnc.csv` de esa misma
   corrida (que se actualiza a diario). Vuelve el estimado a ~15 llamadas/mes.
+- **Input `forzar_comentario_ia` en workflow_dispatch (2026-07-06).** Permite
+  saltar la comprobación de 2 días desde la UI de Actions (checkbox) cuando
+  se quiere ver el efecto de un cambio de prompt sin esperar; el cron
+  programado y los `workflow_dispatch` sin marcar siguen respetando la
+  cadencia normal.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
