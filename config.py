@@ -350,6 +350,8 @@ TERMINOS_NOTICIAS = [
     "sequía",
     "arancel",
 ]
+# Máximo de titulares que se entregan como señal al comentario del periodo.
+NOTICIAS_COMENTARIO_MAX = 3
 
 # ---------------------------------------------------------------------------
 # Score (Fase 3) — PROVISIONAL

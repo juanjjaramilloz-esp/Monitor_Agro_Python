@@ -4,7 +4,9 @@ Corre solo en la automatización de datos (GitHub Actions), nunca en runtime de
 la app: el resultado queda versionado en ``datos/comentario/`` con fecha y
 modelo, y el tablero solo lee ese archivo. El prompt entrega cifras exactas ya
 calculadas desde el histórico y obliga a describir sin predecir ni recomendar,
-el mismo estándar de honestidad del resto del kit.
+el mismo estándar de honestidad del resto del kit. Si GDELT responde, se
+adjuntan además unos pocos titulares recientes como señal cualitativa opcional
+(marcados como sin verificar; el comentario funciona igual sin ellos).
 
 Uso: ``python -m reporte.comentario_ia`` (requiere ANTHROPIC_API_KEY en el
 entorno; sin la key informa y termina sin error para no romper corridas
@@ -14,6 +16,7 @@ locales).
 import json
 import os
 from datetime import date
+from urllib.parse import urlparse
 
 import pandas as pd
 
@@ -26,6 +29,8 @@ from config import (
     CORRELACION_VENTANA_SEMANAS,
     DIR_COMENTARIO,
     DIR_HISTORICO,
+    NOTICIAS_COMENTARIO_MAX,
+    NOTICIAS_DIAS_ATRAS,
 )
 from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 
@@ -54,8 +59,9 @@ máximos/mínimos por serie). Tu valor no es repetir esas cifras una por una: \
 es CRUZARLAS para explicar cómo se combinaron los movimientos.
 
 Reglas no negociables:
-- Usa ÚNICAMENTE las cifras y fechas entregadas en el mensaje; no agregues \
-datos de tu memoria ni contexto externo (noticias, clima, política).
+- Usa ÚNICAMENTE las cifras, fechas y señales entregadas en el mensaje; no \
+agregues de tu memoria datos ni contexto externo (noticias, clima, política \
+que no vengan en el paquete).
 - Describe lo observado; NUNCA predigas, recomiendes comprar/vender ni \
 califiques nada como oportunidad o riesgo.
 - Cita cifras con su fecha (formato dd/mm/aaaa) tal como vienen en los datos.
@@ -93,6 +99,23 @@ mercado descrito, señala si esa variación mensual fue en la misma dirección \
 que el mercado o no; si no coincide el mes, no fuerces la comparación.
 - Cada oración del párrafo 1 y 2 debe conectar al menos dos cifras entre sí, \
 no describir una sola serie de forma aislada.
+
+Cómo manejar las señales de noticias (campo "senales_noticias", solo si está \
+presente):
+- Son titulares recientes recogidos por GDELT: señales cualitativas SIN \
+verificar, nunca hechos confirmados. Preséntalas siempre con esa cautela y \
+su trazabilidad: "un titular de <dominio> del dd/mm/aaaa menciona...".
+- Evalúa tú la credibilidad por el dominio: descarta sin mencionar cualquier \
+titular cuyo dominio no parezca un medio informativo o institucional \
+reconocible.
+- No copies el titular literal; parafrasea su idea en tus palabras en cada \
+idioma.
+- Menciona una señal SOLO si se conecta de forma evidente con un movimiento \
+de las cifras entregadas; máximo una señal en todo el comentario, y si \
+ninguna se conecta, ignóralas todas: el comentario funciona completo sin \
+ellas.
+- Una señal jamás sustituye a las cifras ni explica causalidad; a lo sumo \
+"coincide con" un movimiento observado.
 
 Tono profesional y claro, sin jerga innecesaria; 3 párrafos cortos: (1) \
 dónde están HOY las tres variables según la referencia diaria y cómo se \
@@ -240,9 +263,50 @@ def _referencia_diaria(
     return referencia if referencia["valores"] else None
 
 
+def _senales_noticias(noticias: pd.DataFrame | None) -> dict | None:
+    """Titulares recientes de GDELT como señal cualitativa, deduplicados.
+
+    GDELT suele repetir el mismo cable en varios medios; se conserva un titular
+    por texto y por dominio, priorizando los más recientes. El campo es
+    opcional: si la fuente falló (rate limit) o no trajo nada, se devuelve
+    None y el comentario se genera igual que siempre.
+    """
+    if noticias is None or noticias.empty:
+        return None
+    if not {"fecha", "titulo", "url"}.issubset(noticias.columns):
+        return None
+    df = noticias.dropna(subset=["fecha", "titulo", "url"]).copy()
+    if df.empty:
+        return None
+    df["dominio"] = df["url"].map(
+        lambda u: urlparse(str(u)).netloc.removeprefix("www.")
+    )
+    df = (
+        df.sort_values("fecha", ascending=False)
+        .drop_duplicates(subset=["titulo"])
+        .drop_duplicates(subset=["dominio"])
+        .head(NOTICIAS_COMENTARIO_MAX)
+    )
+    return {
+        "descripcion": (
+            f"Titulares de los últimos {NOTICIAS_DIAS_ATRAS} días recogidos "
+            "por GDELT; señales cualitativas sin verificar, no hechos."
+        ),
+        "titulares": [
+            {
+                "titulo": str(fila["titulo"]).strip(),
+                "fecha": _fecha(fila["fecha"]),
+                "dominio": str(fila["dominio"]),
+            }
+            for _, fila in df.iterrows()
+        ],
+    }
+
+
 def construir_contexto(
     historico: pd.DataFrame,
     calibracion: pd.DataFrame | None = None,
+    noticias: pd.DataFrame | None = None,
 ) -> dict:
     """Arma el paquete de cifras exactas que el modelo puede citar (y nada más)."""
     datos = historico.copy()
@@ -288,6 +352,9 @@ def construir_contexto(
     referencia = _referencia_diaria(calibracion, contexto["series_mercado"])
     if referencia is not None:
         contexto["referencia_diaria"] = referencia
+    senales = _senales_noticias(noticias)
+    if senales is not None:
+        contexto["senales_noticias"] = senales
     return contexto
 
 
@@ -297,8 +364,9 @@ def construir_mensaje(contexto: dict) -> str:
         "Redacta el comentario del periodo con base exclusiva en estas cifras. "
         f"Incluyen las últimas {contexto['periodo_semanas']} semanas cerradas "
         "del mercado, el último mes publicado de las series mensuales y, si "
-        "está presente, la referencia diaria más reciente (campo "
-        "'referencia_diaria'), que es el dato más fresco disponible:\n\n"
+        "están presentes, la referencia diaria más reciente (campo "
+        "'referencia_diaria', el dato más fresco disponible) y titulares "
+        "recientes como señal sin verificar (campo 'senales_noticias'):\n\n"
         + json.dumps(contexto, ensure_ascii=False, indent=2)
     )
 
@@ -361,7 +429,17 @@ def main() -> None:
     calibracion = (
         pd.read_csv(RUTA_CALIBRACION_FNC) if RUTA_CALIBRACION_FNC.exists() else None
     )
-    contexto = construir_contexto(historico, calibracion)
+    try:
+        from fuentes import noticias as fuente_noticias
+
+        noticias = fuente_noticias.obtener()
+    except Exception as error:  # noqa: BLE001 - señal opcional, nunca bloquea
+        print(
+            f"comentario_ia: sin señales de noticias "
+            f"({type(error).__name__}); se continúa sin ellas."
+        )
+        noticias = None
+    contexto = construir_contexto(historico, calibracion, noticias)
     if not contexto["series_mercado"]:
         print("comentario_ia: sin series de mercado suficientes; no se genera.")
         return

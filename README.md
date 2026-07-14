@@ -19,7 +19,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 78 offline unit tests and automated data refresh on business days.
+> 81 offline unit tests and automated data refresh on business days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
@@ -47,7 +47,10 @@ internacional, análisis de datos y necesidades reales de investigación.
 - Publica un **comentario del periodo redactado con IA (Claude)**, generado en
   la actualización automática de datos y anclado exclusivamente a cifras del
   propio kit: describe sin predecir ni recomendar, queda versionado con fecha
-  y modelo, y la app no hace ninguna llamada de IA en runtime.
+  y modelo, y la app no hace ninguna llamada de IA en runtime. Cuando GDELT
+  responde, recibe además titulares recientes como señal cualitativa — siempre
+  marcados como sin verificar y solo mencionables si coinciden con un
+  movimiento real de las cifras.
 - Muestra el **último precio de mercado** de USD/COP y Coffee C (~15 minutos
   de retraso) junto al histórico semanal, sin mezclar proveedores en la
   calibración.
@@ -79,7 +82,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.600+ (crecen en días hábiles) |
 | Semanas completas de mercado y clima | 181+ |
 | Observaciones mensuales de producción y exportaciones | 82+ |
-| Pruebas unitarias sin internet | 76 |
+| Pruebas unitarias sin internet | 81 |
 | Actualización automática | Días hábiles |
 | Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |

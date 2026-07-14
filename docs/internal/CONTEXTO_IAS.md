@@ -273,6 +273,35 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   recomendada: gente revisando LinkedIn al inicio del día laboral). Queda
   pendiente solo que el usuario responda comentarios en la primera hora tras
   publicar.
+- **Migración de cuenta GitHub (2026-07-14).** La cuenta vieja
+  (`juanjosejaramillozarate-png`) tuvo problemas y su repo desapareció (404).
+  El proyecto vive ahora en `juanjjaramilloz-esp/Monitor_Agro_Python` (push
+  completo del historial local, remoto `origin` reapuntado). Badges y enlace
+  de clonado del README y el enlace de la GUIA_PORTAFOLIO actualizados.
+  **Pendiente del usuario:** (1) reconectar Streamlit Community Cloud al repo
+  nuevo (el deploy apuntaba al viejo; puede exigir recrear la app conservando
+  el subdominio `kitconsultayreporte`); (2) recrear el secret
+  `ANTHROPIC_API_KEY` en Settings → Secrets del repo nuevo (los secrets no
+  migran); (3) verificar que los workflows de Actions queden habilitados.
+- **Señales de noticias en el comentario IA (2026-07-14).** GDELT deja de ser
+  la única fuente que el usuario jamás veía: `comentario_ia.main()` llama a
+  `fuentes.noticias.obtener()` (import perezoso, mismo patrón que `anthropic`;
+  nunca bloquea — GDELT rate-limita con frecuencia y entonces el campo
+  simplemente no aparece) y `construir_contexto(historico, calibracion,
+  noticias)` añade el campo opcional `senales_noticias`: máximo
+  `NOTICIAS_COMENTARIO_MAX`=3 titulares (título, fecha, dominio; sin URL para
+  ahorrar tokens), deduplicados por titular y por dominio porque GDELT repite
+  el mismo cable en varios medios. El prompt ahora distingue el contexto de
+  memoria del modelo (sigue prohibido) de los titulares entregados en el
+  paquete (permitidos con cautela): máximo una señal por comentario,
+  parafraseada como "un titular de <dominio> del dd/mm/aaaa menciona...",
+  solo si coincide con un movimiento real de las cifras, sin causalidad, y
+  con credibilidad evaluada por dominio por el propio modelo (decisión del
+  usuario 2026-07-14: confiar en Opus 4.8 + prompt, sin whitelist de medios,
+  priorizando eficiencia de créditos — cero llamadas extra a Claude, ~150
+  tokens más de contexto). 81 pruebas (+3 nuevas de dedupe/tope/ausencia),
+  ruff limpio, `import app` OK. Falta verificar el efecto en la próxima
+  corrida real del workflow con la API key ya configurada.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el

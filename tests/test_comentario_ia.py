@@ -74,6 +74,56 @@ def _calibracion_sintetica() -> pd.DataFrame:
     )
 
 
+def _noticias_sinteticas() -> pd.DataFrame:
+    """Titulares con el mismo cable repetido en dos medios y un dominio duplicado."""
+    return pd.DataFrame(
+        [
+            {
+                "fecha": date(2025, 12, 26),
+                "geografia": "COLOMBIA",
+                "titulo": "Helada en Brasil presiona el precio del arábica",
+                "url": "https://www.medio-uno.com/nota-1",
+                "fuente": "gdelt",
+                "idioma": "spanish",
+                "tono": float("nan"),
+                "categoria": pd.NA,
+            },
+            {
+                # Mismo titular replicado por otro medio: debe deduplicarse.
+                "fecha": date(2025, 12, 25),
+                "geografia": "COLOMBIA",
+                "titulo": "Helada en Brasil presiona el precio del arábica",
+                "url": "https://portal-dos.co/replica",
+                "fuente": "gdelt",
+                "idioma": "spanish",
+                "tono": float("nan"),
+                "categoria": pd.NA,
+            },
+            {
+                # Mismo dominio que la primera: debe conservarse solo una.
+                "fecha": date(2025, 12, 24),
+                "geografia": "COLOMBIA",
+                "titulo": "Exportaciones de café crecen en noviembre",
+                "url": "https://medio-uno.com/nota-2",
+                "fuente": "gdelt",
+                "idioma": "spanish",
+                "tono": float("nan"),
+                "categoria": pd.NA,
+            },
+            {
+                "fecha": date(2025, 12, 23),
+                "geografia": "COLOMBIA",
+                "titulo": "Paro camionero afecta salida por el puerto de Buenaventura",
+                "url": "https://diario-tres.com/nota",
+                "fuente": "gdelt",
+                "idioma": "spanish",
+                "tono": float("nan"),
+                "categoria": pd.NA,
+            },
+        ]
+    )
+
+
 class ConstruirContextoTests(unittest.TestCase):
     def test_contexto_incluye_mercado_mensuales_y_correlaciones(self):
         contexto = comentario_ia.construir_contexto(_historico_sintetico())
@@ -140,6 +190,63 @@ class ConstruirContextoTests(unittest.TestCase):
         self.assertEqual(contexto["series_mercado"], {})
         self.assertEqual(contexto["series_mensuales"], {})
         self.assertEqual(contexto["correlaciones"], {})
+
+    def test_senales_noticias_deduplica_por_titulo_y_dominio(self):
+        contexto = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=_noticias_sinteticas()
+        )
+        senales = contexto["senales_noticias"]
+        titulares = senales["titulares"]
+        # 4 filas de entrada: cae la réplica del cable y la segunda nota del
+        # mismo dominio; quedan 2, dentro del tope configurado.
+        self.assertEqual(len(titulares), 2)
+        self.assertEqual(
+            [t["dominio"] for t in titulares],
+            ["medio-uno.com", "diario-tres.com"],
+        )
+        primera = titulares[0]
+        self.assertEqual(
+            primera["titulo"], "Helada en Brasil presiona el precio del arábica"
+        )
+        self.assertEqual(primera["fecha"], "26/12/2025")
+        self.assertIn("sin verificar", senales["descripcion"])
+
+    def test_sin_noticias_no_hay_senales(self):
+        contexto = comentario_ia.construir_contexto(_historico_sintetico())
+        self.assertNotIn("senales_noticias", contexto)
+        contexto_vacio = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=pd.DataFrame()
+        )
+        self.assertNotIn("senales_noticias", contexto_vacio)
+
+    def test_senales_respetan_el_tope_configurado(self):
+        noticias = pd.concat(
+            [
+                pd.DataFrame(
+                    [
+                        {
+                            "fecha": date(2025, 12, 20 + i),
+                            "geografia": "COLOMBIA",
+                            "titulo": f"Titular distinto número {i}",
+                            "url": f"https://medio-{i}.com/nota",
+                            "fuente": "gdelt",
+                            "idioma": "spanish",
+                            "tono": float("nan"),
+                            "categoria": pd.NA,
+                        }
+                    ]
+                )
+                for i in range(6)
+            ],
+            ignore_index=True,
+        )
+        contexto = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=noticias
+        )
+        titulares = contexto["senales_noticias"]["titulares"]
+        self.assertEqual(len(titulares), comentario_ia.NOTICIAS_COMENTARIO_MAX)
+        # Se priorizan los más recientes.
+        self.assertEqual(titulares[0]["fecha"], "25/12/2025")
 
     def test_pocas_semanas_no_generan_resumen_de_mercado(self):
         historico = _historico_sintetico()
