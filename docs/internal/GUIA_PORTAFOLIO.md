@@ -212,7 +212,7 @@ Enlazar el nombre del proyecto directamente a la aplicación.
 > adopción ni aval institucional de CRECE.)
 >
 > 👉 Pruébala (sin registro): https://kitconsultayreporte.streamlit.app/
-> 📂 Código y metodología: https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python
+> 📂 Código y metodología: https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python
 >
 > #AnálisisDeDatos #Python #Streamlit #DataAnalytics #Café #Colombia
 

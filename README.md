@@ -3,8 +3,8 @@
 **Datos de mercado cafetero convertidos en evidencia lista para analizar,
 presentar y descargar.**
 
-[![Pruebas](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/pruebas.yml/badge.svg)](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/pruebas.yml)
-[![Datos](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml/badge.svg)](https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml)
+[![Pruebas](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/pruebas.yml/badge.svg)](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/pruebas.yml)
+[![Datos](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml/badge.svg)](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml)
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
 [![App en vivo](https://img.shields.io/badge/Streamlit-app%20en%20vivo-FF4B4B)](https://kitconsultayreporte.streamlit.app/)
 
@@ -175,7 +175,7 @@ Open-Meteo · GDELT · GitHub Actions · Claude API (Anthropic).
 Requiere Python 3.13+.
 
 ```powershell
-git clone https://github.com/juanjosejaramillozarate-png/Monitor_Agro_Python.git
+git clone https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python.git
 cd Monitor_Agro_Python
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1        # Windows · en Linux/macOS: source .venv/bin/activate
