@@ -31,7 +31,13 @@ from reportlab.platypus import (
     TableStyle,
 )
 
-from config import CATALOGO_VARIABLES, COLORES_INTERFAZ
+from config import (
+    CATALOGO_VARIABLES,
+    COLORES_INTERFAZ,
+    MARCA_AUTORIA,
+    MARCA_AUTORIA_PERSONA,
+    MARCA_AUTORIA_TAGLINE,
+)
 from reporte.formato import numero as _numero
 
 _ACENTO_HEX = COLORES_INTERFAZ["acento"]
@@ -529,7 +535,12 @@ def _pie_pagina(canvas, documento, idioma: str = "es") -> None:
     canvas.line(2 * cm, 1.25 * cm, ancho - 2 * cm, 1.25 * cm)
     canvas.setFillColor(_SECUNDARIO)
     canvas.setFont("Helvetica", 7.5)
-    canvas.drawString(2 * cm, 0.85 * cm, "Juan José Jaramillo · Pulso Cafetero")
+    canvas.drawString(
+        2 * cm,
+        0.85 * cm,
+        f"{MARCA_AUTORIA} — {MARCA_AUTORIA_TAGLINE[idioma]} · "
+        f"{MARCA_AUTORIA_PERSONA} · {_tr('titulo', idioma)}",
+    )
     canvas.drawRightString(
         ancho - 2 * cm, 0.85 * cm, f"{_tr('pagina', idioma)} {documento.page}"
     )

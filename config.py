@@ -104,6 +104,15 @@ COLORES_INTERFAZ = {
     "rejilla": "#E7EBE7",
 }
 
+# Marca de autoría (sidebar de la app y pie del brief PDF).
+MARCA_AUTORIA = "Cauce"
+MARCA_AUTORIA_TAGLINE = {
+    "es": "Automatización e IA para empresas",
+    "en": "Automation & AI for business",
+}
+MARCA_AUTORIA_PERSONA = "By Juan J. Jaramillo"
+MARCA_AUTORIA_COLOR = "#2456F5"  # azul del isotipo Cauce
+
 # Supuestos iniciales del simulador. El costo es una referencia nacional
 # publicada por FEPCafé y permanece editable porque no representa cada finca.
 COSTO_PRODUCCION_REFERENCIA = 1_624_000

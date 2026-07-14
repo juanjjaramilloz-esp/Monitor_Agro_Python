@@ -25,6 +25,10 @@ from config import (
     FACTOR_RENDIMIENTO_REFERENCIA,
     FEEDBACK_MAX_CARACTERES,
     FUENTES_COMERCIALES,
+    MARCA_AUTORIA,
+    MARCA_AUTORIA_COLOR,
+    MARCA_AUTORIA_PERSONA,
+    MARCA_AUTORIA_TAGLINE,
     PERIODOS_VISUALIZACION,
     PROYECCION_CARGAS_MAXIMAS,
     PROYECCION_CARGAS_PREDETERMINADAS,
@@ -139,7 +143,6 @@ TEXTOS = {
     "fechas_personalizadas": {"es": "Fechas personalizadas", "en": "Custom dates"},
     "periodo": {"es": "Periodo", "en": "Period"},
     "fechas_cierre": {"es": "Fechas de cierre", "en": "Closing dates"},
-    "autor": {"es": "Autor: Juan José Jaramillo", "en": "Author: Juan José Jaramillo"},
     "feedback_titulo": {"es": "Enviar feedback", "en": "Send feedback"},
     "feedback_ayuda": {
         "es": (
@@ -2219,7 +2222,31 @@ else:
     else:
         filtrados = _filtrar_periodo(datos, PERIODOS_VISUALIZACION["1 año"])
 st.sidebar.divider()
-st.sidebar.caption(_t("autor"))
+# Marca de autoría: isotipo aproximado de Cauce en SVG inline (contenido
+# controlado desde config.py; reemplazable por el archivo oficial de la marca).
+_SVG_MARCA = (
+    '<svg width="30" height="30" viewBox="0 0 32 32" fill="none" '
+    'aria-hidden="true" style="flex:0 0 auto;">'
+    f'<path d="M23 8C12.5 5.5 6.5 11 6.5 16s6 10.5 16.5 8" '
+    f'stroke="{MARCA_AUTORIA_COLOR}" stroke-width="3.4" '
+    'stroke-linecap="round" fill="none"/>'
+    f'<circle cx="24.6" cy="7.2" r="2.6" fill="{MARCA_AUTORIA_COLOR}"/>'
+    "</svg>"
+)
+st.sidebar.markdown(
+    '<div style="display:flex;align-items:center;gap:.6rem;">'
+    f"{_SVG_MARCA}"
+    '<div style="line-height:1.35;">'
+    f'<span style="font-weight:800;font-size:1.02rem;letter-spacing:-.01em;'
+    f'color:{COLORES_INTERFAZ["texto"]};">{MARCA_AUTORIA}</span> '
+    f'<span style="font-size:.76rem;color:{COLORES_INTERFAZ["texto_secundario"]};">'
+    f"{MARCA_AUTORIA_TAGLINE[IDIOMA]}</span><br>"
+    f'<span style="font-size:.7rem;font-family:ui-monospace,SFMono-Regular,Menlo,'
+    f'monospace;color:{COLORES_INTERFAZ["texto_secundario"]};">'
+    f"{MARCA_AUTORIA_PERSONA}</span>"
+    "</div></div>",
+    unsafe_allow_html=True,
+)
 with st.sidebar.expander(_t("feedback_titulo")):
     st.caption(_t("feedback_ayuda"))
     mensaje_feedback = st.text_area(

@@ -302,6 +302,21 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   tokens más de contexto). 81 pruebas (+3 nuevas de dedupe/tope/ausencia),
   ruff limpio, `import app` OK. Falta verificar el efecto en la próxima
   corrida real del workflow con la API key ya configurada.
+- **Autoría con marca Cauce (2026-07-14, pedido del usuario).** La atribución
+  visible dejó de ser "Autor: Juan José Jaramillo" y ahora es la marca
+  **Cauce — Automatización e IA para empresas · By Juan J. Jaramillo**:
+  bloque en el sidebar (isotipo aproximado en SVG inline + nombre + tagline
+  bilingüe) y pie de todas las páginas del brief PDF. Todo editable en
+  `config.py` (`MARCA_AUTORIA`, `MARCA_AUTORIA_TAGLINE` es/en,
+  `MARCA_AUTORIA_PERSONA`, `MARCA_AUTORIA_COLOR`). El SVG es una
+  aproximación del isotipo real; si el usuario entrega el archivo oficial
+  de la marca, reemplazarlo. El © del pie de la app y la LICENSE siguen a
+  nombre de Juan José Jaramillo (titular legal); cambiarlos solo a petición.
+  La URL pública nueva es `pulso-cafetero.streamlit.app` (el usuario recreó
+  la app en Streamlit Cloud tras la migración de cuenta GitHub). Nota
+  operativa: tras ese primer deploy hubo un segmentation fault al hacer pull
+  en caliente (patrón conocido de recarga de Streamlit Cloud, no del código);
+  se resuelve con Manage app → Reboot o con el siguiente redespliegue.
 - **Backlog priorizado costo/beneficio (2026-07-06, reordenado al criterio
   "visible para el usuario"):** (a) escenarios comparables/guardables en el
   simulador (A vs B); (b) incluir la lectura rápida y la correlación en el
