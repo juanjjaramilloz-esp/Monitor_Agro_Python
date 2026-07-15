@@ -82,7 +82,7 @@ def _noticias_sinteticas() -> pd.DataFrame:
                 "fecha": date(2025, 12, 26),
                 "geografia": "COLOMBIA",
                 "titulo": "Helada en Brasil presiona el precio del arábica",
-                "url": "https://www.medio-uno.com/nota-1",
+                "url": "https://www.reuters.com/nota-1",
                 "fuente": "gdelt",
                 "idioma": "spanish",
                 "tono": float("nan"),
@@ -93,7 +93,7 @@ def _noticias_sinteticas() -> pd.DataFrame:
                 "fecha": date(2025, 12, 25),
                 "geografia": "COLOMBIA",
                 "titulo": "Helada en Brasil presiona el precio del arábica",
-                "url": "https://portal-dos.co/replica",
+                "url": "https://eltiempo.com/replica",
                 "fuente": "gdelt",
                 "idioma": "spanish",
                 "tono": float("nan"),
@@ -104,7 +104,7 @@ def _noticias_sinteticas() -> pd.DataFrame:
                 "fecha": date(2025, 12, 24),
                 "geografia": "COLOMBIA",
                 "titulo": "Exportaciones de café crecen en noviembre",
-                "url": "https://medio-uno.com/nota-2",
+                "url": "https://reuters.com/nota-2",
                 "fuente": "gdelt",
                 "idioma": "spanish",
                 "tono": float("nan"),
@@ -114,7 +114,7 @@ def _noticias_sinteticas() -> pd.DataFrame:
                 "fecha": date(2025, 12, 23),
                 "geografia": "COLOMBIA",
                 "titulo": "Paro camionero afecta salida por el puerto de Buenaventura",
-                "url": "https://diario-tres.com/nota",
+                "url": "https://portafolio.co/nota",
                 "fuente": "gdelt",
                 "idioma": "spanish",
                 "tono": float("nan"),
@@ -202,7 +202,7 @@ class ConstruirContextoTests(unittest.TestCase):
         self.assertEqual(len(titulares), 2)
         self.assertEqual(
             [t["dominio"] for t in titulares],
-            ["medio-uno.com", "diario-tres.com"],
+            ["reuters.com", "portafolio.co"],
         )
         primera = titulares[0]
         self.assertEqual(
@@ -228,7 +228,7 @@ class ConstruirContextoTests(unittest.TestCase):
                             "fecha": date(2025, 12, 20 + i),
                             "geografia": "COLOMBIA",
                             "titulo": f"Titular distinto número {i}",
-                            "url": f"https://medio-{i}.com/nota",
+                            "url": f"https://subdominio-{i}.reuters.com/nota",
                             "fuente": "gdelt",
                             "idioma": "spanish",
                             "tono": float("nan"),
@@ -247,6 +247,19 @@ class ConstruirContextoTests(unittest.TestCase):
         self.assertEqual(len(titulares), comentario_ia.NOTICIAS_COMENTARIO_MAX)
         # Se priorizan los más recientes.
         self.assertEqual(titulares[0]["fecha"], "25/12/2025")
+
+    def test_descarta_dominios_no_reconocidos(self):
+        noticias = _noticias_sinteticas().copy()
+        noticias.loc[:, "url"] = [
+            f"https://sitio-opaco-{indice}.example/nota"
+            for indice in range(len(noticias))
+        ]
+
+        contexto = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=noticias
+        )
+
+        self.assertNotIn("senales_noticias", contexto)
 
     def test_pocas_semanas_no_generan_resumen_de_mercado(self):
         historico = _historico_sintetico()
@@ -296,6 +309,58 @@ class GenerarComentarioTests(unittest.TestCase):
         contexto = comentario_ia.construir_contexto(_historico_sintetico())
         cliente = self._cliente_simulado("", stop_reason="refusal")
         with self.assertRaises(RuntimeError):
+            comentario_ia.generar_comentario(contexto, cliente=cliente)
+
+    def test_generar_exige_y_registra_conexion_con_noticia(self):
+        contexto = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=_noticias_sinteticas()
+        )
+        cliente = self._cliente_simulado(
+            json.dumps(
+                {
+                    "comentario_es": (
+                        "Un titular de reuters.com del 26/12/2025 sobre heladas "
+                        "coincide con el avance de Coffee C de 1,0%."
+                    ),
+                    "comentario_en": (
+                        "A reuters.com headline from 26/12/2025 about frost "
+                        "coincides with Coffee C's 1.0% increase."
+                    ),
+                    "noticia_conectada": {
+                        "dominio": "reuters.com",
+                        "fecha": "26/12/2025",
+                        "variable_dato": "precio_cafe_arabica",
+                    },
+                }
+            )
+        )
+
+        comentario = comentario_ia.generar_comentario(contexto, cliente=cliente)
+
+        self.assertEqual(comentario["noticias_disponibles"], 2)
+        self.assertEqual(comentario["noticia_conectada"]["dominio"], "reuters.com")
+        esquema = cliente.messages.create.call_args.kwargs["output_config"]["format"]["schema"]
+        self.assertIn("noticia_conectada", esquema["required"])
+
+    def test_generar_rechaza_noticia_que_no_aparece_en_el_texto(self):
+        contexto = comentario_ia.construir_contexto(
+            _historico_sintetico(), noticias=_noticias_sinteticas()
+        )
+        cliente = self._cliente_simulado(
+            json.dumps(
+                {
+                    "comentario_es": "Comentario sin trazabilidad.",
+                    "comentario_en": "Comment without traceability.",
+                    "noticia_conectada": {
+                        "dominio": "reuters.com",
+                        "fecha": "26/12/2025",
+                        "variable_dato": "precio_cafe_arabica",
+                    },
+                }
+            )
+        )
+
+        with self.assertRaisesRegex(RuntimeError, "no incluye dominio y fecha"):
             comentario_ia.generar_comentario(contexto, cliente=cliente)
 
 

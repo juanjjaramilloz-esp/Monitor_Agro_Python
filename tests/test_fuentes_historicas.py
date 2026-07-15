@@ -233,6 +233,22 @@ class CalibracionFncGuardarTests(unittest.TestCase):
 
 
 class NoticiasTests(unittest.TestCase):
+    def _noticia_cache(self, fecha: date) -> pd.DataFrame:
+        return pd.DataFrame(
+            [
+                {
+                    "fecha": fecha,
+                    "geografia": "COLOMBIA",
+                    "titulo": "Helada coincide con avance del arábica",
+                    "url": "https://reuters.com/cafe",
+                    "fuente": "gdelt",
+                    "idioma": "Spanish",
+                    "tono": float("nan"),
+                    "categoria": pd.NA,
+                }
+            ]
+        )
+
     def test_normaliza_articulos_al_contrato(self) -> None:
         articulos = pd.DataFrame(
             {
@@ -256,6 +272,43 @@ class NoticiasTests(unittest.TestCase):
 
         self.assertTrue(resultado.empty)
         self.assertListEqual(list(resultado.columns), noticias.COLUMNAS)
+
+    def test_consulta_reintenta_hasta_recibir_datos(self) -> None:
+        esperado = self._noticia_cache(date(2026, 7, 15))
+        consultar = Mock(side_effect=[RuntimeError("límite"), esperado])
+        dormir = Mock()
+
+        resultado, error, intentos = noticias._consultar_con_reintentos(
+            consultar=consultar,
+            dormir=dormir,
+        )
+
+        self.assertIsNone(error)
+        self.assertEqual(intentos, 2)
+        self.assertEqual(len(resultado), 1)
+        dormir.assert_called_once()
+
+    def test_actualizar_cache_usa_ultimo_exito_si_gdelt_falla(self) -> None:
+        with tempfile.TemporaryDirectory() as carpeta:
+            ruta = Path(carpeta) / "noticias.csv"
+            esperado = self._noticia_cache(date.today())
+            noticias.guardar_cache(esperado, ruta)
+            fallo = (noticias._tabla_vacia(), RuntimeError("límite"), 3)
+
+            with patch.object(noticias, "_consultar_con_reintentos", return_value=fallo):
+                resultado = noticias.actualizar_cache(ruta)
+
+            self.assertEqual(len(resultado), 1)
+            self.assertEqual(resultado.iloc[0]["titulo"], esperado.iloc[0]["titulo"])
+
+    def test_cache_obsoleto_no_se_entrega_al_comentario(self) -> None:
+        with tempfile.TemporaryDirectory() as carpeta:
+            ruta = Path(carpeta) / "noticias.csv"
+            noticias.guardar_cache(self._noticia_cache(date(2026, 6, 1)), ruta)
+
+            resultado = noticias.cargar_cache(ruta, hoy=date(2026, 7, 15))
+
+            self.assertTrue(resultado.empty)
 
 
 if __name__ == "__main__":

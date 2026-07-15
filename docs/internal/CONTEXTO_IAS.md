@@ -14,6 +14,17 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 
 ## Punto de control (2026-07-15)
 
+- **Noticias persistentes para el comentario IA (2026-07-15).** La primera
+  corrida real con GDELT integrado fue limitada por la API y generó el
+  comentario sin noticias. El flujo ya no consulta GDELT desde
+  `comentario_ia`: `python -m fuentes.noticias` hace hasta 3 intentos con
+  espera exponencial y versiona la última consulta no vacía en
+  `datos/noticias/noticias_gdelt.csv`; si vuelve a fallar, usa ese respaldo
+  durante máximo 14 días. `config.py` contiene la lista editable de dominios
+  reconocidos. Cuando queda al menos una señal confiable, el esquema de salida
+  obliga a Claude a identificarla y el código verifica que dominio y fecha
+  aparezcan en ES y EN conectados con una cifra. El JSON y el caption de la app
+  conservan esa trazabilidad. Suite actual: 96 pruebas.
 - **Automatización observable (2026-07-15).** El workflow de datos conserva
   tolerancia ante fallos puntuales de red, pero ahora termina con
   `procesar.auditar_automatizacion`: valida frescura por serie del histórico
@@ -21,7 +32,7 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   en `config.py`. Indicadores y visualización dejaron de ocultar errores con
   `continue-on-error`. El workflow de pruebas admite ejecución manual, usa
   permisos de solo lectura y ejecuta `import app` en modo offline. Suite actual:
-  90 pruebas, ruff limpio e importación completa OK.
+  96 pruebas, ruff limpio e importación completa OK.
 - **Primera desconcentración de `app.py` (2026-07-15).** Nuevo paquete
   `interfaz/`: `datos.py` concentra carga, regeneración, caché e intradía;
   `formato.py`, números y unidades; `analisis.py`, transformaciones comerciales
@@ -298,25 +309,12 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
   el subdominio `kitconsultayreporte`); (2) recrear el secret
   `ANTHROPIC_API_KEY` en Settings → Secrets del repo nuevo (los secrets no
   migran); (3) verificar que los workflows de Actions queden habilitados.
-- **Señales de noticias en el comentario IA (2026-07-14).** GDELT deja de ser
-  la única fuente que el usuario jamás veía: `comentario_ia.main()` llama a
-  `fuentes.noticias.obtener()` (import perezoso, mismo patrón que `anthropic`;
-  nunca bloquea — GDELT rate-limita con frecuencia y entonces el campo
-  simplemente no aparece) y `construir_contexto(historico, calibracion,
-  noticias)` añade el campo opcional `senales_noticias`: máximo
-  `NOTICIAS_COMENTARIO_MAX`=3 titulares (título, fecha, dominio; sin URL para
-  ahorrar tokens), deduplicados por titular y por dominio porque GDELT repite
-  el mismo cable en varios medios. El prompt ahora distingue el contexto de
-  memoria del modelo (sigue prohibido) de los titulares entregados en el
-  paquete (permitidos con cautela): máximo una señal por comentario,
-  parafraseada como "un titular de <dominio> del dd/mm/aaaa menciona...",
-  solo si coincide con un movimiento real de las cifras, sin causalidad, y
-  con credibilidad evaluada por dominio por el propio modelo (decisión del
-  usuario 2026-07-14: confiar en Opus 4.8 + prompt, sin whitelist de medios,
-  priorizando eficiencia de créditos — cero llamadas extra a Claude, ~150
-  tokens más de contexto). 81 pruebas (+3 nuevas de dedupe/tope/ausencia),
-  ruff limpio, `import app` OK. Falta verificar el efecto en la próxima
-  corrida real del workflow con la API key ya configurada.
+- **Señales de noticias en el comentario IA (2026-07-14, reemplazado
+  2026-07-15).** Se conserva el diseño de máximo una señal GDELT por comentario,
+  parafraseada, con dominio y fecha, sin causalidad y sin llamada adicional a
+  Claude. La evaluación abierta del dominio por el modelo y la consulta en vivo
+  desde `comentario_ia` se reemplazaron por caché persistente, filtro explícito
+  de dominios y validación estructural; ver el punto de control superior.
 - **Autoría con marca Cauce (2026-07-14, pedido del usuario).** La atribución
   visible dejó de ser "Autor: Juan José Jaramillo" y ahora es la marca
   **Cauce — Automatización e IA para empresas · By Juan J. Jaramillo**:
@@ -538,8 +536,9 @@ contenido controlado; sin red en runtime; `.gitignore` cubre `.env`). URL local:
   producción mensual desde 1956; se filtran a 2023+ (producción hasta 2026-05).
 - El Excel separado de exportaciones FNC trae volumen mensual desde 1958 en
   miles de sacos de 60 kg; se filtra a 2023+ (hasta 2026-05).
-- GDELT puede dar `RateLimitError`; el fallback vacío funciona (estrategia
-  alterna pendiente si se vuelve recurrente).
+- GDELT puede dar `RateLimitError`; el pipeline reintenta y usa la última
+  consulta útil reciente. Si nunca hubo una consulta exitosa o el respaldo
+  supera 14 días, el comentario se genera honestamente sin noticias.
 - PDF: no usar `plotly`+`kaleido` (kaleido 0.2.1 se cuelga con Plotly 6.8 en
   Python 3.13/Windows; v1 exige Chrome). Gráficas del brief con matplotlib.
 - El PDF FNC por ciudad se descartó (frágil, poca diferencia con el nacional).

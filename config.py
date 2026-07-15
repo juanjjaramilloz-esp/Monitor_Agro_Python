@@ -20,6 +20,8 @@ DIR_HISTORICO = DIR_DATOS / "historico"
 DIR_INDICADORES = DIR_DATOS / "indicadores"
 DIR_VISUALIZACION = DIR_DATOS / "visualizacion"
 DIR_COMENTARIO = DIR_DATOS / "comentario"
+DIR_NOTICIAS = DIR_DATOS / "noticias"
+ARCHIVO_NOTICIAS = DIR_NOTICIAS / "noticias_gdelt.csv"
 
 # Ventana inicial del backfill. Se puede cambiar sin tocar la lógica.
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
@@ -355,6 +357,11 @@ URL_OPEN_METEO_HISTORICO = "https://archive-api.open-meteo.com/v1/archive"
 IDIOMA_NOTICIAS = "spanish"
 NOTICIAS_DIAS_ATRAS = 7
 NOTICIAS_MAX_REGISTROS = 25
+NOTICIAS_REINTENTOS = 3
+NOTICIAS_ESPERA_REINTENTO_SEGUNDOS = 5
+# El respaldo se conserva, pero no se entrega a Claude si su noticia más
+# reciente supera esta edad. Evita convertir un caché útil en contexto obsoleto.
+NOTICIAS_CACHE_MAX_EDAD_DIAS = 14
 # Términos que disparan señales relevantes para agroexportación.
 TERMINOS_NOTICIAS = [
     "café",
@@ -369,6 +376,26 @@ TERMINOS_NOTICIAS = [
 ]
 # Máximo de titulares que se entregan como señal al comentario del periodo.
 NOTICIAS_COMENTARIO_MAX = 3
+# Dominios periodísticos e institucionales aceptados para conectar señales con
+# cifras. Se admiten también sus subdominios. Mantener explícita esta lista
+# evita que un sitio opaco recogido por GDELT entre al comentario como fuente.
+NOTICIAS_DOMINIOS_CONFIABLES = [
+    "agronegocios.co",
+    "analdex.org",
+    "banrep.gov.co",
+    "bloomberg.com",
+    "cafedecolombia.com",
+    "dane.gov.co",
+    "eltiempo.com",
+    "elespectador.com",
+    "federaciondecafeteros.org",
+    "ico.org",
+    "larepublica.co",
+    "minagricultura.gov.co",
+    "portafolio.co",
+    "procolombia.co",
+    "reuters.com",
+]
 
 # ---------------------------------------------------------------------------
 # Score (Fase 3) — PROVISIONAL

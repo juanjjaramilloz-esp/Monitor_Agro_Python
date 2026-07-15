@@ -114,9 +114,18 @@ jobs:
           fi
 
       # El comentario queda versionado en datos/comentario/ con fecha y modelo;
-      # la app solo lee el archivo (cero llamadas de IA en runtime). La key
-      # vive únicamente como secret del repo.
+      # GDELT se consulta antes y persiste su último resultado útil. Si la
+      # consulta agota sus reintentos, comentario_ia usa ese respaldo sin hacer
+      # una segunda llamada en vivo.
+      - name: Actualizar caché de noticias GDELT
+        if: steps.chequeo_comentario.outputs.toca == 'true'
+        continue-on-error: true
+        run: python -m fuentes.noticias
+
+      # La app solo lee el archivo final (cero llamadas de IA en runtime). La
+      # key vive únicamente como secret del repo.
       - name: Redactar comentario del periodo con Claude
+        id: comentario_ia
         if: steps.chequeo_comentario.outputs.toca == 'true'
         continue-on-error: true
         env:
@@ -137,6 +146,18 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+      # Los datos y el caché ya quedaron publicados en el paso anterior. Si
+      # Claude incumplió el esquema o la conexión obligatoria con una noticia
+      # disponible, se deja una señal roja sin perder las demás actualizaciones.
+      - name: Confirmar generación del comentario solicitado
+        if: >-
+          always() &&
+          steps.chequeo_comentario.outputs.toca == 'true' &&
+          steps.comentario_ia.outcome == 'failure'
+        run: |
+          echo "::error title=Comentario IA inválido::Claude no generó un comentario válido o no conectó la noticia disponible con los datos."
+          exit 1
 
       # Se audita después del commit para no perder actualizaciones parciales:
       # el workflow queda rojo si algo está congelado, pero los datos frescos

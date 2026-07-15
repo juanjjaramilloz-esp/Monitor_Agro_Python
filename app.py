@@ -205,17 +205,25 @@ TEXTOS = {
     "cap_comentario_ia": {
         "es": (
             "Redactado por {modelo} el {fecha} durante la actualización "
-            "automática de datos, usando únicamente cifras del propio kit: "
-            "las últimas {semanas} semanas de mercado y la referencia diaria "
-            "más reciente de la FNC. Describe lo observado; no es pronóstico "
-            "ni recomendación."
+            "automática de datos, usando cifras del propio kit: las últimas "
+            "{semanas} semanas de mercado y la referencia diaria más reciente "
+            "de la FNC. Describe lo observado; no es pronóstico ni recomendación."
         ),
         "en": (
             "Written by {modelo} on {fecha} during the automated data "
-            "refresh, using only the kit's own figures: the last {semanas} "
-            "market weeks and the most recent FNC daily reference. It "
-            "describes what was observed; it is not a forecast or a "
-            "recommendation."
+            "refresh, using the kit's own figures: the last {semanas} market "
+            "weeks and the most recent FNC daily reference. It describes what "
+            "was observed; it is not a forecast or a recommendation."
+        ),
+    },
+    "cap_comentario_ia_noticia": {
+        "es": (
+            " Incluye una señal cualitativa sin verificar de {dominio}, "
+            "fechada el {fecha_noticia}, conectada de forma descriptiva con los datos."
+        ),
+        "en": (
+            " It includes an unverified qualitative signal from {dominio}, "
+            "dated {fecha_noticia}, descriptively connected with the data."
         ),
     },
     "md_lectura_rapida": {
@@ -2009,13 +2017,18 @@ with tab_panorama:
             comentario_ia["comentario_es" if IDIOMA == "es" else "comentario_en"]
         )
         fecha_comentario = pd.Timestamp(comentario_ia["fecha_generacion"])
-        st.caption(
-            _t("cap_comentario_ia").format(
-                modelo=comentario_ia.get("modelo", "Claude"),
-                fecha=f"{fecha_comentario:%d/%m/%Y}",
-                semanas=comentario_ia.get("periodo_semanas", COMENTARIO_IA_SEMANAS),
-            )
+        trazabilidad = _t("cap_comentario_ia").format(
+            modelo=comentario_ia.get("modelo", "Claude"),
+            fecha=f"{fecha_comentario:%d/%m/%Y}",
+            semanas=comentario_ia.get("periodo_semanas", COMENTARIO_IA_SEMANAS),
         )
+        noticia_conectada = comentario_ia.get("noticia_conectada")
+        if noticia_conectada:
+            trazabilidad += _t("cap_comentario_ia_noticia").format(
+                dominio=noticia_conectada["dominio"],
+                fecha_noticia=noticia_conectada["fecha"],
+            )
+        st.caption(trazabilidad)
 
     st.subheader(_t("sub_prodexp"))
     _bloque_produccion_exportaciones(filtrados, datos)

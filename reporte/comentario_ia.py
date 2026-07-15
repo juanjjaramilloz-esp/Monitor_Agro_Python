@@ -4,9 +4,10 @@ Corre solo en la automatización de datos (GitHub Actions), nunca en runtime de
 la app: el resultado queda versionado en ``datos/comentario/`` con fecha y
 modelo, y el tablero solo lee ese archivo. El prompt entrega cifras exactas ya
 calculadas desde el histórico y obliga a describir sin predecir ni recomendar,
-el mismo estándar de honestidad del resto del kit. Si GDELT responde, se
-adjuntan además unos pocos titulares recientes como señal cualitativa opcional
-(marcados como sin verificar; el comentario funciona igual sin ellos).
+el mismo estándar de honestidad del resto del kit. Lee del caché persistente de
+GDELT unos pocos titulares recientes de dominios reconocidos. Si hay al menos
+uno, el esquema obliga a conectarlo con una cifra como señal sin verificar; si
+el caché falta o caducó, el comentario funciona sin noticias.
 
 Uso: ``python -m reporte.comentario_ia`` (requiere ANTHROPIC_API_KEY en el
 entorno; sin la key informa y termina sin error para no romper corridas
@@ -31,6 +32,7 @@ from config import (
     DIR_HISTORICO,
     NOTICIAS_COMENTARIO_MAX,
     NOTICIAS_DIAS_ATRAS,
+    NOTICIAS_DOMINIOS_CONFIABLES,
 )
 from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
 
@@ -103,17 +105,18 @@ no describir una sola serie de forma aislada.
 Cómo manejar las señales de noticias (campo "senales_noticias", solo si está \
 presente):
 - Son titulares recientes recogidos por GDELT: señales cualitativas SIN \
-verificar, nunca hechos confirmados. Preséntalas siempre con esa cautela y \
-su trazabilidad: "un titular de <dominio> del dd/mm/aaaa menciona...".
-- Evalúa tú la credibilidad por el dominio: descarta sin mencionar cualquier \
-titular cuyo dominio no parezca un medio informativo o institucional \
-reconocible.
+verificar, nunca hechos confirmados. Ya fueron filtrados por una lista \
+explícita de dominios periodísticos o institucionales reconocidos.
+- Si el campo está presente, DEBES conectar exactamente uno de sus titulares \
+con al menos un movimiento cuantitativo entregado. Incluye siempre su \
+trazabilidad: "un titular de <dominio> del dd/mm/aaaa menciona..." y cita en \
+la misma oración la cifra y fecha con la que coincide.
 - No copies el titular literal; parafrasea su idea en tus palabras en cada \
 idioma.
-- Menciona una señal SOLO si se conecta de forma evidente con un movimiento \
-de las cifras entregadas; máximo una señal en todo el comentario, y si \
-ninguna se conecta, ignóralas todas: el comentario funciona completo sin \
-ellas.
+- Usa una sola señal en todo el comentario. El objeto estructurado \
+"noticia_conectada" debe identificar el dominio, la fecha y la variable \
+cuantitativa que conectaste; los dos comentarios deben incluir el dominio y \
+la fecha elegidos.
 - Una señal jamás sustituye a las cifras ni explica causalidad; a lo sumo \
 "coincide con" un movimiento observado.
 
@@ -143,6 +146,37 @@ ESQUEMA_SALIDA = {
     "required": ["comentario_es", "comentario_en"],
     "additionalProperties": False,
 }
+
+
+def _esquema_salida(contexto: dict) -> dict:
+    """Exige trazabilidad estructurada cuando hay noticias confiables."""
+    senales = contexto.get("senales_noticias", {}).get("titulares", [])
+    if not senales:
+        return ESQUEMA_SALIDA
+    variables = list(contexto["series_mercado"]) + list(contexto["series_mensuales"])
+    propiedades = dict(ESQUEMA_SALIDA["properties"])
+    propiedades["noticia_conectada"] = {
+        "type": "object",
+        "properties": {
+            "dominio": {
+                "type": "string",
+                "enum": sorted({senal["dominio"] for senal in senales}),
+            },
+            "fecha": {
+                "type": "string",
+                "enum": sorted({senal["fecha"] for senal in senales}),
+            },
+            "variable_dato": {"type": "string", "enum": variables},
+        },
+        "required": ["dominio", "fecha", "variable_dato"],
+        "additionalProperties": False,
+    }
+    return {
+        "type": "object",
+        "properties": propiedades,
+        "required": ["comentario_es", "comentario_en", "noticia_conectada"],
+        "additionalProperties": False,
+    }
 
 
 def _fecha(valor: object) -> str:
@@ -281,6 +315,16 @@ def _senales_noticias(noticias: pd.DataFrame | None) -> dict | None:
     df["dominio"] = df["url"].map(
         lambda u: urlparse(str(u)).netloc.removeprefix("www.")
     )
+    df = df[
+        df["dominio"].map(
+            lambda dominio: any(
+                dominio == permitido or dominio.endswith(f".{permitido}")
+                for permitido in NOTICIAS_DOMINIOS_CONFIABLES
+            )
+        )
+    ]
+    if df.empty:
+        return None
     df = (
         df.sort_values("fecha", ascending=False)
         .drop_duplicates(subset=["titulo"])
@@ -290,7 +334,8 @@ def _senales_noticias(noticias: pd.DataFrame | None) -> dict | None:
     return {
         "descripcion": (
             f"Titulares de los últimos {NOTICIAS_DIAS_ATRAS} días recogidos "
-            "por GDELT; señales cualitativas sin verificar, no hechos."
+            "por GDELT y filtrados por dominio reconocido; señales "
+            "cualitativas sin verificar, no hechos."
         ),
         "titulares": [
             {
@@ -371,6 +416,34 @@ def construir_mensaje(contexto: dict) -> str:
     )
 
 
+def _validar_noticia_conectada(contexto: dict, respuesta: dict) -> dict | None:
+    """Comprueba que la noticia elegida existe y aparece en ambos idiomas."""
+    titulares = contexto.get("senales_noticias", {}).get("titulares", [])
+    if not titulares:
+        return None
+    seleccion = respuesta.get("noticia_conectada")
+    if not isinstance(seleccion, dict):
+        raise RuntimeError("comentario_ia: falta la conexión obligatoria con noticias")
+    dominio = seleccion.get("dominio")
+    fecha = seleccion.get("fecha")
+    if not any(
+        titular["dominio"] == dominio and titular["fecha"] == fecha
+        for titular in titulares
+    ):
+        raise RuntimeError("comentario_ia: la noticia conectada no pertenece al contexto")
+    for clave in ("comentario_es", "comentario_en"):
+        texto = respuesta.get(clave, "")
+        if dominio not in texto or fecha not in texto:
+            raise RuntimeError(
+                f"comentario_ia: {clave} no incluye dominio y fecha de la noticia"
+            )
+    return {
+        "dominio": dominio,
+        "fecha": fecha,
+        "variable_dato": seleccion.get("variable_dato"),
+    }
+
+
 def generar_comentario(contexto: dict, cliente=None) -> dict:
     """Llama a Claude y devuelve el comentario bilingüe validado por esquema."""
     if cliente is None:
@@ -381,7 +454,9 @@ def generar_comentario(contexto: dict, cliente=None) -> dict:
         model=COMENTARIO_IA_MODELO,
         max_tokens=COMENTARIO_IA_MAX_TOKENS,
         system=INSTRUCCIONES_SISTEMA,
-        output_config={"format": {"type": "json_schema", "schema": ESQUEMA_SALIDA}},
+        output_config={
+            "format": {"type": "json_schema", "schema": _esquema_salida(contexto)}
+        },
         messages=[{"role": "user", "content": construir_mensaje(contexto)}],
     )
     if respuesta.stop_reason == "refusal":
@@ -390,10 +465,15 @@ def generar_comentario(contexto: dict, cliente=None) -> dict:
         bloque.text for bloque in respuesta.content if bloque.type == "text"
     )
     comentario = json.loads(texto)
+    noticia_conectada = _validar_noticia_conectada(contexto, comentario)
     return {
         "fecha_generacion": date.today().isoformat(),
         "modelo": COMENTARIO_IA_MODELO,
         "periodo_semanas": contexto["periodo_semanas"],
+        "noticias_disponibles": len(
+            contexto.get("senales_noticias", {}).get("titulares", [])
+        ),
+        "noticia_conectada": noticia_conectada,
         "comentario_es": comentario["comentario_es"],
         "comentario_en": comentario["comentario_en"],
     }
@@ -429,16 +509,11 @@ def main() -> None:
     calibracion = (
         pd.read_csv(RUTA_CALIBRACION_FNC) if RUTA_CALIBRACION_FNC.exists() else None
     )
-    try:
-        from fuentes import noticias as fuente_noticias
+    from fuentes import noticias as fuente_noticias
 
-        noticias = fuente_noticias.obtener()
-    except Exception as error:  # noqa: BLE001 - señal opcional, nunca bloquea
-        print(
-            f"comentario_ia: sin señales de noticias "
-            f"({type(error).__name__}); se continúa sin ellas."
-        )
-        noticias = None
+    noticias = fuente_noticias.cargar_cache()
+    if noticias.empty:
+        print("comentario_ia: no hay un caché vigente de noticias; se continúa sin ellas.")
     contexto = construir_contexto(historico, calibracion, noticias)
     if not contexto["series_mercado"]:
         print("comentario_ia: sin series de mercado suficientes; no se genera.")

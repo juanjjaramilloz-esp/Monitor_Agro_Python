@@ -19,7 +19,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 90 offline unit tests and automated data refresh on business days.
+> 96 offline unit tests and automated data refresh on business days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
@@ -47,10 +47,10 @@ internacional, análisis de datos y necesidades reales de investigación.
 - Publica un **comentario del periodo redactado con IA (Claude)**, generado en
   la actualización automática de datos y anclado exclusivamente a cifras del
   propio kit: describe sin predecir ni recomendar, queda versionado con fecha
-  y modelo, y la app no hace ninguna llamada de IA en runtime. Cuando GDELT
-  responde, recibe además titulares recientes como señal cualitativa — siempre
-  marcados como sin verificar y solo mencionables si coinciden con un
-  movimiento real de las cifras.
+  y modelo, y la app no hace ninguna llamada de IA en runtime. Los titulares
+  recientes de GDELT se guardan previamente con reintentos y respaldo; si hay
+  una señal de un dominio reconocido, Claude debe conectarla con un movimiento
+  real de las cifras, sin presentarla como causalidad ni hecho confirmado.
 - Muestra el **último precio de mercado** de USD/COP y Coffee C (~15 minutos
   de retraso) junto al histórico semanal, sin mezclar proveedores en la
   calibración.
@@ -82,7 +82,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.600+ (crecen en días hábiles) |
 | Semanas completas de mercado y clima | 181+ |
 | Observaciones mensuales de producción y exportaciones | 82+ |
-| Pruebas unitarias sin internet | 90 |
+| Pruebas unitarias sin internet | 96 |
 | Actualización automática | Días hábiles |
 | Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
@@ -164,7 +164,7 @@ procesar/ -> calidad, histórico, indicadores, visualización y escenarios
 reporte/  -> brief Markdown, informe del simulador, Excel y PDF bilingüe
 interfaz/ -> acceso/caché de datos, formato, análisis visual y estilos Streamlit
 datos/    -> histórico, indicadores, metadatos y snapshots
-tests/    -> 90 pruebas unitarias sin internet (CI en cada push)
+tests/    -> 96 pruebas unitarias sin internet (CI en cada push)
 app.py    -> interfaz Streamlit bilingüe
 ```
 
@@ -185,7 +185,7 @@ python main.py                       # verifica los contratos de las fuentes
 streamlit run app.py                 # abre el tablero en localhost:8501
 ```
 
-Para comprobar la lógica sin depender de internet (90 pruebas, también corren
+Para comprobar la lógica sin depender de internet (96 pruebas, también corren
 en CI en cada push):
 
 ```powershell
@@ -272,6 +272,12 @@ días hábiles, el comentario se limita a **cada 2 días** (según la fecha del
 Para forzarlo antes de esos 2 días (por ejemplo, tras cambiar el prompt),
 dispara el workflow a mano marcando el checkbox **"Forzar el comentario IA"**
 en `workflow_dispatch`.
+Antes de llamar a Claude, `python -m fuentes.noticias` intenta actualizar
+`datos/noticias/noticias_gdelt.csv` hasta tres veces. Si GDELT limita la
+consulta, conserva el último resultado útil durante un máximo de 14 días. El
+comentario nunca consulta GDELT directamente: consume ese archivo, filtra los
+dominios reconocidos configurados en `config.py` y exige una conexión
+noticia–dato cuando queda al menos una señal confiable.
 Recibe únicamente cifras exactas ya calculadas del histórico y la referencia
 diaria más reciente (grounding), el prompt le prohíbe predecir o recomendar,
 y el resultado queda versionado en `datos/comentario/` con fecha y modelo. La
@@ -294,8 +300,11 @@ de visitantes (~15 llamadas al mes).
 - `datos/visualizacion/catalogo_variables.csv`: etiquetas, descripciones,
   colores y formatos de las nueve variables.
 - `datos/snapshots/`: fotografías archivadas de las ejecuciones semanales.
+- `datos/noticias/noticias_gdelt.csv`: última consulta útil de titulares,
+  usada como respaldo ante límites temporales de GDELT.
 - `datos/comentario/comentario_periodo.json`: comentario del periodo redactado
-  con Claude en CI, bilingüe y con fecha y modelo para trazabilidad.
+  con Claude en CI, bilingüe y con fecha, modelo y noticia conectada para
+  trazabilidad.
 
 La semana se cierra el domingo. Café, USD/COP y precio FNC usan el último dato
 disponible de la semana. La lluvia se suma y las temperaturas se agregan a
