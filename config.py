@@ -25,6 +25,14 @@ DIR_COMENTARIO = DIR_DATOS / "comentario"
 HISTORICO_FECHA_INICIO = date(2023, 1, 1)
 HISTORICO_RETRASO_CLIMA_DIAS = 5
 
+# Tolerancias de salud para la automatización. Consideran el retraso climático,
+# fines de semana y festivos, pero hacen fallar el workflow si los artefactos
+# quedan silenciosamente congelados durante varios días.
+AUTOMATIZACION_MAX_RETRASO_DIARIO_DIAS = 10
+AUTOMATIZACION_MAX_RETRASO_SEMANAL_DIAS = 14
+AUTOMATIZACION_MAX_RETRASO_CALIBRACION_DIAS = 7
+AUTOMATIZACION_MAX_RETRASO_COMENTARIO_DIAS = 4
+
 # Ventanas descriptivas del Bloque 3. No expresan todavía criterio cafetero.
 INDICADORES_VENTANA_CORTA = 4
 INDICADORES_VENTANA_LARGA = 12

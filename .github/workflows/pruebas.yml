@@ -6,10 +6,14 @@ name: Pruebas
 # reportes y simulador pasa sus pruebas.
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -49,3 +53,8 @@ jobs:
 
       - name: Ejecutar la suite
         run: python -m unittest discover -s tests -v
+
+      - name: Importar la app sin llamadas de red
+        env:
+          PULSO_CAFETERO_OFFLINE: "1"
+        run: python -c "import app"

@@ -51,7 +51,6 @@ jobs:
         run: python -m procesar.historico --desde "$(date -u -d '120 days ago' +%Y-%m-%d)"
 
       - name: Recalcular indicadores
-        continue-on-error: true
         run: python -m procesar.indicadores
 
       - name: Actualizar calibracion oficial del simulador
@@ -59,7 +58,6 @@ jobs:
         run: python -m procesar.calibracion_fnc
 
       - name: Preparar series de visualización
-        continue-on-error: true
         run: python -m procesar.visualizacion
 
       # procesar.unir vuelve a consultar las fuentes en vivo (no lee el
@@ -139,3 +137,20 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+      # Se audita después del commit para no perder actualizaciones parciales:
+      # el workflow queda rojo si algo está congelado, pero los datos frescos
+      # que sí llegaron ya quedan publicados. Sin secret de Anthropic se avisa
+      # y se audita el núcleo de datos sin bloquearlo por la capa opcional de IA.
+      - name: Auditar frescura de la automatización
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::warning title=Secret faltante::ANTHROPIC_API_KEY no está configurado; el comentario IA no se audita."
+            export AUDITAR_COMENTARIO_IA=false
+          else
+            export AUDITAR_COMENTARIO_IA=true
+          fi
+          unset ANTHROPIC_API_KEY
+          python -m procesar.auditar_automatizacion

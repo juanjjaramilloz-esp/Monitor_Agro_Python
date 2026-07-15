@@ -12,7 +12,22 @@ que no conviene reconstruir. Contrato técnico estable: `CLAUDE.md`. Estrategia:
 `git log --oneline -8`; verificar con código/pruebas cualquier dato operativo.
 `BRIEFING_CHAT.md` solo si la tarea depende de audiencia o producto.
 
-## Punto de control (2026-06-30)
+## Punto de control (2026-07-15)
+
+- **Automatización observable (2026-07-15).** El workflow de datos conserva
+  tolerancia ante fallos puntuales de red, pero ahora termina con
+  `procesar.auditar_automatizacion`: valida frescura por serie del histórico
+  diario y semanal, calibración FNC y comentario IA con límites centralizados
+  en `config.py`. Indicadores y visualización dejaron de ocultar errores con
+  `continue-on-error`. El workflow de pruebas admite ejecución manual, usa
+  permisos de solo lectura y ejecuta `import app` en modo offline. Suite actual:
+  90 pruebas, ruff limpio e importación completa OK.
+- **Primera desconcentración de `app.py` (2026-07-15).** Nuevo paquete
+  `interfaz/`: `datos.py` concentra carga, regeneración, caché e intradía;
+  `formato.py`, números y unidades; `analisis.py`, transformaciones comerciales
+  puras; `estilos.py`, CSS. `app.py` queda como composición de vistas y pierde
+  286 líneas sin cambios funcionales visibles. Próxima extracción razonable:
+  internacionalización y gráficas, en otra unidad incremental.
 
 - MVP descriptivo completo: fuentes, calidad, histórico desde 2023, indicadores
   neutrales, preparación visual, dashboard y brief del periodo en PDF con gráficas.

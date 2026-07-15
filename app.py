@@ -7,7 +7,6 @@ from urllib.parse import quote
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-import yfinance as yf
 
 from config import (
     ARROBAS_POR_CARGA,
@@ -37,12 +36,21 @@ from config import (
     PROYECCION_PUNTOS_MATRIZ,
     PROYECCION_RANGO_FACTOR_CAFE,
     PROYECCION_RANGO_FACTOR_FX,
-    TICKER_CAFE_ARABICA,
-    TICKER_FX,
     VARIABLES_MENSUALES,
 )
+from interfaz.analisis import (
+    comparar_produccion_exportaciones as _comparar_produccion_exportaciones,
+)
+from interfaz.analisis import resumen_fuentes_comerciales as _resumen_fuentes_comerciales
+from interfaz.analisis import variaciones_mercado as _variaciones_mercado
+from interfaz.datos import cargar_calibracion_fnc as _cargar_calibracion_fnc
+from interfaz.datos import cargar_datos as _cargar_datos
+from interfaz.datos import cargar_historico_diario as _cargar_historico_diario
+from interfaz.datos import precios_intradia as _precios_intradia
+from interfaz.estilos import aplicar_estilos as _estilos
+from interfaz.formato import numero as _formatear_numero
+from interfaz.formato import unidad_legible as _unidad_legible
 from procesar.calibracion_fnc import RUTA_CALIBRACION_FNC
-from procesar.historico import RUTA_DIARIO
 from procesar.proyeccion import (
     ResultadoEscenario,
     calcular_escenario,
@@ -57,10 +65,6 @@ from procesar.visualizacion import (
     filtrar_periodo_visualizacion,
     incorporar_referencia_comercial_actual,
     preparar_descarga_comercial,
-    series_necesitan_regenerarse,
-)
-from procesar.visualizacion import (
-    ejecutar as preparar_visualizacion,
 )
 from reporte.comentario_ia import cargar as cargar_comentario_ia
 from reporte.excel import generar_excel_comercial
@@ -78,20 +82,6 @@ CONFIG_GRAFICO = {
 # repetir el prefijo PROYECCION_ en los seis puntos de uso del simulador.
 PASO_FX = PROYECCION_PASO_FX
 PASO_CAFE = PROYECCION_PASO_CAFE
-
-
-# Las fuentes usan unidades "de máquina" en el contrato de datos; aquí se
-# traducen a etiquetas legibles solo al mostrarlas, sin tocar el esquema.
-UNIDADES_LEGIBLES = {
-    "COP/carga_125kg": "COP/carga",
-    "USc/lb": "US¢/lb",
-    "miles_sacos_60kg": "miles de sacos de 60 kg",
-}
-
-
-def _unidad_legible(unidad: str) -> str:
-    """Traduce la unidad técnica del contrato a una etiqueta legible en la UI."""
-    return UNIDADES_LEGIBLES.get(unidad, unidad)
 
 
 # --- Internacionalización (español / inglés) ------------------------------
@@ -858,238 +848,13 @@ st.set_page_config(
 )
 
 
-def _estilos() -> None:
-    colores = COLORES_INTERFAZ
-    st.markdown(
-        f"""
-        <style>
-        :root {{
-            --monitor-texto: {colores['texto']};
-            --monitor-secundario: {colores['texto_secundario']};
-            --monitor-fondo: {colores['fondo']};
-            --monitor-sidebar: {colores['sidebar']};
-            --monitor-superficie: {colores['superficie']};
-            --monitor-borde: {colores['borde']};
-            --monitor-acento: {colores['acento']};
-        }}
-        .stApp {{ background: var(--monitor-fondo); color: var(--monitor-texto); }}
-        [data-testid="stHeader"] {{ background: var(--monitor-fondo); }}
-        .block-container {{ max-width: 1440px; padding-top: 1.5rem; padding-bottom: 3rem; }}
-        h1, h2, h3, p, label {{ color: var(--monitor-texto); letter-spacing: 0; }}
-        h1 {{
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin-bottom: 0.15rem;
-        }}
-        h1 + div[data-testid="stCaptionContainer"] {{ margin-bottom: 0.6rem; }}
-        h2 {{ font-size: 1.35rem; margin-top: 1rem; }}
-        h3 {{
-            font-size: 1.18rem;
-            font-weight: 600;
-            margin-top: 1.75rem;
-            margin-bottom: 0.4rem;
-        }}
-        [data-testid="stSidebar"] {{
-            background: var(--monitor-sidebar);
-            border-right: 1px solid var(--monitor-borde);
-        }}
-        [data-testid="stSidebar"] h1,
-        [data-testid="stSidebar"] h2,
-        [data-testid="stSidebar"] h3,
-        [data-testid="stSidebar"] p,
-        [data-testid="stSidebar"] label {{ color: var(--monitor-texto) !important; }}
-        [data-testid="stMetric"] {{
-            background: var(--monitor-superficie);
-            border: 1px solid var(--monitor-borde);
-            border-left: 4px solid var(--monitor-acento);
-            border-radius: 10px;
-            padding: 0.9rem 1rem;
-            min-height: 128px;
-            box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
-        }}
-        [data-testid="stMetricLabel"] {{ color: var(--monitor-secundario) !important; }}
-        [data-testid="stMetricValue"] {{
-            color: var(--monitor-texto) !important;
-            font-size: 1.55rem;
-        }}
-        [data-testid="stMetricDelta"] {{ color: var(--monitor-secundario) !important; }}
-        /* Margen por carga y total: ocultar la flecha (es un ratio, no una
-           variación) pero conservar el texto dentro de la tarjeta. */
-        .st-key-metrica_margen_carga [data-testid="stMetricDelta"] svg,
-        .st-key-metrica_margen_total [data-testid="stMetricDelta"] svg {{ display: none; }}
-        .st-key-metrica_margen_carga [data-testid="stMetricDelta"],
-        .st-key-metrica_margen_total [data-testid="stMetricDelta"] {{ padding-left: 0; }}
-        [data-testid="stPlotlyChart"] {{
-            background: var(--monitor-superficie);
-            border: 1px solid var(--monitor-borde);
-            border-radius: 10px;
-            padding: 0.25rem;
-            box-shadow: 0 1px 2px rgba(23, 33, 27, 0.05);
-        }}
-        [data-testid="stExpander"] details {{
-            border: 1px solid var(--monitor-borde);
-            border-radius: 10px;
-            background: var(--monitor-superficie);
-        }}
-        [data-testid="stExpander"] summary {{ transition: color 120ms ease; }}
-        [data-testid="stExpander"] summary:hover {{ color: var(--monitor-acento) !important; }}
-        [data-testid="stAlert"] {{
-            background: var(--monitor-superficie);
-            border: 1px solid var(--monitor-borde);
-            border-left: 4px solid var(--monitor-acento);
-            border-radius: 10px;
-        }}
-        [data-testid="stDataFrame"] {{
-            border: 1px solid var(--monitor-borde);
-            border-radius: 10px;
-            overflow: hidden;
-        }}
-        [data-testid="stDataFrame"] [data-testid="stDataFrameResizable"] {{
-            border-radius: 10px;
-        }}
-        [data-testid="stDataFrame"] thead tr th {{
-            background: var(--monitor-sidebar) !important;
-        }}
-        [data-testid="stDownloadButton"] button {{
-            border: 1px solid var(--monitor-acento);
-            border-radius: 8px;
-            color: var(--monitor-acento);
-            background: var(--monitor-superficie);
-            font-weight: 600;
-            transition: background 120ms ease, color 120ms ease;
-        }}
-        [data-testid="stDownloadButton"] button:hover {{
-            background: var(--monitor-acento);
-            color: #FFFFFF;
-        }}
-        .stTabs [data-baseweb="tab-list"] {{
-            gap: 1.5rem;
-            border-bottom: 1px solid var(--monitor-borde);
-        }}
-        .stTabs [data-baseweb="tab"] {{
-            color: var(--monitor-secundario) !important;
-            padding-left: 0;
-            padding-right: 0;
-            padding-bottom: 0.5rem;
-            font-size: 1.02rem;
-            border-bottom: 3px solid transparent;
-            transition: color 120ms ease, border-color 120ms ease;
-        }}
-        .stTabs [data-baseweb="tab"] p {{ color: inherit !important; font-weight: 500; }}
-        .stTabs [data-baseweb="tab"]:hover {{ color: var(--monitor-acento) !important; }}
-        .stTabs [aria-selected="true"] {{
-            color: var(--monitor-acento) !important;
-            border-bottom-color: var(--monitor-acento);
-        }}
-        @media (max-width: 1024px) {{
-            .block-container {{ padding: 1.2rem 1rem 2.5rem; }}
-            [data-testid="stMetric"] {{ min-height: 120px; }}
-        }}
-        @media (max-width: 768px) {{
-            .block-container {{ padding: 1rem 0.8rem 2rem; }}
-            h1 {{ font-size: 1.65rem; }}
-            [data-testid="stMetric"] {{ min-height: 112px; }}
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
-@st.cache_data(show_spinner=False)
-def _leer_series(ruta: str, marca_tiempo: float) -> pd.DataFrame:
-    del marca_tiempo
-    tabla = pd.read_csv(ruta, parse_dates=["semana_fin", "fecha_dato"])
-    numericas = [
-        "valor",
-        "indice_base_100",
-        "cambio_1s_absoluto",
-        "cambio_1s_pct",
-        "cambio_4s_pct",
-        "cambio_1m_pct",
-        "cambio_12m_pct",
-        "promedio_movil_4s",
-        "promedio_movil_12s",
-        "anomalia_z_52s",
-        "ranking_departamental",
-        "percentil_departamental",
-        "diferencia_mediana_departamentos",
-    ]
-    for columna in numericas:
-        # Un CSV derivado de una versión anterior puede carecer de columnas
-        # nuevas; se crean vacías para conservar el esquema esperado.
-        if columna not in tabla.columns:
-            tabla[columna] = pd.NA
-        tabla[columna] = pd.to_numeric(tabla[columna], errors="coerce")
-    return tabla
-
-
-def _cargar_datos() -> pd.DataFrame:
-    ruta = Path(RUTA_SERIES)
-    if series_necesitan_regenerarse():
-        preparar_visualizacion()
-    return _leer_series(str(ruta), ruta.stat().st_mtime)
-
-
-@st.cache_data(show_spinner=False)
-def _leer_historico_diario(ruta: str, marca_tiempo: float) -> pd.DataFrame:
-    """Carga las observaciones diarias usadas para calibrar el estimador."""
-    del marca_tiempo
-    return pd.read_csv(ruta, parse_dates=["fecha"])
-
-
-def _cargar_historico_diario() -> pd.DataFrame:
-    ruta = Path(RUTA_DIARIO)
-    if not ruta.exists():
-        raise FileNotFoundError(f"No existe el histórico diario: {ruta}")
-    return _leer_historico_diario(str(ruta), ruta.stat().st_mtime)
-
-
-def _cargar_calibracion_fnc() -> pd.DataFrame:
-    """Carga referencias oficiales coherentes; permite respaldo si aún no existen."""
-    ruta = Path(RUTA_CALIBRACION_FNC)
-    if not ruta.exists():
-        return pd.DataFrame()
-    return pd.read_csv(ruta, parse_dates=["fecha"])
-
-
-@st.cache_data(ttl=300, show_spinner=False)
-def _precios_intradia() -> dict[str, tuple[float, str]]:
-    """Último precio de cada mercado en Yahoo (~15 min de retraso); vacío si falla.
-
-    Referencia informativa: no alimenta el histórico ni el simulador. El
-    resultado (incluido un fallo) se cachea 5 minutos para hacer como máximo
-    una consulta por ventana, no una por visita. Se muestra fecha y hora del
-    dato porque fuera del horario de cada mercado (Coffee C cierra ~12:30
-    hora Colombia) el último precio disponible es el cierre de la sesión.
-    """
-    precios: dict[str, tuple[float, str]] = {}
-    for clave, ticker in (("cafe", TICKER_CAFE_ARABICA), ("fx", TICKER_FX)):
-        try:
-            historial = yf.Ticker(ticker).history(period="1d", interval="1m")
-            cierres = historial["Close"].dropna()
-            if cierres.empty:
-                continue
-            momento = cierres.index[-1]
-            if momento.tzinfo is not None:
-                momento = momento.tz_convert("America/Bogota")
-            precios[clave] = (float(cierres.iloc[-1]), f"{momento:%d/%m %H:%M}")
-        except Exception:
-            continue
-    return precios
-
-
 def _numero(valor: float, decimales: int) -> str:
     """Número con separadores según el idioma activo.
 
     Base (Python): miles con coma, decimal con punto → inglés directo. Para
     español se intercambian a miles con punto y decimal con coma.
     """
-    texto = f"{valor:,.{decimales}f}"
-    if IDIOMA == "en":
-        return texto
-    return texto.replace(",", "X").replace(".", ",").replace("X", ".")
+    return _formatear_numero(valor, decimales, IDIOMA)
 
 
 def _valor_metrica(fila: pd.Series) -> str:
@@ -1301,26 +1066,6 @@ def _grafico_exportaciones(tabla: pd.DataFrame) -> go.Figure:
         xaxis=configuracion_eje_mensual(datos["fecha_dato"]),
     )
     return _layout(figura, 350)
-
-
-def _comparar_produccion_exportaciones(tabla: pd.DataFrame) -> pd.DataFrame:
-    """Empareja producción y exportaciones únicamente cuando comparten mes."""
-    mensuales = tabla[
-        tabla["variable"].isin(["produccion_nacional", "exportaciones_cafe"])
-    ][["fecha_dato", "variable", "valor"]].copy()
-    mensuales["mes"] = pd.to_datetime(mensuales["fecha_dato"]).dt.to_period("M")
-    ancho = mensuales.pivot_table(
-        index="mes",
-        columns="variable",
-        values="valor",
-        aggfunc="last",
-    ).dropna(subset=["produccion_nacional", "exportaciones_cafe"])
-    ancho = ancho.reset_index()
-    ancho["fecha"] = ancho["mes"].dt.to_timestamp()
-    ancho["diferencia"] = (
-        ancho["produccion_nacional"] - ancho["exportaciones_cafe"]
-    )
-    return ancho.sort_values("fecha").reset_index(drop=True)
 
 
 def _grafico_diferencia_mensual(tabla: pd.DataFrame) -> go.Figure:
@@ -1887,64 +1632,6 @@ def _frases_lectura_rapida(tabla: pd.DataFrame) -> list[str]:
                 )
             )
     return frases
-
-
-def _variaciones_mercado(tabla: pd.DataFrame) -> pd.DataFrame:
-    """Resume cambios semanales, de 4 semanas y de 52 semanas sin causalidad."""
-    filas = []
-    for variable in ["precio_interno_referencia", "precio_cafe_arabica", "fx_usd_local"]:
-        serie = tabla[tabla["variable"].eq(variable)].sort_values("semana_fin")
-        if serie.empty:
-            continue
-        actual = serie.iloc[-1]
-
-        def cambio(
-            periodos: int,
-            serie: pd.DataFrame = serie,
-            actual: pd.Series = actual,
-        ) -> float | None:
-            if len(serie) <= periodos:
-                return None
-            anterior = float(serie.iloc[-periodos - 1]["valor"])
-            if anterior == 0:
-                return None
-            return (float(actual["valor"]) / anterior - 1) * 100
-
-        filas.append(
-            {
-                "Indicador": actual["etiqueta_variable"],
-                "Semanal": cambio(1),
-                "Mensual (4 sem.)": cambio(4),
-                "Anual (52 sem.)": cambio(52),
-            }
-        )
-    return pd.DataFrame(filas)
-
-
-def _resumen_fuentes_comerciales(tabla: pd.DataFrame) -> pd.DataFrame:
-    """Resume cobertura y fecha real del último dato de cada serie comercial."""
-    mercado = tabla[tabla["categoria"].isin(["Mercado", "Producción"])].copy()
-    indices = mercado.groupby("variable")["semana_fin"].idxmax()
-    ultimos = mercado.loc[indices]
-    filas = []
-    for _, fila in ultimos.iterrows():
-        metadatos = FUENTES_COMERCIALES[fila["variable"]]
-        fuente = (
-            "Federación Nacional de Cafeteros (FNC)"
-            if fila["fuente"] == "FNC"
-            else metadatos["nombre"]
-        )
-        filas.append(
-            {
-                "Indicador": fila["etiqueta_variable"],
-                "Último dato": pd.Timestamp(fila["fecha_dato"]).strftime("%d/%m/%Y"),
-                "Unidad": _unidad_legible(fila["unidad"]),
-                "Fuente": fuente,
-                "Alcance": metadatos["alcance"],
-                "Cadencia": fila["cadencia"],
-            }
-        )
-    return pd.DataFrame(filas)
 
 
 def _bloque_produccion_exportaciones(

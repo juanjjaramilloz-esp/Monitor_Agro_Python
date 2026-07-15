@@ -6,9 +6,9 @@ presentar y descargar.**
 [![Pruebas](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/pruebas.yml/badge.svg)](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/pruebas.yml)
 [![Datos](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml/badge.svg)](https://github.com/juanjjaramilloz-esp/Monitor_Agro_Python/actions/workflows/actualizar-datos.yml)
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-[![App en vivo](https://img.shields.io/badge/Streamlit-app%20en%20vivo-FF4B4B)](https://kitconsultayreporte.streamlit.app/)
+[![App en vivo](https://img.shields.io/badge/Streamlit-app%20en%20vivo-FF4B4B)](https://pulso-cafetero.streamlit.app/)
 
-[Abrir la aplicación](https://kitconsultayreporte.streamlit.app/) ·
+[Abrir la aplicación](https://pulso-cafetero.streamlit.app/) ·
 [Ver las decisiones de producto](#decisiones-de-producto-y-análisis) ·
 [Ejecutar localmente](#ejecución-local)
 
@@ -19,7 +19,7 @@ presentar y descargar.**
 > since 2023, with near-real-time market prices (~15 min delay), downloadable
 > Excel workbooks, a bilingual PDF brief and a price/margin scenario
 > simulator. Built with Python, pandas, Streamlit and GitHub Actions;
-> 81 offline unit tests and automated data refresh on business days.
+> 90 offline unit tests and automated data refresh on business days.
 
 *(Nombre del repositorio: `Monitor_Agro_Python`, el nombre de trabajo original
 del proyecto; la marca actual del producto es **Pulso Cafetero**.)*
@@ -82,7 +82,7 @@ la interfaz actual para mantener el foco comercial.
 | Observaciones diarias normalizadas | 33.600+ (crecen en días hábiles) |
 | Semanas completas de mercado y clima | 181+ |
 | Observaciones mensuales de producción y exportaciones | 82+ |
-| Pruebas unitarias sin internet | 81 |
+| Pruebas unitarias sin internet | 90 |
 | Actualización automática | Días hábiles |
 | Salidas reutilizables | Excel, CSV, PDF (ES/EN) y Markdown |
 | Idiomas | Español e inglés |
@@ -162,8 +162,9 @@ adopción ni aval institucional de CRECE.*
 fuentes/  -> contratos estables por fuente (descarga FNC compartida y cacheada)
 procesar/ -> calidad, histórico, indicadores, visualización y escenarios
 reporte/  -> brief Markdown, informe del simulador, Excel y PDF bilingüe
+interfaz/ -> acceso/caché de datos, formato, análisis visual y estilos Streamlit
 datos/    -> histórico, indicadores, metadatos y snapshots
-tests/    -> 76 pruebas unitarias sin internet (CI en cada push)
+tests/    -> 90 pruebas unitarias sin internet (CI en cada push)
 app.py    -> interfaz Streamlit bilingüe
 ```
 
@@ -184,7 +185,7 @@ python main.py                       # verifica los contratos de las fuentes
 streamlit run app.py                 # abre el tablero en localhost:8501
 ```
 
-Para comprobar la lógica sin depender de internet (76 pruebas, también corren
+Para comprobar la lógica sin depender de internet (90 pruebas, también corren
 en CI en cada push):
 
 ```powershell
@@ -257,6 +258,12 @@ del histórico de forma idempotente, recalcula indicadores y visualización, y h
 commit/push solo si hay datos nuevos. Ese push redespliega la app en Streamlit
 Community Cloud, así que los datos se actualizan sin intervención. Los pasos de
 datos toleran fallos puntuales de las fuentes (scraping/yfinance).
+
+Al final de cada corrida se audita la frescura del histórico diario y semanal,
+la calibración FNC y, cuando está configurado `ANTHROPIC_API_KEY`, el comentario
+de IA. Los retrasos normales de publicación, fines de semana y festivos tienen
+tolerancias explícitas en `config.py`; si se superan, el workflow falla de forma
+visible en lugar de quedar verde con datos congelados.
 
 Cada corrida verifica si toca redactar el **comentario del periodo con
 Claude** (`python -m reporte.comentario_ia`): aunque los datos se refrescan en
