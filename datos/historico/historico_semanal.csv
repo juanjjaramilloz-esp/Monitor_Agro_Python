@@ -6475,6 +6475,10 @@ semana_fin,fecha_dato,geografia,variable,valor,unidad,fuente,dias_observados
 2026-07-05,2026-07-05,Nariño,temp_max_semanal,26.3,°C,open-meteo,7
 2026-07-05,2026-07-05,Nariño,temp_min_semanal,16.5,°C,open-meteo,7
 2026-07-05,2026-07-05,Nariño,temp_promedio_semanal,21.1071,°C,open-meteo,7
+2026-07-05,2026-07-05,Quindío,precipitacion_semanal,45.3,mm,open-meteo,7
+2026-07-05,2026-07-05,Quindío,temp_max_semanal,26.8,°C,open-meteo,7
+2026-07-05,2026-07-05,Quindío,temp_min_semanal,15.7,°C,open-meteo,7
+2026-07-05,2026-07-05,Quindío,temp_promedio_semanal,21.1429,°C,open-meteo,7
 2026-07-05,2026-07-05,Risaralda,precipitacion_semanal,9.1,mm,open-meteo,7
 2026-07-05,2026-07-05,Risaralda,temp_max_semanal,27.6,°C,open-meteo,7
 2026-07-05,2026-07-05,Risaralda,temp_min_semanal,17.1,°C,open-meteo,7
