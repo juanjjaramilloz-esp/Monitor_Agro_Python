@@ -6492,6 +6492,7 @@ semana_fin,fecha_dato,geografia,variable,valor,unidad,fuente,dias_observados
 2026-07-12,2026-07-12,Antioquia,temp_min_semanal,18.3,°C,open-meteo,7
 2026-07-12,2026-07-12,Antioquia,temp_promedio_semanal,24.5429,°C,open-meteo,7
 2026-07-12,2026-07-10,COLOMBIA,fx_usd_local,3294.179931640625,COP/USD,yfinance,5
+2026-07-12,2026-07-12,COLOMBIA,precio_interno_referencia,2310000.0,COP/carga_125kg,FNC,7
 2026-07-12,2026-07-12,Caldas,precipitacion_semanal,35.9,mm,open-meteo,7
 2026-07-12,2026-07-12,Caldas,temp_max_semanal,24.0,°C,open-meteo,7
 2026-07-12,2026-07-12,Caldas,temp_min_semanal,12.6,°C,open-meteo,7
