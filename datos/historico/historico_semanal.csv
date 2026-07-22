@@ -6510,6 +6510,14 @@ semana_fin,fecha_dato,geografia,variable,valor,unidad,fuente,dias_observados
 2026-07-12,2026-07-12,Nariño,temp_max_semanal,28.5,°C,open-meteo,7
 2026-07-12,2026-07-12,Nariño,temp_min_semanal,15.2,°C,open-meteo,7
 2026-07-12,2026-07-12,Nariño,temp_promedio_semanal,21.6357,°C,open-meteo,7
+2026-07-12,2026-07-12,Quindío,precipitacion_semanal,49.1,mm,open-meteo,7
+2026-07-12,2026-07-12,Quindío,temp_max_semanal,30.1,°C,open-meteo,7
+2026-07-12,2026-07-12,Quindío,temp_min_semanal,15.8,°C,open-meteo,7
+2026-07-12,2026-07-12,Quindío,temp_promedio_semanal,21.85,°C,open-meteo,7
+2026-07-12,2026-07-12,Risaralda,precipitacion_semanal,17.0,mm,open-meteo,7
+2026-07-12,2026-07-12,Risaralda,temp_max_semanal,30.3,°C,open-meteo,7
+2026-07-12,2026-07-12,Risaralda,temp_min_semanal,16.6,°C,open-meteo,7
+2026-07-12,2026-07-12,Risaralda,temp_promedio_semanal,22.7214,°C,open-meteo,7
 2026-07-12,2026-07-12,Tolima,precipitacion_semanal,35.8,mm,open-meteo,7
 2026-07-12,2026-07-12,Tolima,temp_max_semanal,27.6,°C,open-meteo,7
 2026-07-12,2026-07-12,Tolima,temp_min_semanal,15.7,°C,open-meteo,7
